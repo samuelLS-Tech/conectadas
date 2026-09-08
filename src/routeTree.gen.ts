@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 
@@ -30,6 +31,11 @@ const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
   path: '/como-funciona',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SobreRoute = SobreRouteImport.update({
   id: '/sobre',
   path: '/sobre',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/como-funciona': typeof ComoFuncionaRoute
+  '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/como-funciona': typeof ComoFuncionaRoute
+  '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app': typeof AppIndexRoute
 }
@@ -59,21 +67,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/como-funciona': typeof ComoFuncionaRoute
+  '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/como-funciona' | '/sobre' | '/app/'
+  fullPaths: '/' | '/app' | '/como-funciona' | '/login' | '/sobre' | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/como-funciona' | '/sobre' | '/app'
-  id: '__root__' | '/' | '/app' | '/como-funciona' | '/sobre' | '/app/'
+  to: '/' | '/como-funciona' | '/login' | '/sobre' | '/app'
+  id:
+    '__root__' | '/' | '/app' | '/como-funciona' | '/login' | '/sobre' | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   ComoFuncionaRoute: typeof ComoFuncionaRoute
+  LoginRoute: typeof LoginRoute
   SobreRoute: typeof SobreRoute
 }
 
@@ -98,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/como-funciona'
       fullPath: '/como-funciona'
       preLoaderRoute: typeof ComoFuncionaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sobre': {
@@ -131,6 +149,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   ComoFuncionaRoute: ComoFuncionaRoute,
+  LoginRoute: LoginRoute,
   SobreRoute: SobreRoute,
 }
 export const routeTree = rootRouteImport
