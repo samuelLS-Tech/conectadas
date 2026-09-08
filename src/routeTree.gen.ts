@@ -15,6 +15,8 @@ import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAjudaRouteImport } from './routes/app.ajuda'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +48,16 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAjudaRoute = AppAjudaRouteImport.update({
+  id: '/ajuda',
+  path: '/ajuda',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
+  '/app/ajuda': typeof AppAjudaRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +74,8 @@ export interface FileRoutesByTo {
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
+  '/app/ajuda': typeof AppAjudaRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -69,15 +85,40 @@ export interface FileRoutesById {
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
+  '/app/ajuda': typeof AppAjudaRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/como-funciona' | '/login' | '/sobre' | '/app/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/como-funciona'
+    | '/login'
+    | '/sobre'
+    | '/app/ajuda'
+    | '/app/dashboard'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/como-funciona' | '/login' | '/sobre' | '/app'
+  to:
+    | '/'
+    | '/como-funciona'
+    | '/login'
+    | '/sobre'
+    | '/app/ajuda'
+    | '/app/dashboard'
+    | '/app'
   id:
-    '__root__' | '/' | '/app' | '/como-funciona' | '/login' | '/sobre' | '/app/'
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/como-funciona'
+    | '/login'
+    | '/sobre'
+    | '/app/ajuda'
+    | '/app/dashboard'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,14 +173,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/ajuda': {
+      id: '/app/ajuda'
+      path: '/ajuda'
+      fullPath: '/app/ajuda'
+      preLoaderRoute: typeof AppAjudaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAjudaRoute: typeof AppAjudaRoute
+  AppDashboardRoute: typeof AppDashboardRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAjudaRoute: AppAjudaRoute,
+  AppDashboardRoute: AppDashboardRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
