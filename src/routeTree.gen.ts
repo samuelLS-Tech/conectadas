@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
+import { Route as EmpresaRouteImport } from './routes/empresa'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -20,6 +21,7 @@ import { Route as AppBibliotecaRouteImport } from './routes/app.biblioteca'
 import { Route as AppConquistasRouteImport } from './routes/app.conquistas'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppMonitoriaRouteImport } from './routes/app.monitoria'
+import { Route as AppPortfolioRouteImport } from './routes/app.portfolio'
 import { Route as AppValidarRouteImport } from './routes/app.validar'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +37,11 @@ const AppRoute = AppRouteImport.update({
 const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
   id: '/como-funciona',
   path: '/como-funciona',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmpresaRoute = EmpresaRouteImport.update({
+  id: '/empresa',
+  path: '/empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -77,6 +84,11 @@ const AppMonitoriaRoute = AppMonitoriaRouteImport.update({
   path: '/monitoria',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPortfolioRoute = AppPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppValidarRoute = AppValidarRouteImport.update({
   id: '/validar',
   path: '/validar',
@@ -87,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/como-funciona': typeof ComoFuncionaRoute
+  '/empresa': typeof EmpresaRoute
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
@@ -94,12 +107,14 @@ export interface FileRoutesByFullPath {
   '/app/conquistas': typeof AppConquistasRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/monitoria': typeof AppMonitoriaRoute
+  '/app/portfolio': typeof AppPortfolioRoute
   '/app/validar': typeof AppValidarRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/como-funciona': typeof ComoFuncionaRoute
+  '/empresa': typeof EmpresaRoute
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
@@ -107,6 +122,7 @@ export interface FileRoutesByTo {
   '/app/conquistas': typeof AppConquistasRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/monitoria': typeof AppMonitoriaRoute
+  '/app/portfolio': typeof AppPortfolioRoute
   '/app/validar': typeof AppValidarRoute
   '/app': typeof AppIndexRoute
 }
@@ -115,6 +131,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/como-funciona': typeof ComoFuncionaRoute
+  '/empresa': typeof EmpresaRoute
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
@@ -122,6 +139,7 @@ export interface FileRoutesById {
   '/app/conquistas': typeof AppConquistasRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/monitoria': typeof AppMonitoriaRoute
+  '/app/portfolio': typeof AppPortfolioRoute
   '/app/validar': typeof AppValidarRoute
   '/app/': typeof AppIndexRoute
 }
@@ -131,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/como-funciona'
+    | '/empresa'
     | '/login'
     | '/sobre'
     | '/app/ajuda'
@@ -138,12 +157,14 @@ export interface FileRouteTypes {
     | '/app/conquistas'
     | '/app/dashboard'
     | '/app/monitoria'
+    | '/app/portfolio'
     | '/app/validar'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/como-funciona'
+    | '/empresa'
     | '/login'
     | '/sobre'
     | '/app/ajuda'
@@ -151,6 +172,7 @@ export interface FileRouteTypes {
     | '/app/conquistas'
     | '/app/dashboard'
     | '/app/monitoria'
+    | '/app/portfolio'
     | '/app/validar'
     | '/app'
   id:
@@ -158,6 +180,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/como-funciona'
+    | '/empresa'
     | '/login'
     | '/sobre'
     | '/app/ajuda'
@@ -165,6 +188,7 @@ export interface FileRouteTypes {
     | '/app/conquistas'
     | '/app/dashboard'
     | '/app/monitoria'
+    | '/app/portfolio'
     | '/app/validar'
     | '/app/'
   fileRoutesById: FileRoutesById
@@ -173,6 +197,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   ComoFuncionaRoute: typeof ComoFuncionaRoute
+  EmpresaRoute: typeof EmpresaRoute
   LoginRoute: typeof LoginRoute
   SobreRoute: typeof SobreRoute
 }
@@ -198,6 +223,13 @@ declare module '@tanstack/react-router' {
       path: '/como-funciona'
       fullPath: '/como-funciona'
       preLoaderRoute: typeof ComoFuncionaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/empresa': {
+      id: '/empresa'
+      path: '/empresa'
+      fullPath: '/empresa'
+      preLoaderRoute: typeof EmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -256,6 +288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMonitoriaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/portfolio': {
+      id: '/app/portfolio'
+      path: '/portfolio'
+      fullPath: '/app/portfolio'
+      preLoaderRoute: typeof AppPortfolioRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/validar': {
       id: '/app/validar'
       path: '/validar'
@@ -272,6 +311,7 @@ interface AppRouteChildren {
   AppConquistasRoute: typeof AppConquistasRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppMonitoriaRoute: typeof AppMonitoriaRoute
+  AppPortfolioRoute: typeof AppPortfolioRoute
   AppValidarRoute: typeof AppValidarRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -282,6 +322,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppConquistasRoute: AppConquistasRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppMonitoriaRoute: AppMonitoriaRoute,
+  AppPortfolioRoute: AppPortfolioRoute,
   AppValidarRoute: AppValidarRoute,
   AppIndexRoute: AppIndexRoute,
 }
@@ -292,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   ComoFuncionaRoute: ComoFuncionaRoute,
+  EmpresaRoute: EmpresaRoute,
   LoginRoute: LoginRoute,
   SobreRoute: SobreRoute,
 }
