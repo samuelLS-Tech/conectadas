@@ -16,6 +16,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAjudaRouteImport } from './routes/app.ajuda'
+import { Route as AppBibliotecaRouteImport } from './routes/app.biblioteca'
+import { Route as AppConquistasRouteImport } from './routes/app.conquistas'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppMonitoriaRouteImport } from './routes/app.monitoria'
 import { Route as AppValidarRouteImport } from './routes/app.validar'
@@ -55,6 +57,16 @@ const AppAjudaRoute = AppAjudaRouteImport.update({
   path: '/ajuda',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBibliotecaRoute = AppBibliotecaRouteImport.update({
+  id: '/biblioteca',
+  path: '/biblioteca',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConquistasRoute = AppConquistasRouteImport.update({
+  id: '/conquistas',
+  path: '/conquistas',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -78,6 +90,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
+  '/app/biblioteca': typeof AppBibliotecaRoute
+  '/app/conquistas': typeof AppConquistasRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/monitoria': typeof AppMonitoriaRoute
   '/app/validar': typeof AppValidarRoute
@@ -89,6 +103,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
+  '/app/biblioteca': typeof AppBibliotecaRoute
+  '/app/conquistas': typeof AppConquistasRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/monitoria': typeof AppMonitoriaRoute
   '/app/validar': typeof AppValidarRoute
@@ -102,6 +118,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
+  '/app/biblioteca': typeof AppBibliotecaRoute
+  '/app/conquistas': typeof AppConquistasRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/monitoria': typeof AppMonitoriaRoute
   '/app/validar': typeof AppValidarRoute
@@ -116,6 +134,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/sobre'
     | '/app/ajuda'
+    | '/app/biblioteca'
+    | '/app/conquistas'
     | '/app/dashboard'
     | '/app/monitoria'
     | '/app/validar'
@@ -127,6 +147,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/sobre'
     | '/app/ajuda'
+    | '/app/biblioteca'
+    | '/app/conquistas'
     | '/app/dashboard'
     | '/app/monitoria'
     | '/app/validar'
@@ -139,6 +161,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/sobre'
     | '/app/ajuda'
+    | '/app/biblioteca'
+    | '/app/conquistas'
     | '/app/dashboard'
     | '/app/monitoria'
     | '/app/validar'
@@ -204,6 +228,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAjudaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/biblioteca': {
+      id: '/app/biblioteca'
+      path: '/biblioteca'
+      fullPath: '/app/biblioteca'
+      preLoaderRoute: typeof AppBibliotecaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/conquistas': {
+      id: '/app/conquistas'
+      path: '/conquistas'
+      fullPath: '/app/conquistas'
+      preLoaderRoute: typeof AppConquistasRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/dashboard': {
       id: '/app/dashboard'
       path: '/dashboard'
@@ -230,6 +268,8 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppAjudaRoute: typeof AppAjudaRoute
+  AppBibliotecaRoute: typeof AppBibliotecaRoute
+  AppConquistasRoute: typeof AppConquistasRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppMonitoriaRoute: typeof AppMonitoriaRoute
   AppValidarRoute: typeof AppValidarRoute
@@ -238,6 +278,8 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAjudaRoute: AppAjudaRoute,
+  AppBibliotecaRoute: AppBibliotecaRoute,
+  AppConquistasRoute: AppConquistasRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppMonitoriaRoute: AppMonitoriaRoute,
   AppValidarRoute: AppValidarRoute,
