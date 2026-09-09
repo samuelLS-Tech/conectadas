@@ -17,6 +17,8 @@ import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAjudaRouteImport } from './routes/app.ajuda'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppMonitoriaRouteImport } from './routes/app.monitoria'
+import { Route as AppValidarRouteImport } from './routes/app.validar'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +60,16 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMonitoriaRoute = AppMonitoriaRouteImport.update({
+  id: '/monitoria',
+  path: '/monitoria',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppValidarRoute = AppValidarRouteImport.update({
+  id: '/validar',
+  path: '/validar',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -67,6 +79,8 @@ export interface FileRoutesByFullPath {
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/monitoria': typeof AppMonitoriaRoute
+  '/app/validar': typeof AppValidarRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +90,8 @@ export interface FileRoutesByTo {
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/monitoria': typeof AppMonitoriaRoute
+  '/app/validar': typeof AppValidarRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -87,6 +103,8 @@ export interface FileRoutesById {
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/monitoria': typeof AppMonitoriaRoute
+  '/app/validar': typeof AppValidarRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -99,6 +117,8 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/app/ajuda'
     | '/app/dashboard'
+    | '/app/monitoria'
+    | '/app/validar'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,6 +128,8 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/app/ajuda'
     | '/app/dashboard'
+    | '/app/monitoria'
+    | '/app/validar'
     | '/app'
   id:
     | '__root__'
@@ -118,6 +140,8 @@ export interface FileRouteTypes {
     | '/sobre'
     | '/app/ajuda'
     | '/app/dashboard'
+    | '/app/monitoria'
+    | '/app/validar'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
@@ -187,18 +211,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/monitoria': {
+      id: '/app/monitoria'
+      path: '/monitoria'
+      fullPath: '/app/monitoria'
+      preLoaderRoute: typeof AppMonitoriaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/validar': {
+      id: '/app/validar'
+      path: '/validar'
+      fullPath: '/app/validar'
+      preLoaderRoute: typeof AppValidarRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAjudaRoute: typeof AppAjudaRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppMonitoriaRoute: typeof AppMonitoriaRoute
+  AppValidarRoute: typeof AppValidarRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAjudaRoute: AppAjudaRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppMonitoriaRoute: AppMonitoriaRoute,
+  AppValidarRoute: AppValidarRoute,
   AppIndexRoute: AppIndexRoute,
 }
 

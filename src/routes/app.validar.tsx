@@ -46,7 +46,7 @@ function QRFicticio() {
   }, []);
 
   return (
-    <div className="mx-auto grid w-56 grid-cols-21 gap-0 rounded-2xl bg-foreground p-3 shadow-[var(--shadow-cyan)] sm:w-64">
+    <div className="mx-auto w-56 rounded-2xl bg-foreground p-3 shadow-[var(--shadow-cyan)] sm:w-64">
       <div className="grid w-full grid-cols-[repeat(21,minmax(0,1fr))]">
         {celulas.map((on, i) => (
           <span
