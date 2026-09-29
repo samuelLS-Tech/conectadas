@@ -22,7 +22,6 @@ export const Route = createFileRoute("/app/validar")({
 function QRFicticio() {
   const celulas = useMemo(() => {
     const n = 21;
-    const seed = 7;
     const arr: boolean[] = [];
     for (let i = 0; i < n * n; i++) {
       const l = Math.floor(i / n);
