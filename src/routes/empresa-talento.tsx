@@ -42,7 +42,7 @@ function Talento() {
         <section className="glass animate-rise p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-4">
-              <span className="grid h-16 w-16 shrink-0 place-items-center rounded-3xl bg-[var(--gradient-brand)] font-display text-2xl font-bold text-background">
+              <span className="grid h-16 w-16 shrink-0 place-items-center rounded-3xl bg-brand font-display text-2xl font-bold text-background">
                 A
               </span>
               <div className="min-w-0">

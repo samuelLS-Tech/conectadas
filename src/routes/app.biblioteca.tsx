@@ -73,7 +73,7 @@ function Biblioteca() {
             onClick={() => setCategoria(c)}
             className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
               categoria === c
-                ? "border-primary/60 bg-[var(--gradient-soft)] text-foreground"
+                ? "border-primary/60 bg-soft text-foreground"
                 : "border-border text-muted-foreground hover:border-cyan/50 hover:text-foreground"
             }`}
           >
@@ -105,7 +105,7 @@ function Biblioteca() {
                 className={`mt-5 w-full rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${
                   concluida
                     ? "border border-mint/50 text-mint"
-                    : "bg-[var(--gradient-brand)] text-background"
+                    : "bg-brand text-background"
                 }`}
               >
                 {concluida ? "✅ Refazer atividade" : "Iniciar atividade"}
@@ -173,7 +173,7 @@ function Biblioteca() {
                 <p className="mt-5 font-display text-3xl font-bold text-gradient">+{ativo.xp} XP</p>
                 <button
                   onClick={() => setAtivo(null)}
-                  className="mt-7 rounded-full bg-[var(--gradient-brand)] px-6 py-3 text-sm font-semibold text-background"
+                  className="mt-7 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background"
                 >
                   Voltar para a biblioteca
                 </button>

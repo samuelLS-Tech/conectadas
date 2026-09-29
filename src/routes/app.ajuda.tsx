@@ -74,7 +74,7 @@ function Ajuda() {
                 style={{ animationDelay: `${i * 90}ms` }}
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[var(--gradient-brand)] font-display text-lg font-bold text-background">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand font-display text-lg font-bold text-background">
                     {m.nome[0]}
                   </span>
                   <div className="min-w-0">
@@ -103,7 +103,7 @@ function Ajuda() {
                     iniciarSessao({ monitora: m.nome, materia: m.materia });
                     navigate({ to: "/app/monitoria" });
                   }}
-                  className="mt-5 w-full rounded-full bg-[var(--gradient-brand)] px-5 py-2.5 text-sm font-semibold text-background transition-transform hover:scale-[1.03]"
+                  className="mt-5 w-full rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-background transition-transform hover:scale-[1.03]"
                 >
                   {ensinar ? "Oferecer monitoria" : "Convidar para monitoria"}
                 </button>

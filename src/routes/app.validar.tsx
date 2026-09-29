@@ -88,7 +88,7 @@ function Validar() {
               validarMonitoria();
               setValidado(true);
             }}
-            className="mt-8 rounded-full bg-[var(--gradient-brand)] px-8 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
+            className="mt-8 rounded-full bg-brand px-8 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
           >
             Validar monitoria
           </button>
@@ -113,7 +113,7 @@ function Validar() {
             ].map((r, i) => (
               <li
                 key={r.t}
-                className="animate-pop flex items-center justify-between rounded-2xl border border-primary/40 bg-[var(--gradient-soft)] px-5 py-3 text-left"
+                className="animate-pop flex items-center justify-between rounded-2xl border border-primary/40 bg-soft px-5 py-3 text-left"
                 style={{ animationDelay: `${i * 150}ms` }}
               >
                 <span className="font-display font-bold text-gradient">{r.t}</span>
@@ -128,7 +128,7 @@ function Validar() {
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link
               to="/app/conquistas"
-              className="rounded-full bg-[var(--gradient-brand)] px-6 py-3 text-sm font-semibold text-background"
+              className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background"
             >
               🏆 Ver conquistas
             </Link>

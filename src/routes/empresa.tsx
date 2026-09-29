@@ -77,7 +77,7 @@ function Empresa() {
                     onClick={() => setArea(a)}
                     className={`rounded-full border px-4 py-2 text-sm transition-colors ${
                       area === a
-                        ? "border-primary/60 bg-[var(--gradient-soft)]"
+                        ? "border-primary/60 bg-soft"
                         : "border-border text-muted-foreground hover:border-cyan/50"
                     }`}
                   >
@@ -125,7 +125,7 @@ function Empresa() {
                 </p>
                 <button
                   onClick={() => setVaga(o.id)}
-                  className="mt-5 w-full rounded-full bg-[var(--gradient-brand)] px-5 py-2.5 text-sm font-semibold text-background transition-transform hover:scale-[1.02]"
+                  className="mt-5 w-full rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-background transition-transform hover:scale-[1.02]"
                 >
                   Ver talentos compatíveis
                 </button>
@@ -159,7 +159,7 @@ function Empresa() {
                     className="flex items-center justify-between gap-4 rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
                   >
                     <span className="flex min-w-0 items-center gap-3">
-                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[var(--gradient-brand)] font-bold text-background">
+                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
                         {t.nome[0]}
                       </span>
                       <span className="min-w-0">

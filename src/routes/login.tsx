@@ -100,7 +100,7 @@ function Login() {
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-[var(--gradient-brand)] px-6 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.02]"
+              className="w-full rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.02]"
             >
               Entrar
             </button>
@@ -118,7 +118,7 @@ function Login() {
                 onClick={() => navigate({ to: p.to })}
                 className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition-all ${
                   perfil === p.id
-                    ? "border-primary/60 bg-[var(--gradient-soft)] shadow-[var(--shadow-neon)]"
+                    ? "border-primary/60 bg-soft shadow-[var(--shadow-neon)]"
                     : "border-border hover:border-cyan/50"
                 }`}
               >
