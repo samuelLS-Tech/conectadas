@@ -39,7 +39,8 @@ function QRFicticio() {
         void dc;
         arr.push(bl === 0 || bc === 0 || bl === 6 || bc === 6 || (bl >= 2 && bl <= 4 && bc >= 2 && bc <= 4) || anel === -1);
       } else {
-        arr.push((i * seed + l * 3 + c * 5) % 3 !== 0);
+        const h = Math.abs(Math.sin((l + 1) * 12.9898 + (c + 1) * 78.233) * 43758.5453) % 1;
+        arr.push(h > 0.45);
       }
     }
     return arr;
