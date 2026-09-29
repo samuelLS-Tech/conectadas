@@ -38,10 +38,10 @@ export function NeuralBackground({ className = "" }: { className?: string }) {
         {ligacoes.map(([a, b], i) => (
           <line
             key={i}
-            x1={pontos[a][0]}
-            y1={pontos[a][1]}
-            x2={pontos[b][0]}
-            y2={pontos[b][1]}
+            x1={pontos[a]![0]}
+            y1={pontos[a]![1]}
+            x2={pontos[b]![0]}
+            y2={pontos[b]![1]}
             stroke="var(--cyan)"
             strokeWidth="0.12"
             strokeOpacity="0.35"

@@ -7,9 +7,8 @@ import { useXP } from "@/lib/xp-store";
 type Busca = { modo?: "ensinar" | "aprender" };
 
 export const Route = createFileRoute("/app/ajuda")({
-  validateSearch: (s: Record<string, unknown>): Busca => ({
-    modo: s.modo === "ensinar" ? "ensinar" : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): Busca =>
+    s["modo"] === "ensinar" ? { modo: "ensinar" } : {},
   head: () => ({
     meta: [
       { title: "Preciso de ajuda — CONECTADAS" },
@@ -31,7 +30,7 @@ function Ajuda() {
   const { iniciarSessao } = useXP();
   const [materia, setMateria] = useState<string | null>("fisica");
 
-  const monitoras = materia ? monitorasPorMateria[materia] : [];
+  const monitoras = (materia ? monitorasPorMateria[materia] : []) ?? [];
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">

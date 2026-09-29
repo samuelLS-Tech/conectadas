@@ -44,7 +44,7 @@ function Biblioteca() {
   function responder(i: number) {
     if (escolha !== null || !ativo) return;
     setEscolha(i);
-    const certo = i === ativo.questoes[indice].correta;
+    const certo = i === ativo.questoes[indice]!.correta;
     if (certo) setAcertos((a) => a + 1);
     setTimeout(() => {
       if (indice + 1 < ativo.questoes.length) {
@@ -132,10 +132,10 @@ function Biblioteca() {
                     altura="h-2"
                   />
                 </div>
-                <h3 className="mt-6 text-lg font-bold">{ativo.questoes[indice].pergunta}</h3>
+                <h3 className="mt-6 text-lg font-bold">{ativo.questoes[indice]!.pergunta}</h3>
                 <div className="mt-5 space-y-2">
-                  {ativo.questoes[indice].alternativas.map((alt, i) => {
-                    const correta = i === ativo.questoes[indice].correta;
+                  {ativo.questoes[indice]!.alternativas.map((alt, i) => {
+                    const correta = i === ativo.questoes[indice]!.correta;
                     const marcada = escolha === i;
                     const cor =
                       escolha === null

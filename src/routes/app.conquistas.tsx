@@ -37,7 +37,7 @@ function Conquistas() {
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
             {arvoreHabilidades.flatMap((h) =>
               h.liga.map((pai) => {
-                const p = mapa[pai];
+                const p = mapa[pai]!;
                 const ativo = h.desbloqueada && p.desbloqueada;
                 return (
                   <line
