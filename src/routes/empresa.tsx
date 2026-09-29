@@ -155,7 +155,7 @@ function Empresa() {
                 {compativeis.map((t) => (
                   <button
                     key={t.nome}
-                    onClick={() => navigate({ to: "/empresa/talento" })}
+                    onClick={() => navigate({ to: "/empresa-talento" })}
                     className="flex items-center justify-between gap-4 rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
                   >
                     <span className="flex min-w-0 items-center gap-3">
