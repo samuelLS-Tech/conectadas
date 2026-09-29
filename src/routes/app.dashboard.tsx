@@ -164,7 +164,7 @@ function Dashboard() {
                 key={r.nome}
                 className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors ${
                   r.nome === "Ana"
-                    ? "border-primary/50 bg-[var(--gradient-soft)]"
+                    ? "border-primary/50 bg-soft"
                     : "border-border/60 hover:border-cyan/40"
                 }`}
               >

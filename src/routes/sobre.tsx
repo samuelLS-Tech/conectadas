@@ -90,7 +90,7 @@ function Sobre() {
           <div className="mt-12 flex flex-wrap gap-3">
             <Link
               to="/login"
-              className="rounded-full bg-[var(--gradient-brand)] px-6 py-3 text-sm font-semibold text-background shadow-[var(--shadow-neon)]"
+              className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background shadow-[var(--shadow-neon)]"
             >
               🚀 Entrar na plataforma
             </Link>

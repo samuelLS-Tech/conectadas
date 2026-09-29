@@ -44,7 +44,7 @@ function Biblioteca() {
   function responder(i: number) {
     if (escolha !== null || !ativo) return;
     setEscolha(i);
-    const certo = i === ativo.questoes[indice].correta;
+    const certo = i === ativo.questoes[indice]!.correta;
     if (certo) setAcertos((a) => a + 1);
     setTimeout(() => {
       if (indice + 1 < ativo.questoes.length) {
@@ -73,7 +73,7 @@ function Biblioteca() {
             onClick={() => setCategoria(c)}
             className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
               categoria === c
-                ? "border-primary/60 bg-[var(--gradient-soft)] text-foreground"
+                ? "border-primary/60 bg-soft text-foreground"
                 : "border-border text-muted-foreground hover:border-cyan/50 hover:text-foreground"
             }`}
           >
@@ -105,7 +105,7 @@ function Biblioteca() {
                 className={`mt-5 w-full rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${
                   concluida
                     ? "border border-mint/50 text-mint"
-                    : "bg-[var(--gradient-brand)] text-background"
+                    : "bg-brand text-background"
                 }`}
               >
                 {concluida ? "✅ Refazer atividade" : "Iniciar atividade"}
@@ -132,10 +132,10 @@ function Biblioteca() {
                     altura="h-2"
                   />
                 </div>
-                <h3 className="mt-6 text-lg font-bold">{ativo.questoes[indice].pergunta}</h3>
+                <h3 className="mt-6 text-lg font-bold">{ativo.questoes[indice]!.pergunta}</h3>
                 <div className="mt-5 space-y-2">
-                  {ativo.questoes[indice].alternativas.map((alt, i) => {
-                    const correta = i === ativo.questoes[indice].correta;
+                  {ativo.questoes[indice]!.alternativas.map((alt, i) => {
+                    const correta = i === ativo.questoes[indice]!.correta;
                     const marcada = escolha === i;
                     const cor =
                       escolha === null
@@ -173,7 +173,7 @@ function Biblioteca() {
                 <p className="mt-5 font-display text-3xl font-bold text-gradient">+{ativo.xp} XP</p>
                 <button
                   onClick={() => setAtivo(null)}
-                  className="mt-7 rounded-full bg-[var(--gradient-brand)] px-6 py-3 text-sm font-semibold text-background"
+                  className="mt-7 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background"
                 >
                   Voltar para a biblioteca
                 </button>

@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as EmpresaRouteImport } from './routes/empresa'
+import { Route as EmpresaTalentoRouteImport } from './routes/empresa-talento'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProfessorRouteImport } from './routes/professor'
 import { Route as SobreRouteImport } from './routes/sobre'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAjudaRouteImport } from './routes/app.ajuda'
@@ -44,9 +46,19 @@ const EmpresaRoute = EmpresaRouteImport.update({
   path: '/empresa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmpresaTalentoRoute = EmpresaTalentoRouteImport.update({
+  id: '/empresa-talento',
+  path: '/empresa-talento',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfessorRoute = ProfessorRouteImport.update({
+  id: '/professor',
+  path: '/professor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SobreRoute = SobreRouteImport.update({
@@ -100,7 +112,9 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/como-funciona': typeof ComoFuncionaRoute
   '/empresa': typeof EmpresaRoute
+  '/empresa-talento': typeof EmpresaTalentoRoute
   '/login': typeof LoginRoute
+  '/professor': typeof ProfessorRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
   '/app/biblioteca': typeof AppBibliotecaRoute
@@ -115,7 +129,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/empresa': typeof EmpresaRoute
+  '/empresa-talento': typeof EmpresaTalentoRoute
   '/login': typeof LoginRoute
+  '/professor': typeof ProfessorRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
   '/app/biblioteca': typeof AppBibliotecaRoute
@@ -132,7 +148,9 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/como-funciona': typeof ComoFuncionaRoute
   '/empresa': typeof EmpresaRoute
+  '/empresa-talento': typeof EmpresaTalentoRoute
   '/login': typeof LoginRoute
+  '/professor': typeof ProfessorRoute
   '/sobre': typeof SobreRoute
   '/app/ajuda': typeof AppAjudaRoute
   '/app/biblioteca': typeof AppBibliotecaRoute
@@ -150,7 +168,9 @@ export interface FileRouteTypes {
     | '/app'
     | '/como-funciona'
     | '/empresa'
+    | '/empresa-talento'
     | '/login'
+    | '/professor'
     | '/sobre'
     | '/app/ajuda'
     | '/app/biblioteca'
@@ -165,7 +185,9 @@ export interface FileRouteTypes {
     | '/'
     | '/como-funciona'
     | '/empresa'
+    | '/empresa-talento'
     | '/login'
+    | '/professor'
     | '/sobre'
     | '/app/ajuda'
     | '/app/biblioteca'
@@ -181,7 +203,9 @@ export interface FileRouteTypes {
     | '/app'
     | '/como-funciona'
     | '/empresa'
+    | '/empresa-talento'
     | '/login'
+    | '/professor'
     | '/sobre'
     | '/app/ajuda'
     | '/app/biblioteca'
@@ -198,7 +222,9 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   EmpresaRoute: typeof EmpresaRoute
+  EmpresaTalentoRoute: typeof EmpresaTalentoRoute
   LoginRoute: typeof LoginRoute
+  ProfessorRoute: typeof ProfessorRoute
   SobreRoute: typeof SobreRoute
 }
 
@@ -232,11 +258,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmpresaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/empresa-talento': {
+      id: '/empresa-talento'
+      path: '/empresa-talento'
+      fullPath: '/empresa-talento'
+      preLoaderRoute: typeof EmpresaTalentoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/professor': {
+      id: '/professor'
+      path: '/professor'
+      fullPath: '/professor'
+      preLoaderRoute: typeof ProfessorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sobre': {
@@ -334,7 +374,9 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   ComoFuncionaRoute: ComoFuncionaRoute,
   EmpresaRoute: EmpresaRoute,
+  EmpresaTalentoRoute: EmpresaTalentoRoute,
   LoginRoute: LoginRoute,
+  ProfessorRoute: ProfessorRoute,
   SobreRoute: SobreRoute,
 }
 export const routeTree = rootRouteImport

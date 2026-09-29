@@ -236,3 +236,11 @@
 @utility animate-pop {
   animation: pop-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
+
+@utility bg-brand {
+  background: var(--gradient-brand);
+}
+
+@utility bg-soft {
+  background: var(--gradient-soft);
+}

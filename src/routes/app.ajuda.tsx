@@ -7,9 +7,8 @@ import { useXP } from "@/lib/xp-store";
 type Busca = { modo?: "ensinar" | "aprender" };
 
 export const Route = createFileRoute("/app/ajuda")({
-  validateSearch: (s: Record<string, unknown>): Busca => ({
-    modo: s.modo === "ensinar" ? "ensinar" : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): Busca =>
+    s["modo"] === "ensinar" ? { modo: "ensinar" } : {},
   head: () => ({
     meta: [
       { title: "Preciso de ajuda — CONECTADAS" },
@@ -31,7 +30,7 @@ function Ajuda() {
   const { iniciarSessao } = useXP();
   const [materia, setMateria] = useState<string | null>("fisica");
 
-  const monitoras = materia ? monitorasPorMateria[materia] : [];
+  const monitoras = (materia ? monitorasPorMateria[materia] : []) ?? [];
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
@@ -75,7 +74,7 @@ function Ajuda() {
                 style={{ animationDelay: `${i * 90}ms` }}
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[var(--gradient-brand)] font-display text-lg font-bold text-background">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand font-display text-lg font-bold text-background">
                     {m.nome[0]}
                   </span>
                   <div className="min-w-0">
@@ -104,7 +103,7 @@ function Ajuda() {
                     iniciarSessao({ monitora: m.nome, materia: m.materia });
                     navigate({ to: "/app/monitoria" });
                   }}
-                  className="mt-5 w-full rounded-full bg-[var(--gradient-brand)] px-5 py-2.5 text-sm font-semibold text-background transition-transform hover:scale-[1.03]"
+                  className="mt-5 w-full rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-background transition-transform hover:scale-[1.03]"
                 >
                   {ensinar ? "Oferecer monitoria" : "Convidar para monitoria"}
                 </button>

@@ -68,7 +68,7 @@ function Monitoria() {
     <div className="mx-auto max-w-6xl space-y-6">
       <header className="glass animate-rise grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 p-6 sm:flex sm:justify-between">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[var(--gradient-brand)] font-display text-lg font-bold text-background">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand font-display text-lg font-bold text-background">
             {monitora[0]}
           </span>
           <div className="min-w-0">
@@ -85,7 +85,7 @@ function Monitoria() {
         <div className="glass relative flex min-h-[22rem] flex-col items-center justify-center overflow-hidden p-6">
           <div className="grid-lines absolute inset-0 opacity-30" />
           <div className="relative text-center">
-            <span className="animate-pulse-glow mx-auto grid h-28 w-28 place-items-center rounded-full bg-[var(--gradient-brand)] font-display text-4xl font-bold text-background">
+            <span className="animate-pulse-glow mx-auto grid h-28 w-28 place-items-center rounded-full bg-brand font-display text-4xl font-bold text-background">
               {monitora[0]}
             </span>
             <p className="mt-5 text-lg font-bold">{monitora}</p>
@@ -129,7 +129,7 @@ function Monitoria() {
                 key={i}
                 className={`animate-rise max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
                   m.eu
-                    ? "ml-auto border border-primary/40 bg-[var(--gradient-soft)]"
+                    ? "ml-auto border border-primary/40 bg-soft"
                     : "border border-border/60 bg-secondary/50"
                 }`}
               >
@@ -150,7 +150,7 @@ function Monitoria() {
             />
             <button
               type="submit"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[var(--gradient-brand)] text-background"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand text-background"
               aria-label="Enviar"
             >
               <Send size={16} />

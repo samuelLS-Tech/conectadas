@@ -102,7 +102,7 @@ function Home() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/login"
-                className="rounded-full bg-[var(--gradient-brand)] px-7 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
+                className="rounded-full bg-brand px-7 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
               >
                 🚀 Entrar na plataforma
               </Link>
@@ -129,7 +129,7 @@ function Home() {
           </div>
 
           <div className="animate-float relative mx-auto w-full max-w-md">
-            <div className="absolute -inset-6 rounded-[3rem] bg-[var(--gradient-soft)] blur-3xl" />
+            <div className="absolute -inset-6 rounded-[3rem] bg-soft blur-3xl" />
             <img
               src={heroImg}
               alt="Estudante conectada a elementos de STEM: código, moléculas, fórmulas, circuitos e constelações"
@@ -216,7 +216,7 @@ function Home() {
               {fluxo.map((f, i) => (
                 <div key={f} className="flex items-center gap-3">
                   <div
-                    className="animate-rise rounded-full border border-primary/40 bg-[var(--gradient-soft)] px-5 py-2.5 text-sm font-semibold"
+                    className="animate-rise rounded-full border border-primary/40 bg-soft px-5 py-2.5 text-sm font-semibold"
                     style={{ animationDelay: `${i * 150}ms` }}
                   >
                     {f}
@@ -276,7 +276,7 @@ function Home() {
           </p>
           <Link
             to="/login"
-            className="mt-9 inline-block rounded-full bg-[var(--gradient-brand)] px-8 py-4 text-base font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
+            className="mt-9 inline-block rounded-full bg-brand px-8 py-4 text-base font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
           >
             🚀 Conhecer o CONECTADAS
           </Link>

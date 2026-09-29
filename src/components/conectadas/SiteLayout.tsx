@@ -35,7 +35,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-2">
             <Link
               to="/login"
-              className="hidden rounded-full bg-[var(--gradient-brand)] px-5 py-2.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03] sm:inline-flex"
+              className="hidden rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03] sm:inline-flex"
             >
               Entrar na plataforma
             </Link>
@@ -63,7 +63,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             <Link
               to="/login"
               onClick={() => setAberto(false)}
-              className="mt-2 block rounded-full bg-[var(--gradient-brand)] px-5 py-3 text-center text-sm font-semibold text-background"
+              className="mt-2 block rounded-full bg-brand px-5 py-3 text-center text-sm font-semibold text-background"
             >
               Entrar na plataforma
             </Link>

@@ -22,7 +22,6 @@ export const Route = createFileRoute("/app/validar")({
 function QRFicticio() {
   const celulas = useMemo(() => {
     const n = 21;
-    const seed = 7;
     const arr: boolean[] = [];
     for (let i = 0; i < n * n; i++) {
       const l = Math.floor(i / n);
@@ -39,7 +38,8 @@ function QRFicticio() {
         void dc;
         arr.push(bl === 0 || bc === 0 || bl === 6 || bc === 6 || (bl >= 2 && bl <= 4 && bc >= 2 && bc <= 4) || anel === -1);
       } else {
-        arr.push((i * seed + l * 3 + c * 5) % 3 !== 0);
+        const h = Math.abs(Math.sin((l + 1) * 12.9898 + (c + 1) * 78.233) * 43758.5453) % 1;
+        arr.push(h > 0.45);
       }
     }
     return arr;
@@ -88,7 +88,7 @@ function Validar() {
               validarMonitoria();
               setValidado(true);
             }}
-            className="mt-8 rounded-full bg-[var(--gradient-brand)] px-8 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
+            className="mt-8 rounded-full bg-brand px-8 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
           >
             Validar monitoria
           </button>
@@ -113,7 +113,7 @@ function Validar() {
             ].map((r, i) => (
               <li
                 key={r.t}
-                className="animate-pop flex items-center justify-between rounded-2xl border border-primary/40 bg-[var(--gradient-soft)] px-5 py-3 text-left"
+                className="animate-pop flex items-center justify-between rounded-2xl border border-primary/40 bg-soft px-5 py-3 text-left"
                 style={{ animationDelay: `${i * 150}ms` }}
               >
                 <span className="font-display font-bold text-gradient">{r.t}</span>
@@ -128,7 +128,7 @@ function Validar() {
           <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link
               to="/app/conquistas"
-              className="rounded-full bg-[var(--gradient-brand)] px-6 py-3 text-sm font-semibold text-background"
+              className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background"
             >
               🏆 Ver conquistas
             </Link>

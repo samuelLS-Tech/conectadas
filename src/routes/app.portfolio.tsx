@@ -33,7 +33,7 @@ function Portfolio() {
     <div className="mx-auto max-w-5xl space-y-8">
       <header className="glass animate-rise p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-          <span className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-[var(--gradient-brand)] font-display text-3xl font-bold text-background shadow-[var(--shadow-neon)]">
+          <span className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-brand font-display text-3xl font-bold text-background shadow-[var(--shadow-neon)]">
             A
           </span>
           <div className="min-w-0">
@@ -93,7 +93,7 @@ function Portfolio() {
               description: "PDF fictício pronto para download nesta demonstração.",
             })
           }
-          className="rounded-full bg-[var(--gradient-brand)] px-7 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
+          className="rounded-full bg-brand px-7 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
         >
           📄 Gerar currículo digital
         </button>

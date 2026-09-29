@@ -67,7 +67,7 @@ function ComoFunciona() {
             </div>
             <Link
               to="/login"
-              className="rounded-full bg-[var(--gradient-brand)] px-6 py-3 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
+              className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
             >
               🚀 Iniciar demonstração
             </Link>
