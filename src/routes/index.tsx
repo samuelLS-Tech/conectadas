@@ -126,11 +126,11 @@ function Home() {
             </dl>
           </div>
 
-          <div className="animate-float relative mx-auto w-full max-w-md">
+          <div className="animate-float relative mx-auto w-full max-w-xl">
             <div className="absolute -inset-6 rounded-[3rem] bg-soft blur-3xl" />
             <img
               src={heroImg}
-              alt="Estudante conectada a elementos de STEM: código, moléculas, fórmulas, circuitos e constelações"
+              alt="Estudante segurando um livro e estendendo a mão, cercada por ícones de ciência, livros, ideias e programação"
               width={1536}
               height={1024}
               className="relative rounded-[2rem] border border-primary/30 shadow-[var(--shadow-neon)]"
