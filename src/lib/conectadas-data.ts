@@ -402,6 +402,126 @@ export const biblioteca: Material[] = [
       },
     ],
   },
+  {
+    id: "enem",
+    titulo: "ENEM — Ciências da Natureza e Matemática",
+    categoria: "Vestibulares",
+    detalhe: "4 questões no estilo ENEM",
+    xp: 20,
+    emoji: "📝",
+    questoes: [
+      {
+        pergunta: '(Estilo ENEM) Um produto custava R$ 80,00 e teve aumento de 15%. Qual o novo preço?',
+        alternativas: ["R$ 92,00", "R$ 95,00", "R$ 88,00", "R$ 96,00"],
+        correta: 0,
+      },
+      {
+        pergunta: '(Estilo ENEM) Qual processo converte energia luminosa em energia química nas plantas?',
+        alternativas: ["Respiração celular", "Fermentação", "Fotossíntese", "Transpiração"],
+        correta: 2,
+      },
+      {
+        pergunta: '(Estilo ENEM) Um carro percorre 150 km em 2 horas. Sua velocidade média é:',
+        alternativas: ["60 km/h", "75 km/h", "80 km/h", "300 km/h"],
+        correta: 1,
+      },
+      {
+        pergunta: '(Estilo ENEM) O aumento do efeito estufa está ligado principalmente à emissão de:',
+        alternativas: ["Oxigênio (O₂)", "Nitrogênio (N₂)", "Gás carbônico (CO₂)", "Hélio (He)"],
+        correta: 2,
+      },
+    ],
+  },
+  {
+    id: "fuvest",
+    titulo: "FUVEST — Primeira fase",
+    categoria: "Vestibulares",
+    detalhe: "4 questões no estilo FUVEST",
+    xp: 20,
+    emoji: "🏛️",
+    questoes: [
+      {
+        pergunta: '(Estilo FUVEST) As raízes de x² − 5x + 6 = 0 são:',
+        alternativas: ["1 e 6", "2 e 3", "−2 e −3", "−1 e 6"],
+        correta: 1,
+      },
+      {
+        pergunta: '(Estilo FUVEST) Um objeto de 2 kg cai de 5 m de altura (g = 10 m/s²). Sua energia potencial inicial é:',
+        alternativas: ["10 J", "50 J", "100 J", "20 J"],
+        correta: 2,
+      },
+      {
+        pergunta: '(Estilo FUVEST) Qual é o pH de uma solução neutra a 25 °C?',
+        alternativas: ["0", "5", "7", "14"],
+        correta: 2,
+      },
+      {
+        pergunta: '(Estilo FUVEST) A organela responsável pela produção de energia (ATP) na célula é:',
+        alternativas: ["Ribossomo", "Mitocôndria", "Complexo de Golgi", "Lisossomo"],
+        correta: 1,
+      },
+    ],
+  },
+  {
+    id: "unicamp",
+    titulo: "Unicamp — Questões de raciocínio",
+    categoria: "Vestibulares",
+    detalhe: "4 questões no estilo Unicamp",
+    xp: 20,
+    emoji: "🔭",
+    questoes: [
+      {
+        pergunta: '(Estilo Unicamp) A soma dos ângulos internos de um hexágono é:',
+        alternativas: ["540°", "720°", "900°", "360°"],
+        correta: 1,
+      },
+      {
+        pergunta: '(Estilo Unicamp) A luz leva cerca de 8 minutos para chegar do Sol à Terra. Isso mostra que a luz:',
+        alternativas: ["É instantânea", "Tem velocidade finita", "Não se propaga no vácuo", "É mais lenta que o som"],
+        correta: 1,
+      },
+      {
+        pergunta: '(Estilo Unicamp) Em um circuito, U = 12 V e R = 4 Ω. A corrente elétrica é:',
+        alternativas: ["3 A", "48 A", "8 A", "16 A"],
+        correta: 0,
+      },
+      {
+        pergunta: '(Estilo Unicamp) A molécula que carrega a informação genética é o:',
+        alternativas: ["ATP", "DNA", "Glicose", "Colesterol"],
+        correta: 1,
+      },
+    ],
+  },
+  {
+    id: "ita-unesp",
+    titulo: "UNESP e ITA — Desafio",
+    categoria: "Vestibulares",
+    detalhe: "4 questões no estilo UNESP e ITA",
+    xp: 20,
+    emoji: "🛰️",
+    questoes: [
+      {
+        pergunta: '(Estilo UNESP) log₁₀ 1000 é igual a:',
+        alternativas: ["2", "3", "10", "100"],
+        correta: 1,
+      },
+      {
+        pergunta: '(Estilo ITA) Se 2ˣ = 32, então x vale:',
+        alternativas: ["4", "5", "6", "16"],
+        correta: 1,
+      },
+      {
+        pergunta: '(Estilo UNESP) Qual gás é o mais abundante na atmosfera terrestre?',
+        alternativas: ["Oxigênio", "Gás carbônico", "Nitrogênio", "Argônio"],
+        correta: 2,
+      },
+      {
+        pergunta: '(Estilo ITA) Um corpo em MCU tem aceleração:',
+        alternativas: ["Nula", "Tangencial constante", "Centrípeta, apontando para o centro", "Na direção da velocidade"],
+        correta: 2,
+      },
+    ],
+  },
 ];
 
 export const oportunidades = [
@@ -443,13 +563,26 @@ export const oportunidades = [
   },
 ];
 
-export const talentos = [
-  { nome: "Ana Silva", nivel: 5, titulo: "Pesquisadora Sênior", xp: 2450, areas: ["Tecnologia", "Ciência", "Matemática"] },
-  { nome: "Júlia Moraes", nivel: 4, titulo: "Engenheira de Ideias", xp: 2120, areas: ["Tecnologia", "Engenharia"] },
-  { nome: "Maria Duarte", nivel: 4, titulo: "Exploradora STEM", xp: 1980, areas: ["Engenharia", "Ciência"] },
-  { nome: "Beatriz Nunes", nivel: 3, titulo: "Analista Júnior", xp: 1580, areas: ["Matemática", "Ciência"] },
-  { nome: "Alice Rocha", nivel: 3, titulo: "Cientista em Formação", xp: 1440, areas: ["Ciência", "Matemática"] },
-  { nome: "Nina Prado", nivel: 3, titulo: "Dev Iniciante", xp: 1650, areas: ["Tecnologia"] },
+export type Talento = {
+  nome: string;
+  nivel: number;
+  titulo: string;
+  xp: number;
+  areas: string[];
+  escola: string;
+  monitorias: number;
+  destaques: string[];
+};
+
+export const talentos: Talento[] = [
+  { nome: "Ana Silva", nivel: 5, titulo: "Pesquisadora Sênior", xp: 2450, areas: ["Tecnologia", "Ciência", "Matemática"], escola: "ETEC Centro", monitorias: 37, destaques: ["37 monitorias validadas", "Projeto de Robótica 2026", "Medalha Ada Lovelace"] },
+  { nome: "Júlia Moraes", nivel: 4, titulo: "Engenheira de Ideias", xp: 2120, areas: ["Tecnologia", "Engenharia"], escola: "Colégio Horizonte", monitorias: 29, destaques: ["Líder de equipe de robótica", "Top 3 em Programação", "Medalha Marie Curie"] },
+  { nome: "Maria Duarte", nivel: 4, titulo: "Exploradora STEM", xp: 1980, areas: ["Engenharia", "Ciência"], escola: "IF Campus Norte", monitorias: 24, destaques: ["Protótipo de energia solar", "Monitora de Física", "Simulado FUVEST 100%"] },
+  { nome: "Nina Prado", nivel: 3, titulo: "Dev Iniciante", xp: 1650, areas: ["Tecnologia"], escola: "ETEC Centro", monitorias: 15, destaques: ["App de estudos em Python", "10 desafios de código", "Hackathon escolar"] },
+  { nome: "Beatriz Nunes", nivel: 3, titulo: "Analista Júnior", xp: 1580, areas: ["Matemática", "Ciência"], escola: "Escola Estadual Aurora", monitorias: 18, destaques: ["Olimpíada de Matemática", "Monitora de Estatística", "Simulado ENEM 90%"] },
+  { nome: "Alice Rocha", nivel: 3, titulo: "Cientista em Formação", xp: 1440, areas: ["Ciência", "Matemática"], escola: "Colégio Horizonte", monitorias: 12, destaques: ["Iniciação científica júnior", "Feira de Ciências 2026", "Medalha Rosalind Franklin"] },
+  { nome: "Larissa Campos", nivel: 2, titulo: "Aprendiz Curiosa", xp: 1120, areas: ["Tecnologia", "Matemática"], escola: "IF Campus Norte", monitorias: 8, destaques: ["Lógica de programação", "Monitora de Funções", "5 atividades seguidas"] },
+  { nome: "Sofia Lima", nivel: 2, titulo: "Exploradora", xp: 760, areas: ["Matemática", "Engenharia"], escola: "Escola Estadual Aurora", monitorias: 5, destaques: ["Desafio de geometria", "Primeira monitoria", "Clube de Engenharia"] },
 ];
 
 export const trajetoria = [
