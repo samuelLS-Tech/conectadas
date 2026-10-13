@@ -5,11 +5,11 @@ import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 export const Route = createFileRoute("/sobre")({
   head: () => ({
     meta: [
-      { title: "Sobre o projeto — CONECTADAS | FECEG Ciência Delas" },
+      { title: "Sobre o projeto — CONECTADAS" },
       {
         name: "description",
         content:
-          "CONECTADAS é um projeto escolar da feira FECEG — Ciência Delas: uma plataforma de monitorias entre meninas em STEM.",
+          "CONECTADAS é um projeto escolar: uma plataforma de monitorias entre meninas em STEM.",
       },
       { property: "og:title", content: "Sobre o projeto — CONECTADAS" },
       {
@@ -46,7 +46,6 @@ function Sobre() {
       <section className="relative overflow-hidden px-5 py-20">
         <NeuralBackground className="opacity-50" />
         <div className="relative mx-auto max-w-5xl">
-          <p className="text-xs font-semibold tracking-[0.3em] text-cyan">FECEG — CIÊNCIA DELAS</p>
           <h1 className="mt-3 text-4xl font-bold sm:text-5xl">
             Sobre o <span className="text-gradient">CONECTADAS</span>
           </h1>

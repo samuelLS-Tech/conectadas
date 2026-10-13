@@ -3,7 +3,8 @@ import { ArrowRight, Brain, GraduationCap, Rocket, Quote } from "lucide-react";
 import { SiteLayout } from "@/components/conectadas/SiteLayout";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { comoFunciona } from "@/lib/conectadas-data";
-import heroImg from "@/assets/hero-conectadas.jpg";
+import heroAsset from "@/assets/hero-estudante.png.asset.json";
+const heroImg = heroAsset.url;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -88,10 +89,7 @@ function Home() {
         <NeuralBackground />
         <div className="relative mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2">
           <div className="animate-rise">
-            <span className="inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-cyan/5 px-4 py-1.5 text-xs font-semibold tracking-[0.2em] text-cyan">
-              FECEG — CIÊNCIA DELAS
-            </span>
-            <h1 className="mt-6 text-4xl leading-[1.05] font-bold sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl leading-[1.05] font-bold sm:text-5xl lg:text-6xl">
               Conectando meninas.{" "}
               <span className="text-gradient">Compartilhando conhecimento.</span> Criando futuros.
             </h1>
@@ -128,12 +126,12 @@ function Home() {
             </dl>
           </div>
 
-          <div className="animate-float relative mx-auto w-full max-w-md">
+          <div className="animate-float relative mx-auto w-full max-w-xl">
             <div className="absolute -inset-6 rounded-[3rem] bg-soft blur-3xl" />
             <img
               src={heroImg}
-              alt="Estudante conectada a elementos de STEM: código, moléculas, fórmulas, circuitos e constelações"
-              width={1024}
+              alt="Estudante segurando um livro e estendendo a mão, cercada por ícones de ciência, livros, ideias e programação"
+              width={1536}
               height={1024}
               className="relative rounded-[2rem] border border-primary/30 shadow-[var(--shadow-neon)]"
             />
@@ -285,9 +283,6 @@ function Home() {
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             Conectando meninas. Compartilhando conhecimento. Criando futuros.
-          </p>
-          <p className="mt-4 text-xs font-semibold tracking-[0.3em] text-cyan">
-            FECEG — CIÊNCIA DELAS
           </p>
         </div>
       </section>

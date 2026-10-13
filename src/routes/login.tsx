@@ -66,7 +66,7 @@ function Login() {
         <div className="glass animate-pop p-8">
           <h1 className="text-center text-2xl font-bold">Bem-vinda ao CONECTADAS 💜</h1>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            Demonstração para a feira FECEG — nenhum dado real é utilizado.
+            Ambiente de demonstração — nenhum dado real é utilizado.
           </p>
 
           <form
