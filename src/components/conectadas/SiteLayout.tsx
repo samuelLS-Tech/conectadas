@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Marca } from "./Marca";
 
 const links = [
@@ -81,9 +81,6 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               <p className="mt-3 text-sm text-muted-foreground">
                 Conectando meninas. Compartilhando conhecimento. Criando futuros.
               </p>
-              <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan/40 px-3 py-1.5 text-xs font-semibold tracking-widest text-cyan">
-                <Sparkles size={13} /> FECEG — CIÊNCIA DELAS
-              </p>
             </div>
             <div className="grid grid-cols-2 gap-8 text-sm">
               <div className="space-y-2">
@@ -115,7 +112,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
           <p className="mt-10 border-t border-border/50 pt-6 text-xs text-muted-foreground">
-            Protótipo demonstrativo com dados fictícios — feira científica FECEG 2026.
+            Protótipo demonstrativo com dados fictícios.
           </p>
         </div>
       </footer>

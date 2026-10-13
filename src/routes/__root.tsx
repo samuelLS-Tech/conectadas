@@ -85,7 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Protótipo da plataforma CONECTADAS: monitorias entre estudantes, XP, medalhas e portfólio digital em STEM.",
       },
-      { name: "author", content: "FECEG — Ciência Delas" },
+      { name: "author", content: "CONECTADAS" },
       { property: "og:title", content: "CONECTADAS — Plataforma STEM para meninas" },
       {
         property: "og:description",

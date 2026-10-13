@@ -11,7 +11,7 @@ export const Route = createFileRoute("/app/conquistas")({
         content: "Árvore de habilidades STEM, medalhas desbloqueadas e critérios de cada conquista.",
       },
       { property: "og:title", content: "Central de Conquistas — CONECTADAS" },
-      { property: "og:description", content: "Medalhas Ada Lovelace, Marie Curie e Ciência Delas." },
+      { property: "og:description", content: "Medalhas Ada Lovelace, Marie Curie, Rosalind Franklin, Katherine Johnson e Jaqueline Goes de Jesus." },
     ],
   }),
   component: Conquistas,
