@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { biblioteca, type Material } from "@/lib/conectadas-data";
 import { useXP } from "@/lib/xp-store";
+import { calcularXPAtividade, DESCONTO_POR_ERRO } from "@/lib/xp-regras";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
 
 export const Route = createFileRoute("/app/biblioteca")({
@@ -30,6 +31,7 @@ function Biblioteca() {
   const [acertos, setAcertos] = useState(0);
   const [escolha, setEscolha] = useState<number | null>(null);
   const [fim, setFim] = useState(false);
+  const [xpGanho, setXpGanho] = useState(0);
 
   const lista = biblioteca.filter((m) => categoria === "Todas" || m.categoria === categoria);
 
@@ -45,13 +47,16 @@ function Biblioteca() {
     if (escolha !== null || !ativo) return;
     setEscolha(i);
     const certo = i === ativo.questoes[indice]!.correta;
-    if (certo) setAcertos((a) => a + 1);
+    const novosAcertos = acertos + (certo ? 1 : 0);
+    setAcertos(novosAcertos);
     setTimeout(() => {
       if (indice + 1 < ativo.questoes.length) {
         setIndice((n) => n + 1);
         setEscolha(null);
       } else {
-        concluirAtividade(ativo.id, ativo.xp);
+        const ganho = calcularXPAtividade(ativo.xp, ativo.questoes.length, novosAcertos);
+        setXpGanho(ganho);
+        concluirAtividade(ativo.id, ganho);
         setFim(true);
       }
     }, 900);
@@ -62,7 +67,7 @@ function Biblioteca() {
       <header className="animate-rise">
         <h1 className="text-3xl font-bold">📚 Biblioteca STEM</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Atividades curtas e simulados. Cada conclusão adiciona XP ao seu perfil.
+          Atividades curtas e simulados. Cada conclusão adiciona XP ao seu perfil — cada erro desconta {DESCONTO_POR_ERRO} XP.
         </p>
       </header>
 
@@ -170,7 +175,12 @@ function Biblioteca() {
                 <p className="mt-2 text-sm text-muted-foreground">
                   {acertos} de {ativo.questoes.length} respostas corretas
                 </p>
-                <p className="mt-5 font-display text-3xl font-bold text-gradient">+{ativo.xp} XP</p>
+                <p className="mt-5 font-display text-3xl font-bold text-gradient">+{xpGanho} XP</p>
+                {xpGanho < ativo.xp && (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {ativo.questoes.length - acertos} erro(s): −{ativo.xp - xpGanho} XP do total de {ativo.xp} XP. Revise e tente de novo!
+                  </p>
+                )}
                 <button
                   onClick={() => setAtivo(null)}
                   className="mt-7 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background"

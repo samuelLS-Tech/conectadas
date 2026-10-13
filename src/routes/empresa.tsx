@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { oportunidades, talentos } from "@/lib/conectadas-data";
@@ -31,13 +31,27 @@ function Empresa() {
   const [area, setArea] = useState("Todas");
   const [xpMin, setXpMin] = useState(500);
   const [vaga, setVaga] = useState<string | null>(null);
+  const [analisando, setAnalisando] = useState(false);
+
+  useEffect(() => {
+    if (!vaga) return;
+    setAnalisando(true);
+    const t = setTimeout(() => setAnalisando(false), 1600);
+    return () => clearTimeout(t);
+  }, [vaga]);
 
   const vagas = oportunidades.filter(
     (o) => (area === "Todas" || o.area === area) && o.xpMinimo >= xpMin,
   );
   const selecionada = oportunidades.find((o) => o.id === vaga);
   const compativeis = selecionada
-    ? talentos.filter((t) => t.xp >= selecionada.xpMinimo && t.areas.includes(selecionada.area))
+    ? talentos
+        .filter((t) => t.xp >= selecionada.xpMinimo)
+        .sort(
+          (a, b) =>
+            Number(b.areas.includes(selecionada.area)) - Number(a.areas.includes(selecionada.area)) ||
+            b.xp - a.xp,
+        )
     : [];
 
   return (
@@ -151,35 +165,72 @@ function Empresa() {
                   Limpar
                 </button>
               </div>
-              <div className="mt-5 grid gap-3 md:grid-cols-2">
-                {compativeis.map((t) => (
-                  <button
-                    key={t.nome}
-                    onClick={() => navigate({ to: "/empresa-talento" })}
-                    className="flex items-center justify-between gap-4 rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
-                  >
-                    <span className="flex min-w-0 items-center gap-3">
-                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
-                        {t.nome[0]}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-semibold">{t.nome}</span>
-                        <span className="block text-xs text-muted-foreground">
-                          Nível {t.nivel} · {t.titulo}
-                        </span>
-                      </span>
-                    </span>
-                    <span className="shrink-0 text-sm text-mint">
-                      {t.xp.toLocaleString("pt-BR")} XP
-                    </span>
-                  </button>
-                ))}
-                {compativeis.length === 0 && (
+              {analisando ? (
+                <div className="mt-6 flex flex-col items-center gap-3 py-8 text-center">
+                  <span className="h-10 w-10 animate-spin rounded-full border-2 border-cyan/30 border-t-cyan" />
                   <p className="text-sm text-muted-foreground">
-                    Nenhuma estudante atinge o XP mínimo desta oportunidade ainda.
+                    Analisando perfis com XP mínimo de {selecionada.xpMinimo.toLocaleString("pt-BR")}…
                   </p>
-                )}
-              </div>
+                </div>
+              ) : (
+                <>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {compativeis.length} estudante(s) com pelo menos{" "}
+                    <strong className="text-mint">{selecionada.xpMinimo.toLocaleString("pt-BR")} XP</strong>.
+                    Quem tem afinidade com {selecionada.area} aparece primeiro.
+                  </p>
+                  <div className="mt-5 grid gap-3 md:grid-cols-2">
+                    {compativeis.map((t, i) => {
+                      const afinidade = t.areas.includes(selecionada.area);
+                      return (
+                        <button
+                          key={t.nome}
+                          onClick={() => navigate({ to: "/empresa-talento" })}
+                          className="animate-rise rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
+                          style={{ animationDelay: `${i * 90}ms` }}
+                        >
+                          <span className="flex items-center justify-between gap-4">
+                            <span className="flex min-w-0 items-center gap-3">
+                              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
+                                {t.nome[0]}
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block truncate text-sm font-semibold">{t.nome}</span>
+                                <span className="block truncate text-xs text-muted-foreground">
+                                  Nível {t.nivel} · {t.titulo} · {t.escola}
+                                </span>
+                              </span>
+                            </span>
+                            <span className="shrink-0 text-sm font-semibold text-mint">
+                              {t.xp.toLocaleString("pt-BR")} XP
+                            </span>
+                          </span>
+                          <span className="mt-3 flex flex-wrap gap-1.5">
+                            {afinidade && (
+                              <span className="rounded-full border border-cyan/50 bg-cyan/10 px-2.5 py-1 text-[11px] font-semibold text-cyan">
+                                Afinidade com {selecionada.area}
+                              </span>
+                            )}
+                            {t.destaques.map((d) => (
+                              <span
+                                key={d}
+                                className="rounded-full border border-border px-2.5 py-1 text-[11px] text-muted-foreground"
+                              >
+                                {d}
+                              </span>
+                            ))}
+                          </span>
+                        </button>
+                      );
+                    })}
+                    {compativeis.length === 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        Nenhuma estudante atinge o XP mínimo desta oportunidade ainda.
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </section>
           )}
 
