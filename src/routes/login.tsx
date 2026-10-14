@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Building2, GraduationCap, School } from "lucide-react";
 import { Marca } from "@/components/conectadas/Marca";
+import { useXP } from "@/lib/xp-store";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 
 export const Route = createFileRoute("/login")({
@@ -50,6 +51,8 @@ const perfis = [
 function Login() {
   const navigate = useNavigate();
   const [perfil, setPerfil] = useState<(typeof perfis)[number]["id"]>("estudante");
+  const { entrar } = useXP();
+  const [nome, setNome] = useState("Ana Silva");
   const [email, setEmail] = useState("ana.silva@escola.br");
   const [senha, setSenha] = useState("conectadas");
 
@@ -73,9 +76,22 @@ function Login() {
             className="mt-7 space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
+              entrar(nome || "Ana Silva");
               navigate({ to: destino });
             }}
           >
+            <div>
+              <label className="text-xs font-semibold tracking-widest text-muted-foreground">
+                NOME
+              </label>
+              <input
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                placeholder="Seu nome"
+                className="mt-1.5 w-full rounded-xl border border-input bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary"
+              />
+            </div>
             <div>
               <label className="text-xs font-semibold tracking-widest text-muted-foreground">
                 E-MAIL
@@ -115,7 +131,10 @@ function Login() {
                 key={p.id}
                 onMouseEnter={() => setPerfil(p.id)}
                 onFocus={() => setPerfil(p.id)}
-                onClick={() => navigate({ to: p.to })}
+                onClick={() => {
+                  entrar(nome || "Ana Silva");
+                  navigate({ to: p.to });
+                }}
                 className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition-all ${
                   perfil === p.id
                     ? "border-primary/60 bg-soft shadow-[var(--shadow-neon)]"

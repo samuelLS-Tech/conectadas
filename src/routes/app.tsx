@@ -17,13 +17,13 @@ const itens = [
 ] as const;
 
 function AppLayout() {
-  const { xp, proximoNivel, nivel } = useXP();
+  const { xp, proximoNivel, nivel, sair } = useXP();
 
   return (
     <div className="min-h-screen lg:flex">
       <aside className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl lg:h-screen lg:w-72 lg:shrink-0 lg:border-r lg:border-b-0">
         <div className="flex flex-col gap-6 px-5 py-4 lg:h-full">
-          <Marca to="/" />
+          <Marca to="/" usuario />
 
           <div className="glass hidden p-4 lg:block">
             <p className="text-xs tracking-widest text-muted-foreground">NÍVEL {nivel}</p>
@@ -55,6 +55,7 @@ function AppLayout() {
 
           <Link
             to="/"
+            onClick={sair}
             className="mt-auto hidden items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground lg:flex"
           >
             <LogOut size={17} /> Sair da demonstração

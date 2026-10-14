@@ -21,7 +21,7 @@ export const Route = createFileRoute("/app/dashboard")({
 });
 
 function Dashboard() {
-  const { xp, proximoNivel, monitorias, exercicios, horas, nivel } = useXP();
+  const { xp, proximoNivel, monitorias, exercicios, horas, nivel, usuario } = useXP();
   const maxCat = Math.max(...xpPorCategoria.map((c) => c.xp));
   const dados = [...evolucaoMensal.slice(0, -1), { mes: "Hoje", xp }];
 
@@ -37,7 +37,7 @@ function Dashboard() {
       <header className="animate-rise glass p-7">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
           <div className="min-w-0">
-            <h1 className="truncate text-2xl font-bold sm:text-3xl">Olá, Ana! 👋</h1>
+            <h1 className="truncate text-2xl font-bold sm:text-3xl">Olá, {(usuario || "Ana").split(" ")[0]}! 👋</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Nível {nivel} · Pesquisadora Sênior
             </p>

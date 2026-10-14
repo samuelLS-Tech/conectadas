@@ -14,6 +14,7 @@ type EstadoXP = {
   atividadesConcluidas: string[];
   medalhasExtras: string[];
   sessao: Sessao | null;
+  usuario: string;
 };
 
 const inicial: EstadoXP = {
@@ -25,6 +26,7 @@ const inicial: EstadoXP = {
   atividadesConcluidas: [],
   medalhasExtras: [],
   sessao: null,
+  usuario: "",
 };
 
 const CHAVE = "conectadas-estado-v1";
@@ -36,6 +38,8 @@ type Ctx = EstadoXP & {
   validarMonitoria: () => void;
   concluirAtividade: (id: string, xp: number) => void;
   reiniciar: () => void;
+  entrar: (nome: string) => void;
+  sair: () => void;
 };
 
 const XPContext = createContext<Ctx | null>(null);
@@ -88,6 +92,8 @@ export function XPProvider({ children }: { children: ReactNode }) {
               },
         ),
       reiniciar: () => setEstado(inicial),
+      entrar: (nome) => setEstado((e) => ({ ...e, usuario: nome.trim() })),
+      sair: () => setEstado((e) => ({ ...e, usuario: "" })),
     };
   }, [estado]);
 

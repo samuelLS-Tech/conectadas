@@ -35,7 +35,7 @@ function Professor() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/75 px-5 py-3.5 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <Marca to="/" />
+          <Marca to="/" usuario />
           <div className="flex items-center gap-3">
             <span className="hidden rounded-full border border-mint/40 px-3 py-1.5 text-xs font-semibold text-mint sm:inline">
               PROFESSOR / ADMIN

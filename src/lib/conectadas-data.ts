@@ -369,156 +369,47 @@ export const biblioteca: Material[] = [
   },
   {
     id: "vestibular",
-    titulo: "Vestibulares — Simulado STEM",
+    titulo: "Vestibulares — Simulados STEM",
     categoria: "Vestibulares",
-    detalhe: "25 questões",
+    detalhe: "Questões reais: ENEM 2023, FUVEST 2024 e Unicamp 2024",
     xp: 20,
     emoji: "🎓",
     questoes: [
       {
-        pergunta: "Efeito Matilda descreve:",
+        pergunta:
+          "(ENEM 2023) O ideal é consumir 1 grama de carboidrato para cada minuto de caminhada. Um casal realizará diariamente 30 minutos de caminhada, ingerindo antes a quantidade ideal de carboidratos, apenas por meio de pão de fôrma integral, durante 30 dias ininterruptos. Cada pacote tem 18 fatias, e cada fatia tem 15 g de carboidratos. A quantidade mínima de pacotes necessários é",
+        alternativas: ["1", "4", "6", "7", "8"],
+        correta: 3,
+      },
+      {
+        pergunta:
+          "(FUVEST 2024) Para gerar hidrogênio, raspas de zinco reagem com ácido clorídrico: Zn(s) + 2H⁺(aq) → Zn²⁺(aq) + H₂(g). Foram gerados 49,8 mL de hidrogênio. Dados: volume molar do gás nas condições do experimento = 24,9 L; massa molar do Zn = 65,4 g/mol. Qual a quantidade de Zn, em gramas, que de fato reagiu?",
+        alternativas: ["0,07", "0,13", "0,26", "0,29", "0,48"],
+        correta: 1,
+      },
+      {
+        pergunta:
+          "(FUVEST 2024) Um estudante perguntou a um sistema de inteligência artificial se podem existir valores negativos de pH, e a IA respondeu que sim. A resposta fornecida pela IA está",
         alternativas: [
-          "Um fenômeno da física quântica",
-          "O apagamento das contribuições de mulheres na ciência",
-          "Um teorema matemático",
-          "Uma reação química",
+          "errada, pois pH negativo refere-se à concentração de H⁺ maior que 1 mol/L, resultando em pH menor que zero.",
+          "correta, pois pH negativo refere-se à concentração de OH⁻ maior que 1 mol/L, resultando em pH menor que zero.",
+          "correta, assim como é possível existir pH maior que 14 em soluções com concentração de H⁺ maior que 14 mol/L.",
+          "errada, pois a escala de pH é fixa entre 0 e 14, independentemente da concentração de H⁺.",
+          "correta, pois o pH tende a diminuir e tornar-se negativo em soluções com concentração de H⁺ extremamente baixa.",
         ],
-        correta: 1,
-      },
-      {
-        pergunta: "Marie Curie recebeu o Nobel em quais áreas?",
-        alternativas: ["Física e Química", "Medicina e Paz", "Química e Literatura", "Apenas Física"],
         correta: 0,
       },
       {
-        pergunta: "Ada Lovelace é reconhecida por:",
-        alternativas: [
-          "Descobrir o rádio",
-          "Criar o primeiro algoritmo para máquina",
-          "Formular a relatividade",
-          "Inventar o telescópio",
-        ],
-        correta: 1,
-      },
-    ],
-  },
-  {
-    id: "enem",
-    titulo: "ENEM — Ciências da Natureza e Matemática",
-    categoria: "Vestibulares",
-    detalhe: "4 questões no estilo ENEM",
-    xp: 20,
-    emoji: "📝",
-    questoes: [
-      {
-        pergunta: '(Estilo ENEM) Um produto custava R$ 80,00 e teve aumento de 15%. Qual o novo preço?',
-        alternativas: ["R$ 92,00", "R$ 95,00", "R$ 88,00", "R$ 96,00"],
-        correta: 0,
-      },
-      {
-        pergunta: '(Estilo ENEM) Qual processo converte energia luminosa em energia química nas plantas?',
-        alternativas: ["Respiração celular", "Fermentação", "Fotossíntese", "Transpiração"],
-        correta: 2,
-      },
-      {
-        pergunta: '(Estilo ENEM) Um carro percorre 150 km em 2 horas. Sua velocidade média é:',
-        alternativas: ["60 km/h", "75 km/h", "80 km/h", "300 km/h"],
+        pergunta:
+          "(Unicamp 2024) Um objeto de massa m = 200 g é solto a partir de certa altura e atinge a velocidade terminal após determinado tempo. Qual é o módulo da força de resistência do ar depois que o objeto atinge a velocidade terminal? (g = 10 m/s²)",
+        alternativas: ["0,20 N", "2,0 N", "200 N", "2000 N"],
         correta: 1,
       },
       {
-        pergunta: '(Estilo ENEM) O aumento do efeito estufa está ligado principalmente à emissão de:',
-        alternativas: ["Oxigênio (O₂)", "Nitrogênio (N₂)", "Gás carbônico (CO₂)", "Hélio (He)"],
-        correta: 2,
-      },
-    ],
-  },
-  {
-    id: "fuvest",
-    titulo: "FUVEST — Primeira fase",
-    categoria: "Vestibulares",
-    detalhe: "4 questões no estilo FUVEST",
-    xp: 20,
-    emoji: "🏛️",
-    questoes: [
-      {
-        pergunta: '(Estilo FUVEST) As raízes de x² − 5x + 6 = 0 são:',
-        alternativas: ["1 e 6", "2 e 3", "−2 e −3", "−1 e 6"],
+        pergunta:
+          "(Unicamp 2024) João e Maria levaram uma sacola com 100 pedrinhas: 60 brancas e 40 pretas. Retiram aleatoriamente uma pedrinha por vez para marcar o caminho. Ao pararem para lanchar, já tinham sido jogadas 35 brancas e 25 pretas. Qual a probabilidade de as próximas duas pedrinhas jogadas serem brancas?",
+        alternativas: ["7/13", "5/13", "11/52", "7/52"],
         correta: 1,
-      },
-      {
-        pergunta: '(Estilo FUVEST) Um objeto de 2 kg cai de 5 m de altura (g = 10 m/s²). Sua energia potencial inicial é:',
-        alternativas: ["10 J", "50 J", "100 J", "20 J"],
-        correta: 2,
-      },
-      {
-        pergunta: '(Estilo FUVEST) Qual é o pH de uma solução neutra a 25 °C?',
-        alternativas: ["0", "5", "7", "14"],
-        correta: 2,
-      },
-      {
-        pergunta: '(Estilo FUVEST) A organela responsável pela produção de energia (ATP) na célula é:',
-        alternativas: ["Ribossomo", "Mitocôndria", "Complexo de Golgi", "Lisossomo"],
-        correta: 1,
-      },
-    ],
-  },
-  {
-    id: "unicamp",
-    titulo: "Unicamp — Questões de raciocínio",
-    categoria: "Vestibulares",
-    detalhe: "4 questões no estilo Unicamp",
-    xp: 20,
-    emoji: "🔭",
-    questoes: [
-      {
-        pergunta: '(Estilo Unicamp) A soma dos ângulos internos de um hexágono é:',
-        alternativas: ["540°", "720°", "900°", "360°"],
-        correta: 1,
-      },
-      {
-        pergunta: '(Estilo Unicamp) A luz leva cerca de 8 minutos para chegar do Sol à Terra. Isso mostra que a luz:',
-        alternativas: ["É instantânea", "Tem velocidade finita", "Não se propaga no vácuo", "É mais lenta que o som"],
-        correta: 1,
-      },
-      {
-        pergunta: '(Estilo Unicamp) Em um circuito, U = 12 V e R = 4 Ω. A corrente elétrica é:',
-        alternativas: ["3 A", "48 A", "8 A", "16 A"],
-        correta: 0,
-      },
-      {
-        pergunta: '(Estilo Unicamp) A molécula que carrega a informação genética é o:',
-        alternativas: ["ATP", "DNA", "Glicose", "Colesterol"],
-        correta: 1,
-      },
-    ],
-  },
-  {
-    id: "ita-unesp",
-    titulo: "UNESP e ITA — Desafio",
-    categoria: "Vestibulares",
-    detalhe: "4 questões no estilo UNESP e ITA",
-    xp: 20,
-    emoji: "🛰️",
-    questoes: [
-      {
-        pergunta: '(Estilo UNESP) log₁₀ 1000 é igual a:',
-        alternativas: ["2", "3", "10", "100"],
-        correta: 1,
-      },
-      {
-        pergunta: '(Estilo ITA) Se 2ˣ = 32, então x vale:',
-        alternativas: ["4", "5", "6", "16"],
-        correta: 1,
-      },
-      {
-        pergunta: '(Estilo UNESP) Qual gás é o mais abundante na atmosfera terrestre?',
-        alternativas: ["Oxigênio", "Gás carbônico", "Nitrogênio", "Argônio"],
-        correta: 2,
-      },
-      {
-        pergunta: '(Estilo ITA) Um corpo em MCU tem aceleração:',
-        alternativas: ["Nula", "Tangencial constante", "Centrípeta, apontando para o centro", "Na direção da velocidade"],
-        correta: 2,
       },
     ],
   },
