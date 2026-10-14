@@ -31,7 +31,7 @@ function Talento() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/75 px-5 py-3.5 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <Marca to="/" />
+          <Marca to="/" usuario />
           <Link to="/empresa" className="text-sm text-muted-foreground hover:text-foreground">
             ← Voltar às oportunidades
           </Link>
@@ -50,7 +50,7 @@ function Talento() {
                 <p className="text-sm text-muted-foreground">Nível 5 — Pesquisadora Sênior</p>
               </div>
             </div>
-            <span className="shrink-0 rounded-full border border-mint/40 bg-mint/10 px-5 py-2.5 font-display font-bold text-mint">
+            <span className="self-start shrink-0 whitespace-nowrap rounded-full border border-mint/40 bg-mint/10 px-5 py-2.5 font-display font-bold text-mint">
               2.450 XP
             </span>
           </div>

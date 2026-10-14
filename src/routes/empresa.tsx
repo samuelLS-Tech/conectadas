@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
+import { useXP } from "@/lib/xp-store";
 import { oportunidades, talentos } from "@/lib/conectadas-data";
 
 export const Route = createFileRoute("/empresa")({
@@ -28,6 +29,7 @@ const xps = [500, 1000, 1500, 2000];
 
 function Empresa() {
   const navigate = useNavigate();
+  const { sair } = useXP();
   const [area, setArea] = useState("Todas");
   const [xpMin, setXpMin] = useState(500);
   const [vaga, setVaga] = useState<string | null>(null);
@@ -58,12 +60,12 @@ function Empresa() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/75 px-5 py-3.5 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <Marca to="/" />
+          <Marca to="/" usuario />
           <div className="flex items-center gap-2">
             <span className="hidden rounded-full border border-cyan/40 px-3 py-1.5 text-xs font-semibold text-cyan sm:inline">
               ÁREA DE EMPRESAS
             </span>
-            <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link to="/login" onClick={sair} className="text-sm text-muted-foreground hover:text-foreground">
               Sair
             </Link>
           </div>
@@ -189,8 +191,8 @@ function Empresa() {
                           className="animate-rise rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
                           style={{ animationDelay: `${i * 90}ms` }}
                         >
-                          <span className="flex items-center justify-between gap-4">
-                            <span className="flex min-w-0 items-center gap-3">
+                          <span className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                            <span className="flex min-w-0 flex-1 basis-40 items-center gap-3">
                               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
                                 {t.nome[0]}
                               </span>
@@ -201,7 +203,7 @@ function Empresa() {
                                 </span>
                               </span>
                             </span>
-                            <span className="shrink-0 text-sm font-semibold text-mint">
+                            <span className="shrink-0 whitespace-nowrap rounded-full border border-mint/40 bg-mint/10 px-3 py-1 text-sm font-semibold text-mint">
                               {t.xp.toLocaleString("pt-BR")} XP
                             </span>
                           </span>
