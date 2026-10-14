@@ -21,7 +21,7 @@ export const Route = createFileRoute("/app/dashboard")({
 });
 
 function Dashboard() {
-  const { xp, proximoNivel, monitorias, exercicios, horas, nivel } = useXP();
+  const { xp, proximoNivel, monitorias, exercicios, horas, nivel, usuario } = useXP();
   const maxCat = Math.max(...xpPorCategoria.map((c) => c.xp));
   const dados = [...evolucaoMensal.slice(0, -1), { mes: "Hoje", xp }];
 
