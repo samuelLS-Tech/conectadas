@@ -155,7 +155,7 @@ function Empresa() {
           </section>
 
           {selecionada && (
-            <section className="glass animate-rise p-7">
+            <section className="glass animate-rise min-w-0 p-5 sm:p-7">
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
                 <h2 className="min-w-0 truncate text-xl font-bold">
                   Talentos compatíveis · {selecionada.titulo}
@@ -181,18 +181,18 @@ function Empresa() {
                     <strong className="text-mint">{selecionada.xpMinimo.toLocaleString("pt-BR")} XP</strong>.
                     Quem tem afinidade com {selecionada.area} aparece primeiro.
                   </p>
-                  <div className="mt-5 grid gap-3 md:grid-cols-2">
+                  <div className="mt-5 grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2">
                     {compativeis.map((t, i) => {
                       const afinidade = t.areas.includes(selecionada.area);
                       return (
                         <button
                           key={t.nome}
                           onClick={() => navigate({ to: "/empresa-talento" })}
-                          className="animate-rise rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
+                          className="animate-rise block w-full min-w-0 overflow-hidden rounded-2xl border border-border/70 p-4 text-left transition-colors hover:border-primary/60"
                           style={{ animationDelay: `${i * 90}ms` }}
                         >
-                          <span className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                            <span className="flex min-w-0 flex-1 basis-40 items-center gap-3">
+                          <span className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <span className="flex min-w-0 items-center gap-3">
                               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
                                 {t.nome[0]}
                               </span>
@@ -203,7 +203,7 @@ function Empresa() {
                                 </span>
                               </span>
                             </span>
-                            <span className="shrink-0 whitespace-nowrap rounded-full border border-mint/40 bg-mint/10 px-3 py-1 text-sm font-semibold text-mint">
+                            <span className="self-start shrink-0 whitespace-nowrap rounded-full sm:self-auto border border-mint/40 bg-mint/10 px-3 py-1 text-sm font-semibold text-mint">
                               {t.xp.toLocaleString("pt-BR")} XP
                             </span>
                           </span>
