@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
+import { RequerConta } from "@/components/conectadas/RequerConta";
 import { useXP } from "@/lib/xp-store";
 import { oportunidades, talentos } from "@/lib/conectadas-data";
 
@@ -28,6 +29,14 @@ const areas = ["Todas", "Tecnologia", "Engenharia", "Ciência", "Matemática"];
 const xps = [500, 1000, 1500, 2000];
 
 function Empresa() {
+  return (
+    <RequerConta tipo="empresa">
+      <EmpresaConteudo />
+    </RequerConta>
+  );
+}
+
+function EmpresaConteudo() {
   const navigate = useNavigate();
   const { sair } = useXP();
   const [area, setArea] = useState("Todas");
@@ -65,7 +74,7 @@ function Empresa() {
             <span className="hidden rounded-full border border-cyan/40 px-3 py-1.5 text-xs font-semibold text-cyan sm:inline">
               ÁREA DE EMPRESAS
             </span>
-            <Link to="/login" onClick={sair} className="text-sm text-muted-foreground hover:text-foreground">
+            <Link to="/login" onClick={() => void sair()} className="text-sm text-muted-foreground hover:text-foreground">
               Sair
             </Link>
           </div>
