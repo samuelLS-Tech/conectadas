@@ -7,7 +7,7 @@ import { nomeEscola } from "@/lib/turmas";
 type T = { id: string; nome: string; serie: string | null; turma: string | null; escola_id: string | null; xp: number; monitorias: number };
 
 /** Estudantes com conta real (sem e-mail); a empresa pode manifestar interesse. */
-export function TalentosReais({ oportunidade }: { oportunidade?: string }) {
+export function TalentosReais({ oportunidade }: { oportunidade?: string | undefined }) {
   const { usuario } = useXP();
   const [lista, setLista] = useState<T[]>([]);
   const [enviados, setEnviados] = useState<string[]>([]);
