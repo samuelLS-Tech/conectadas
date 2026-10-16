@@ -14,16 +14,115 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      monitoria_sessoes: {
+        Row: {
+          created_at: string
+          criadora_confirmou: boolean
+          criadora_id: string
+          id: string
+          materia: string
+          monitora_confirmou: boolean
+          monitora_id: string | null
+          monitora_nome: string
+        }
+        Insert: {
+          created_at?: string
+          criadora_confirmou?: boolean
+          criadora_id?: string
+          id?: string
+          materia: string
+          monitora_confirmou?: boolean
+          monitora_id?: string | null
+          monitora_nome: string
+        }
+        Update: {
+          created_at?: string
+          criadora_confirmou?: boolean
+          criadora_id?: string
+          id?: string
+          materia?: string
+          monitora_confirmou?: boolean
+          monitora_id?: string | null
+          monitora_nome?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          atividades_concluidas: string[]
+          created_at: string
+          exercicios: number
+          horas: number
+          id: string
+          lideranca: number
+          monitorias: number
+          nome: string
+          serie: string | null
+          turma: string | null
+          xp: number
+        }
+        Insert: {
+          atividades_concluidas?: string[]
+          created_at?: string
+          exercicios?: number
+          horas?: number
+          id: string
+          lideranca?: number
+          monitorias?: number
+          nome?: string
+          serie?: string | null
+          turma?: string | null
+          xp?: number
+        }
+        Update: {
+          atividades_concluidas?: string[]
+          created_at?: string
+          exercicios?: number
+          horas?: number
+          id?: string
+          lideranca?: number
+          monitorias?: number
+          nome?: string
+          serie?: string | null
+          turma?: string | null
+          xp?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      confirmar_monitoria: { Args: { _sessao: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "estudante" | "empresa" | "professor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +249,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["estudante", "empresa", "professor"],
+    },
   },
 } as const
