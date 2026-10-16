@@ -5,6 +5,7 @@ import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { RequerConta } from "@/components/conectadas/RequerConta";
 import { useXP } from "@/lib/xp-store";
 import { oportunidades, talentos } from "@/lib/conectadas-data";
+import { TalentosReais } from "@/components/conectadas/TalentosReais";
 
 export const Route = createFileRoute("/empresa")({
   head: () => ({
@@ -162,6 +163,8 @@ function EmpresaConteudo() {
               </p>
             )}
           </section>
+
+          <TalentosReais oportunidade={selecionada?.titulo} />
 
           {selecionada && (
             <section className="glass animate-rise min-w-0 p-5 sm:p-7">
