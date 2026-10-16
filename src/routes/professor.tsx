@@ -1,67 +1,112 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
+import { RequerConta } from "@/components/conectadas/RequerConta";
 import { estudantesEscola } from "@/lib/conectadas-data";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
+import { supabase } from "@/integrations/supabase/client";
+import { useXP } from "@/lib/xp-store";
+import { SERIES, TURMAS } from "@/lib/turmas";
 
 export const Route = createFileRoute("/professor")({
   head: () => ({
     meta: [
       { title: "Painel da Escola — CONECTADAS" },
-      {
-        name: "description",
-        content:
-          "Indicadores da escola, lista de estudantes ativas e validação de atividades pelo professor.",
-      },
+      { name: "description", content: "Indicadores da escola por série e turma, panorama das estudantes e validação de atividades." },
       { property: "og:title", content: "Painel da Escola — CONECTADAS" },
-      { property: "og:description", content: "Acompanhe monitorias, horas de estudo e projetos." },
+      { property: "og:description", content: "Acompanhe cada turma: dificuldades, facilidades e assuntos para revisar." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: Professor,
+  component: () => (
+    <RequerConta tipo="professor">
+      <Professor />
+    </RequerConta>
+  ),
 });
 
-const indicadores = [
-  { emoji: "👩‍🎓", valor: "128", label: "estudantes ativas" },
-  { emoji: "👩‍🏫", valor: "342", label: "monitorias" },
-  { emoji: "⏱️", valor: "516", label: "horas de estudo" },
-  { emoji: "🚀", valor: "47", label: "projetos" },
+const materiasBase = [
+  { materia: "Matemática", emoji: "🔢", base: 74, forte: "funções do 1º grau", fraco: "raízes e gráfico da função quadrática" },
+  { materia: "Física", emoji: "⚛️", base: 60, forte: "cinemática básica", fraco: "leis de Newton e força resultante" },
+  { materia: "Química", emoji: "🧪", base: 64, forte: "massa molar", fraco: "estequiometria e balanceamento" },
+  { materia: "Programação", emoji: "💻", base: 80, forte: "lógica e laços de repetição", fraco: "funções e listas em Python" },
+  { materia: "Vestibulares", emoji: "🎓", base: 62, forte: "interpretação de enunciados", fraco: "probabilidade e pH (FUVEST/Unicamp)" },
 ];
 
-const desempenho = [
-  { materia: "Matemática", emoji: "🔢", acerto: 78 },
-  { materia: "Física", emoji: "⚛️", acerto: 58 },
-  { materia: "Química", emoji: "🧪", acerto: 64 },
-  { materia: "Programação", emoji: "💻", acerto: 82 },
-  { materia: "Vestibulares", emoji: "🎓", acerto: 61 },
-];
+/** Variação fictícia e estável para cada turma. */
+function variacao(chave: string, i: number) {
+  let h = 0;
+  for (const c of chave + i) h = (h * 31 + c.charCodeAt(0)) % 997;
+  return (h % 25) - 12;
+}
 
-const facilidades = [
-  "Programação: lógica e laços de repetição",
-  "Matemática: funções do 1º grau",
-  "Química: massa molar",
-];
-const dificuldades = [
-  "Física: leis de Newton e força resultante",
-  "Química: estequiometria e balanceamento",
-  "Vestibulares: probabilidade (Unicamp)",
-];
-const revisar = [
-  "Velocidade terminal e resistência do ar",
-  "Escala de pH e concentração de H⁺",
-  "Raízes e gráfico da função quadrática",
-];
-
-const perfis = [
-  { nome: "Ana Silva", forte: "Física e Programação", reforcar: "Estequiometria", sugestao: "Monitora de Física para a turma" },
-  { nome: "Júlia Moraes", forte: "Programação", reforcar: "Probabilidade", sugestao: "Simulado de Vestibulares" },
-  { nome: "Maria Duarte", forte: "Química", reforcar: "Leis de Newton", sugestao: "Monitoria de Mecânica com Ana" },
-  { nome: "Alice Rocha", forte: "Matemática", reforcar: "Funções do 2º grau", sugestao: "Atividade de Funções" },
-];
+type Aluna = { id: string; nome: string; serie: string; turma: string; xp: number; atividade: string; pendente: boolean; real?: boolean };
 
 function Professor() {
+  const { sair } = useXP();
+  const [serie, setSerie] = useState<string>("Todas");
+  const [turma, setTurma] = useState<string>("Todas");
   const [validadas, setValidadas] = useState<string[]>([]);
+  const [reais, setReais] = useState<Aluna[]>([]);
+
+  useEffect(() => {
+    void supabase
+      .from("profiles")
+      .select("id, nome, serie, turma, xp, monitorias")
+      .order("xp", { ascending: false })
+      .then(({ data }) =>
+        setReais(
+          (data ?? [])
+            .filter((p) => p.serie && p.turma)
+            .map((p) => ({
+              id: p.id,
+              nome: p.nome || "Estudante",
+              serie: p.serie!,
+              turma: p.turma!,
+              xp: p.xp,
+              atividade: `${p.monitorias} monitorias registradas`,
+              pendente: false,
+              real: true,
+            })),
+        ),
+      );
+  }, []);
+
+  const todas: Aluna[] = useMemo(
+    () => [...reais, ...estudantesEscola.map((e) => ({ ...e, id: e.nome }))],
+    [reais],
+  );
+  const filtradas = todas.filter(
+    (a) => (serie === "Todas" || a.serie === serie) && (turma === "Todas" || a.turma === turma),
+  );
+  const chave = `${serie}-${turma}`;
+  const desempenho = materiasBase
+    .map((m, i) => ({ ...m, acerto: Math.min(95, Math.max(35, m.base + (chave === "Todas-Todas" ? 0 : variacao(chave, i)))) }))
+    .sort((a, b) => b.acerto - a.acerto);
+  const facilidades = desempenho.slice(0, 3).map((d) => `${d.materia}: ${d.forte}`);
+  const dificuldades = [...desempenho].reverse().slice(0, 3).map((d) => `${d.materia}: ${d.fraco}`);
+  const revisar = [...desempenho].reverse().slice(0, 2).map((d) => d.fraco).concat(desempenho[2] ? [desempenho[2].fraco] : []);
+  const rotuloTurma = serie === "Todas" && turma === "Todas" ? "Toda a escola" : `${serie === "Todas" ? "Todas as séries" : serie} · ${turma === "Todas" ? "todas as turmas" : `Turma ${turma}`}`;
+
+  const indicadores = [
+    { emoji: "👩‍🎓", valor: filtradas.length, label: "estudantes" },
+    { emoji: "⭐", valor: filtradas.reduce((s, a) => s + a.xp, 0).toLocaleString("pt-BR"), label: "XP somado" },
+    { emoji: "⏳", valor: filtradas.filter((a) => a.pendente && !validadas.includes(a.id)).length, label: "atividades pendentes" },
+    { emoji: "📈", valor: `${Math.round(desempenho.reduce((s, d) => s + d.acerto, 0) / desempenho.length)}%`, label: "acerto médio" },
+  ];
+
+  // agrupa por série e turma
+  const grupos = new Map<string, Aluna[]>();
+  for (const a of filtradas) {
+    const k = `${a.serie} · Turma ${a.turma}`;
+    grupos.set(k, [...(grupos.get(k) ?? []), a]);
+  }
+  const gruposOrdenados = [...grupos.entries()].sort(([a], [b]) => a.localeCompare(b));
+
+  const seletor = "rounded-full border border-input bg-background/60 px-4 py-2 text-sm outline-none focus:border-primary";
 
   return (
     <div className="min-h-screen">
@@ -69,10 +114,8 @@ function Professor() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <Marca to="/" usuario />
           <div className="flex items-center gap-3">
-            <span className="hidden rounded-full border border-mint/40 px-3 py-1.5 text-xs font-semibold text-mint sm:inline">
-              PROFESSOR / ADMIN
-            </span>
-            <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground">
+            <span className="hidden rounded-full border border-mint/40 px-3 py-1.5 text-xs font-semibold text-mint sm:inline">PROFESSOR</span>
+            <Link to="/login" onClick={() => void sair()} className="text-sm text-muted-foreground hover:text-foreground">
               Sair
             </Link>
           </div>
@@ -82,35 +125,42 @@ function Professor() {
       <main className="relative overflow-hidden px-5 py-10">
         <NeuralBackground className="opacity-40" />
         <div className="relative mx-auto max-w-6xl space-y-8">
-          <h1 className="animate-rise text-3xl font-bold sm:text-4xl">🏫 Painel da Escola</h1>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="animate-rise text-3xl font-bold sm:text-4xl">🏫 Painel da Escola</h1>
+              <p className="mt-1 text-sm text-muted-foreground">{rotuloTurma}</p>
+            </div>
+            <div className="flex gap-2">
+              <select aria-label="Série" value={serie} onChange={(e) => setSerie(e.target.value)} className={seletor}>
+                <option value="Todas">Todas as séries</option>
+                {SERIES.map((s) => <option key={s}>{s}</option>)}
+              </select>
+              <select aria-label="Turma" value={turma} onChange={(e) => setTurma(e.target.value)} className={seletor}>
+                <option value="Todas">Todas as turmas</option>
+                {TURMAS.map((t) => <option key={t} value={t}>Turma {t}</option>)}
+              </select>
+            </div>
+          </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {indicadores.map((i, idx) => (
-              <div
-                key={i.label}
-                className="glass glow-hover animate-rise p-6"
-                style={{ animationDelay: `${idx * 80}ms` }}
-              >
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {indicadores.map((i) => (
+              <div key={i.label} className="glass glow-hover p-5">
                 <span className="text-2xl">{i.emoji}</span>
-                <p className="mt-3 font-display text-3xl font-bold text-gradient">{i.valor}</p>
+                <p className="mt-2 font-display text-2xl font-bold text-gradient">{i.valor}</p>
                 <p className="text-xs text-muted-foreground">{i.label}</p>
               </div>
             ))}
           </div>
 
           <section className="glass p-7">
-            <h2 className="text-xl font-bold">📊 Panorama da turma</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Taxa média de acertos por matéria na Biblioteca STEM e nas monitorias.
-            </p>
+            <h2 className="text-xl font-bold">📊 Panorama — {rotuloTurma}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Taxa média de acertos por matéria na Biblioteca STEM e nas monitorias.</p>
             <div className="mt-5 space-y-4">
-              {[...desempenho].sort((a, b) => b.acerto - a.acerto).map((d) => (
+              {desempenho.map((d) => (
                 <div key={d.materia}>
                   <div className="mb-1.5 flex justify-between gap-3 text-sm">
                     <span>{d.emoji} {d.materia}</span>
-                    <span className={d.acerto >= 75 ? "text-mint" : d.acerto < 60 ? "text-magenta" : "text-cyan"}>
-                      {d.acerto}% de acertos
-                    </span>
+                    <span className={d.acerto >= 75 ? "text-mint" : d.acerto < 60 ? "text-magenta" : "text-cyan"}>{d.acerto}% de acertos</span>
                   </div>
                   <ProgressoNeon valor={d.acerto} altura="h-2.5" />
                 </div>
@@ -119,86 +169,65 @@ function Professor() {
           </section>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="glass p-6">
-              <h3 className="font-bold text-mint">💪 Maiores facilidades</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                {facilidades.map((f) => <li key={f}>• {f}</li>)}
-              </ul>
-            </div>
-            <div className="glass p-6">
-              <h3 className="font-bold text-magenta">⚠️ Maiores dificuldades</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                {dificuldades.map((f) => <li key={f}>• {f}</li>)}
-              </ul>
-            </div>
-            <div className="glass p-6">
-              <h3 className="font-bold text-cyan">🔁 Assuntos para revisar</h3>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                {revisar.map((f) => <li key={f}>• {f}</li>)}
-              </ul>
-            </div>
+            {[
+              { t: "💪 Maiores facilidades", c: "text-mint", l: facilidades },
+              { t: "⚠️ Maiores dificuldades", c: "text-magenta", l: dificuldades },
+              { t: "🔁 Assuntos para revisar", c: "text-cyan", l: revisar },
+            ].map((b) => (
+              <div key={b.t} className="glass p-6">
+                <h3 className={`font-bold ${b.c}`}>{b.t}</h3>
+                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                  {b.l.map((f) => <li key={f}>• {f}</li>)}
+                </ul>
+              </div>
+            ))}
           </div>
 
-          <section className="glass p-7">
-            <h2 className="text-xl font-bold">👩‍🎓 Visão por estudante</h2>
-            <div className="mt-5 grid gap-3 md:grid-cols-2">
-              {perfis.map((p) => (
-                <div key={p.nome} className="rounded-2xl border border-border/70 p-4">
-                  <p className="font-semibold">{p.nome}</p>
-                  <p className="mt-2 text-xs"><span className="text-mint">Forte em:</span> <span className="text-muted-foreground">{p.forte}</span></p>
-                  <p className="mt-1 text-xs"><span className="text-magenta">Precisa reforçar:</span> <span className="text-muted-foreground">{p.reforcar}</span></p>
-                  <p className="mt-1 text-xs"><span className="text-cyan">Sugestão:</span> <span className="text-muted-foreground">{p.sugestao}</span></p>
+          <section className="glass p-5 sm:p-7">
+            <h2 className="text-xl font-bold">👩‍🎓 Estudantes por série e turma</h2>
+            {gruposOrdenados.length === 0 && (
+              <p className="mt-4 text-sm text-muted-foreground">Nenhuma estudante nesta turma ainda.</p>
+            )}
+            <div className="mt-5 space-y-7">
+              {gruposOrdenados.map(([grupo, alunas]) => (
+                <div key={grupo}>
+                  <h3 className="text-xs font-semibold tracking-widest text-cyan">{grupo.toUpperCase()} · {alunas.length}</h3>
+                  <div className="mt-3 space-y-3">
+                    {alunas.map((e) => {
+                      const ok = validadas.includes(e.id) || !e.pendente;
+                      return (
+                        <div key={e.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-border/70 p-4">
+                          <div className="flex min-w-0 items-center gap-3">
+                            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
+                              {e.nome[0]?.toUpperCase()}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold">
+                                {e.nome}
+                                {e.real && <span className="ml-2 rounded-full border border-mint/40 px-2 py-0.5 text-[10px] text-mint">conta real</span>}
+                              </p>
+                              <p className="truncate text-xs text-muted-foreground">{e.xp.toLocaleString("pt-BR")} XP · {e.atividade}</p>
+                            </div>
+                          </div>
+                          {e.real ? null : ok ? (
+                            <span className="rounded-full border border-mint/50 px-3 py-2 text-xs font-semibold text-mint">✅ Validada</span>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setValidadas((v) => [...v, e.id]);
+                                toast.success(`Atividade de ${e.nome} validada`);
+                              }}
+                              className="rounded-full bg-brand px-3 py-2 text-xs font-semibold text-background"
+                            >
+                              Validar
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
-            </div>
-          </section>
-
-          <section className="glass p-7">
-            <h2 className="text-xl font-bold">Atividades para validar</h2>
-            <div className="mt-5 space-y-3">
-              {estudantesEscola.map((e) => {
-                const ok = validadas.includes(e.nome) || !e.pendente;
-                return (
-                  <div
-                    key={e.nome}
-                    className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-2xl border border-border/70 p-4 transition-colors hover:border-primary/50"
-                  >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
-                        {e.nome[0]}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold">
-                          {e.nome} · <span className="text-muted-foreground">{e.turma}</span>
-                        </p>
-                        <p className="truncate text-xs text-muted-foreground">{e.atividade}</p>
-                      </div>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-3">
-                      <span className="hidden text-sm text-mint sm:inline">
-                        {e.xp.toLocaleString("pt-BR")} XP
-                      </span>
-                      {ok ? (
-                        <span className="rounded-full border border-mint/50 px-4 py-2 text-xs font-semibold text-mint">
-                          ✅ Validada
-                        </span>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setValidadas((v) => [...v, e.nome]);
-                            toast.success(`Atividade de ${e.nome} validada`, {
-                              description: "XP creditado no perfil da estudante.",
-                            });
-                          }}
-                          className="rounded-full bg-brand px-4 py-2 text-xs font-semibold text-background transition-transform hover:scale-[1.04]"
-                        >
-                          Validar atividade
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </section>
         </div>

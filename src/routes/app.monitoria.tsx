@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Mic, MicOff, Video, VideoOff, PhoneOff, Send } from "lucide-react";
+import { toast } from "sonner";
 import { useXP } from "@/lib/xp-store";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/app/monitoria")({
   head: () => ({
@@ -22,7 +24,24 @@ type Msg = { autora: string; texto: string; eu?: boolean };
 
 function Monitoria() {
   const navigate = useNavigate();
-  const { sessao } = useXP();
+  const { sessao, usuario } = useXP();
+  const eu = (usuario || "Você").split(" ")[0]!;
+  const [finalizando, setFinalizando] = useState(false);
+
+  async function finalizar() {
+    setFinalizando(true);
+    const { data, error } = await supabase
+      .from("monitoria_sessoes")
+      .insert({ monitora_nome: monitora, materia })
+      .select("id")
+      .single();
+    setFinalizando(false);
+    if (error || !data) {
+      toast.error("Não foi possível encerrar a sessão. Tente de novo.");
+      return;
+    }
+    navigate({ to: "/app/validar", search: { sessao: data.id } });
+  }
   const monitora = sessao?.monitora ?? "Lívia";
   const materia = sessao?.materia ?? "Física";
 
@@ -31,8 +50,8 @@ function Monitoria() {
   const [cam, setCam] = useState(false);
   const [texto, setTexto] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([
-    { autora: monitora, texto: `Oi, Ana! Vamos revisar ${materia}? Me conta onde travou 😊` },
-    { autora: "Ana", texto: "Oi! Não entendi a segunda lei de Newton nos exercícios.", eu: true },
+    { autora: monitora, texto: `Oi, ${eu}! Vamos revisar ${materia}? Me conta onde travou 😊` },
+    { autora: eu, texto: "Oi! Não entendi a segunda lei de Newton nos exercícios.", eu: true },
     { autora: monitora, texto: "Perfeito. Vou desenhar um bloco no plano inclinado e a gente resolve junta." },
   ]);
   const fim = useRef<HTMLDivElement>(null);
@@ -52,7 +71,7 @@ function Monitoria() {
     e.preventDefault();
     if (!texto.trim()) return;
     const meu = texto.trim();
-    setMsgs((m) => [...m, { autora: "Ana", texto: meu, eu: true }]);
+    setMsgs((m) => [...m, { autora: eu, texto: meu, eu: true }]);
     setTexto("");
     setTimeout(
       () =>
@@ -113,7 +132,8 @@ function Monitoria() {
               {cam ? <Video size={18} /> : <VideoOff size={18} />}
             </button>
             <button
-              onClick={() => navigate({ to: "/app/validar" })}
+              onClick={() => void finalizar()}
+              disabled={finalizando}
               className="inline-flex items-center gap-2 rounded-full bg-destructive px-6 py-3 text-sm font-semibold text-destructive-foreground transition-transform hover:scale-[1.03]"
             >
               <PhoneOff size={16} /> Finalizar monitoria

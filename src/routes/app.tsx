@@ -3,6 +3,7 @@ import { LayoutDashboard, LifeBuoy, Trophy, BookOpen, IdCard, LogOut } from "luc
 import { Marca } from "@/components/conectadas/Marca";
 import { useXP } from "@/lib/xp-store";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
+import { RequerConta } from "@/components/conectadas/RequerConta";
 
 export const Route = createFileRoute("/app")({
   component: AppLayout,
@@ -17,6 +18,14 @@ const itens = [
 ] as const;
 
 function AppLayout() {
+  return (
+    <RequerConta tipo="estudante">
+      <AppConteudo />
+    </RequerConta>
+  );
+}
+
+function AppConteudo() {
   const { xp, proximoNivel, nivel, sair } = useXP();
 
   return (
@@ -55,10 +64,10 @@ function AppLayout() {
 
           <Link
             to="/"
-            onClick={sair}
+            onClick={() => void sair()}
             className="mt-auto hidden items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground lg:flex"
           >
-            <LogOut size={17} /> Sair da demonstração
+            <LogOut size={17} /> Sair
           </Link>
         </div>
       </aside>

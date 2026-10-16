@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { medalhas, trajetoria } from "@/lib/conectadas-data";
 import { useXP } from "@/lib/xp-store";
+import { gerarCurriculoPDF } from "@/lib/curriculo-pdf";
 
 export const Route = createFileRoute("/app/portfolio")({
   head: () => ({
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/app/portfolio")({
 });
 
 function Portfolio() {
-  const { xp, monitorias, exercicios, horas, nivel } = useXP();
+  const { xp, monitorias, exercicios, horas, nivel, lideranca, usuario, email, serie, turma } = useXP();
 
   const stats = [
     { v: monitorias, l: "monitorias" },
@@ -34,11 +35,12 @@ function Portfolio() {
       <header className="glass animate-rise p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
           <span className="grid h-20 w-20 shrink-0 place-items-center rounded-3xl bg-brand font-display text-3xl font-bold text-background shadow-[var(--shadow-neon)]">
-            A
+            {(usuario || "E")[0]!.toUpperCase()}
           </span>
           <div className="min-w-0">
             <p className="text-xs font-semibold tracking-[0.3em] text-cyan">💜 MEU PORTFÓLIO</p>
-            <h1 className="mt-1 text-3xl font-bold">Ana Silva</h1>
+            <h1 className="mt-1 text-3xl font-bold">{usuario || "Estudante"}</h1>
+            {serie && turma && <p className="text-sm text-cyan">{serie} · Turma {turma}</p>}
             <p className="text-sm text-muted-foreground">
               Pesquisadora Sênior — Nível {nivel} · {xp.toLocaleString("pt-BR")} XP
             </p>
@@ -89,9 +91,14 @@ function Portfolio() {
       <div className="flex flex-wrap items-center gap-4">
         <button
           onClick={() =>
-            toast.success("Currículo digital gerado!", {
-              description: "PDF fictício pronto para download nesta demonstração.",
-            })
+{
+            gerarCurriculoPDF({
+              nome: usuario, email, serie, turma, nivel, xp, monitorias, exercicios, horas, lideranca,
+              trajetoria,
+              medalhas: medalhas.filter((m) => m.desbloqueada).map((m) => m.nome),
+            });
+            toast.success("Currículo digital baixado!");
+          }
           }
           className="rounded-full bg-brand px-7 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.03]"
         >

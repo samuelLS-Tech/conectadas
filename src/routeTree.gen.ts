@@ -25,6 +25,7 @@ import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppMonitoriaRouteImport } from './routes/app.monitoria'
 import { Route as AppPortfolioRouteImport } from './routes/app.portfolio'
 import { Route as AppValidarRouteImport } from './routes/app.validar'
+import { Route as ValidarIdRouteImport } from './routes/validar.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -106,6 +107,11 @@ const AppValidarRoute = AppValidarRouteImport.update({
   path: '/validar',
   getParentRoute: () => AppRoute,
 } as any)
+const ValidarIdRoute = ValidarIdRouteImport.update({
+  id: '/validar/$id',
+  path: '/validar/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/app/monitoria': typeof AppMonitoriaRoute
   '/app/portfolio': typeof AppPortfolioRoute
   '/app/validar': typeof AppValidarRoute
+  '/validar/$id': typeof ValidarIdRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/app/monitoria': typeof AppMonitoriaRoute
   '/app/portfolio': typeof AppPortfolioRoute
   '/app/validar': typeof AppValidarRoute
+  '/validar/$id': typeof ValidarIdRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/app/monitoria': typeof AppMonitoriaRoute
   '/app/portfolio': typeof AppPortfolioRoute
   '/app/validar': typeof AppValidarRoute
+  '/validar/$id': typeof ValidarIdRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/app/monitoria'
     | '/app/portfolio'
     | '/app/validar'
+    | '/validar/$id'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/app/monitoria'
     | '/app/portfolio'
     | '/app/validar'
+    | '/validar/$id'
     | '/app'
   id:
     | '__root__'
@@ -214,6 +225,7 @@ export interface FileRouteTypes {
     | '/app/monitoria'
     | '/app/portfolio'
     | '/app/validar'
+    | '/validar/$id'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
@@ -226,6 +238,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ProfessorRoute: typeof ProfessorRoute
   SobreRoute: typeof SobreRoute
+  ValidarIdRoute: typeof ValidarIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppValidarRouteImport
       parentRoute: typeof AppRoute
     }
+    '/validar/$id': {
+      id: '/validar/$id'
+      path: '/validar/$id'
+      fullPath: '/validar/$id'
+      preLoaderRoute: typeof ValidarIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -378,6 +398,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ProfessorRoute: ProfessorRoute,
   SobreRoute: SobreRoute,
+  ValidarIdRoute: ValidarIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
