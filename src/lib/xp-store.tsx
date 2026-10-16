@@ -45,7 +45,11 @@ type Ctx = Perfil & {
   nivel: number;
   proximoNivel: number;
   iniciarSessao: (s: Sessao) => void;
-  concluirAtividade: (id: string, xp: number) => Promise<void>;
+  concluirAtividade: (
+    id: string,
+    xp: number,
+    envio?: { titulo: string; disciplina: string; acertos: number; total: number },
+  ) => Promise<void>;
   recarregar: () => Promise<void>;
   sair: () => Promise<void>;
 };
@@ -110,7 +114,7 @@ export function XPProvider({ children }: { children: ReactNode }) {
       proximoNivel,
       iniciarSessao: setSessao,
       recarregar: sincronizar,
-      concluirAtividade: async (id, xp) => {
+      concluirAtividade: async (id, xp, envio) => {
         if (!perfil.userId || perfil.atividadesConcluidas.includes(id)) return;
         const novo = {
           xp: perfil.xp + xp,
@@ -119,6 +123,10 @@ export function XPProvider({ children }: { children: ReactNode }) {
         };
         setPerfil((p) => ({ ...p, xp: novo.xp, exercicios: novo.exercicios, atividadesConcluidas: novo.atividades_concluidas }));
         await supabase.from("profiles").update(novo).eq("id", perfil.userId);
+        // envia a atividade para validação do professor (XP já foi contado acima; aprovar não soma de novo)
+        if (envio) {
+          await supabase.from("atividades").insert({ atividade_ref: id, xp, ...envio });
+        }
       },
       sair: async () => {
         await supabase.auth.signOut();
