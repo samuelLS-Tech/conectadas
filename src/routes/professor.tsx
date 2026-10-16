@@ -218,9 +218,9 @@ function Professor() {
                               {e.nome[0]?.toUpperCase()}
                             </span>
                             <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold">
-                                {e.nome}
-                                {e.real && <span className="ml-2 rounded-full border border-mint/40 px-2 py-0.5 text-[10px] text-mint">conta real</span>}
+                              <p className="flex min-w-0 items-center gap-2 text-sm font-semibold">
+                                <span className="truncate">{e.nome}</span>
+                                {e.real && <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-mint/40 px-2 py-0.5 text-[10px] leading-none text-mint">conta real</span>}
                               </p>
                               <p className="truncate text-xs text-muted-foreground">{e.xp.toLocaleString("pt-BR")} XP · {e.atividade}</p>
                             </div>
