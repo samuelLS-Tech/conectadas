@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { estudantesEscola } from "@/lib/conectadas-data";
+import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
 
 export const Route = createFileRoute("/professor")({
   head: () => ({
@@ -26,6 +27,37 @@ const indicadores = [
   { emoji: "👩‍🏫", valor: "342", label: "monitorias" },
   { emoji: "⏱️", valor: "516", label: "horas de estudo" },
   { emoji: "🚀", valor: "47", label: "projetos" },
+];
+
+const desempenho = [
+  { materia: "Matemática", emoji: "🔢", acerto: 78 },
+  { materia: "Física", emoji: "⚛️", acerto: 58 },
+  { materia: "Química", emoji: "🧪", acerto: 64 },
+  { materia: "Programação", emoji: "💻", acerto: 82 },
+  { materia: "Vestibulares", emoji: "🎓", acerto: 61 },
+];
+
+const facilidades = [
+  "Programação: lógica e laços de repetição",
+  "Matemática: funções do 1º grau",
+  "Química: massa molar",
+];
+const dificuldades = [
+  "Física: leis de Newton e força resultante",
+  "Química: estequiometria e balanceamento",
+  "Vestibulares: probabilidade (Unicamp)",
+];
+const revisar = [
+  "Velocidade terminal e resistência do ar",
+  "Escala de pH e concentração de H⁺",
+  "Raízes e gráfico da função quadrática",
+];
+
+const perfis = [
+  { nome: "Ana Silva", forte: "Física e Programação", reforcar: "Estequiometria", sugestao: "Monitora de Física para a turma" },
+  { nome: "Júlia Moraes", forte: "Programação", reforcar: "Probabilidade", sugestao: "Simulado de Vestibulares" },
+  { nome: "Maria Duarte", forte: "Química", reforcar: "Leis de Newton", sugestao: "Monitoria de Mecânica com Ana" },
+  { nome: "Alice Rocha", forte: "Matemática", reforcar: "Funções do 2º grau", sugestao: "Atividade de Funções" },
 ];
 
 function Professor() {
@@ -65,6 +97,61 @@ function Professor() {
               </div>
             ))}
           </div>
+
+          <section className="glass p-7">
+            <h2 className="text-xl font-bold">📊 Panorama da turma</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Taxa média de acertos por matéria na Biblioteca STEM e nas monitorias.
+            </p>
+            <div className="mt-5 space-y-4">
+              {[...desempenho].sort((a, b) => b.acerto - a.acerto).map((d) => (
+                <div key={d.materia}>
+                  <div className="mb-1.5 flex justify-between gap-3 text-sm">
+                    <span>{d.emoji} {d.materia}</span>
+                    <span className={d.acerto >= 75 ? "text-mint" : d.acerto < 60 ? "text-magenta" : "text-cyan"}>
+                      {d.acerto}% de acertos
+                    </span>
+                  </div>
+                  <ProgressoNeon valor={d.acerto} altura="h-2.5" />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="glass p-6">
+              <h3 className="font-bold text-mint">💪 Maiores facilidades</h3>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                {facilidades.map((f) => <li key={f}>• {f}</li>)}
+              </ul>
+            </div>
+            <div className="glass p-6">
+              <h3 className="font-bold text-magenta">⚠️ Maiores dificuldades</h3>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                {dificuldades.map((f) => <li key={f}>• {f}</li>)}
+              </ul>
+            </div>
+            <div className="glass p-6">
+              <h3 className="font-bold text-cyan">🔁 Assuntos para revisar</h3>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                {revisar.map((f) => <li key={f}>• {f}</li>)}
+              </ul>
+            </div>
+          </div>
+
+          <section className="glass p-7">
+            <h2 className="text-xl font-bold">👩‍🎓 Visão por estudante</h2>
+            <div className="mt-5 grid gap-3 md:grid-cols-2">
+              {perfis.map((p) => (
+                <div key={p.nome} className="rounded-2xl border border-border/70 p-4">
+                  <p className="font-semibold">{p.nome}</p>
+                  <p className="mt-2 text-xs"><span className="text-mint">Forte em:</span> <span className="text-muted-foreground">{p.forte}</span></p>
+                  <p className="mt-1 text-xs"><span className="text-magenta">Precisa reforçar:</span> <span className="text-muted-foreground">{p.reforcar}</span></p>
+                  <p className="mt-1 text-xs"><span className="text-cyan">Sugestão:</span> <span className="text-muted-foreground">{p.sugestao}</span></p>
+                </div>
+              ))}
+            </div>
+          </section>
 
           <section className="glass p-7">
             <h2 className="text-xl font-bold">Atividades para validar</h2>
