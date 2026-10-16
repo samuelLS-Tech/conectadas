@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Accounts and progress live in Lovable Cloud (profiles + user_roles for account type); XP for monitorias is granted only through the confirmar_monitoria database function, so each participant must confirm on their own device.
+- Schools are a fixed list in src/lib/turmas.ts; the database stores only escola_id, so teacher/student matching never compares typed names. Activity approval (validar_atividade) records the decision only; XP is counted once at completion to avoid double rewards. In-app notifications are created by database functions/triggers.
