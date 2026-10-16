@@ -98,7 +98,9 @@ function Biblioteca() {
             >
               <span className="text-3xl">{m.emoji}</span>
               <h2 className="mt-4 text-lg font-bold">{m.titulo}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{m.detalhe}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {m.questoes.length} questões{m.detalhe ? ` · ${m.detalhe}` : ""}
+              </p>
               <div className="mt-4 flex items-center gap-2 text-xs">
                 <span className="rounded-full border border-border px-2.5 py-1">{m.categoria}</span>
                 <span className="rounded-full border border-mint/40 px-2.5 py-1 text-mint">

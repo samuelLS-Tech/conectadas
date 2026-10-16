@@ -269,9 +269,9 @@ export type Material = {
 export const biblioteca: Material[] = [
   {
     id: "funcoes",
-    titulo: "Funções — Revisão rápida",
+    titulo: "Funções",
     categoria: "Matemática",
-    detalhe: "15 exercícios",
+    detalhe: "",
     xp: 20,
     emoji: "🔢",
     questoes: [
@@ -290,13 +290,23 @@ export const biblioteca: Material[] = [
         alternativas: ["Reta", "Parábola", "Hipérbole", "Circunferência"],
         correta: 1,
       },
+      {
+        pergunta: "Qual é a raiz da função f(x) = 3x − 12?",
+        alternativas: ["3", "4", "−4", "12"],
+        correta: 1,
+      },
+      {
+        pergunta: "Se f(x) = x², qual o valor de f(−3)?",
+        alternativas: ["−9", "6", "9", "−6"],
+        correta: 2,
+      },
     ],
   },
   {
     id: "mecanica",
-    titulo: "Mecânica — Simulado",
+    titulo: "Mecânica",
     categoria: "Física",
-    detalhe: "20 questões",
+    detalhe: "",
     xp: 20,
     emoji: "⚛️",
     questoes: [
@@ -315,13 +325,23 @@ export const biblioteca: Material[] = [
         alternativas: ["Constante e positiva", "Nula", "Variável", "Negativa"],
         correta: 1,
       },
+      {
+        pergunta: "Um carro percorre 120 km em 2 h. Sua velocidade média é:",
+        alternativas: ["40 km/h", "60 km/h", "80 km/h", "240 km/h"],
+        correta: 1,
+      },
+      {
+        pergunta: "Qual o peso de um corpo de 5 kg na Terra (g = 10 m/s²)?",
+        alternativas: ["5 N", "15 N", "50 N", "500 N"],
+        correta: 2,
+      },
     ],
   },
   {
     id: "python",
-    titulo: "Python — Primeiros passos",
+    titulo: "Python",
     categoria: "Programação",
-    detalhe: "10 desafios",
+    detalhe: "",
     xp: 20,
     emoji: "💻",
     questoes: [
@@ -340,13 +360,23 @@ export const biblioteca: Material[] = [
         alternativas: ["int", "float", "str", "bool"],
         correta: 1,
       },
+      {
+        pergunta: "Qual palavra-chave define uma função em Python?",
+        alternativas: ["func", "def", "function", "lambda"],
+        correta: 1,
+      },
+      {
+        pergunta: "Qual o resultado de 7 // 2 em Python?",
+        alternativas: ["3.5", "3", "4", "1"],
+        correta: 1,
+      },
     ],
   },
   {
     id: "estequiometria",
-    titulo: "Estequiometria — Prática guiada",
+    titulo: "Estequiometria",
     categoria: "Química",
-    detalhe: "12 exercícios",
+    detalhe: "",
     xp: 20,
     emoji: "🧪",
     questoes: [
@@ -365,31 +395,41 @@ export const biblioteca: Material[] = [
         alternativas: ["1", "2", "3", "4"],
         correta: 1,
       },
+      {
+        pergunta: "Quantos mols há em 36 g de água (H₂O = 18 g/mol)?",
+        alternativas: ["1 mol", "2 mol", "18 mol", "0,5 mol"],
+        correta: 1,
+      },
+      {
+        pergunta: "A massa molar do CO₂ (C = 12, O = 16) é:",
+        alternativas: ["28 g/mol", "32 g/mol", "44 g/mol", "60 g/mol"],
+        correta: 2,
+      },
     ],
   },
   {
     id: "vestibular",
-    titulo: "Vestibulares — Simulados STEM",
+    titulo: "Vestibulares",
     categoria: "Vestibulares",
-    detalhe: "Questões reais: ENEM 2023, FUVEST 2024 e Unicamp 2024",
+    detalhe: "ENEM · FUVEST · Unicamp",
     xp: 20,
     emoji: "🎓",
     questoes: [
       {
         pergunta:
-          "(ENEM 2023) O ideal é consumir 1 grama de carboidrato para cada minuto de caminhada. Um casal realizará diariamente 30 minutos de caminhada, ingerindo antes a quantidade ideal de carboidratos, apenas por meio de pão de fôrma integral, durante 30 dias ininterruptos. Cada pacote tem 18 fatias, e cada fatia tem 15 g de carboidratos. A quantidade mínima de pacotes necessários é",
+          "(ENEM – 2023) O ideal é consumir 1 grama de carboidrato para cada minuto de caminhada. Um casal realizará diariamente 30 minutos de caminhada, ingerindo antes a quantidade ideal de carboidratos, apenas por meio de pão de fôrma integral, durante 30 dias ininterruptos. Cada pacote tem 18 fatias, e cada fatia tem 15 g de carboidratos. A quantidade mínima de pacotes necessários é",
         alternativas: ["1", "4", "6", "7", "8"],
         correta: 3,
       },
       {
         pergunta:
-          "(FUVEST 2024) Para gerar hidrogênio, raspas de zinco reagem com ácido clorídrico: Zn(s) + 2H⁺(aq) → Zn²⁺(aq) + H₂(g). Foram gerados 49,8 mL de hidrogênio. Dados: volume molar do gás nas condições do experimento = 24,9 L; massa molar do Zn = 65,4 g/mol. Qual a quantidade de Zn, em gramas, que de fato reagiu?",
+          "(FUVEST – 2024) Para gerar hidrogênio, raspas de zinco reagem com ácido clorídrico: Zn(s) + 2H⁺(aq) → Zn²⁺(aq) + H₂(g). Foram gerados 49,8 mL de hidrogênio. Dados: volume molar do gás nas condições do experimento = 24,9 L; massa molar do Zn = 65,4 g/mol. Qual a quantidade de Zn, em gramas, que de fato reagiu?",
         alternativas: ["0,07", "0,13", "0,26", "0,29", "0,48"],
         correta: 1,
       },
       {
         pergunta:
-          "(FUVEST 2024) Um estudante perguntou a um sistema de inteligência artificial se podem existir valores negativos de pH, e a IA respondeu que sim. A resposta fornecida pela IA está",
+          "(FUVEST – 2024) Um estudante perguntou a um sistema de inteligência artificial se podem existir valores negativos de pH, e a IA respondeu que sim. A resposta fornecida pela IA está",
         alternativas: [
           "errada, pois pH negativo refere-se à concentração de H⁺ maior que 1 mol/L, resultando em pH menor que zero.",
           "correta, pois pH negativo refere-se à concentração de OH⁻ maior que 1 mol/L, resultando em pH menor que zero.",
@@ -401,13 +441,13 @@ export const biblioteca: Material[] = [
       },
       {
         pergunta:
-          "(Unicamp 2024) Um objeto de massa m = 200 g é solto a partir de certa altura e atinge a velocidade terminal após determinado tempo. Qual é o módulo da força de resistência do ar depois que o objeto atinge a velocidade terminal? (g = 10 m/s²)",
+          "(Unicamp – 2024) Um objeto de massa m = 200 g é solto a partir de certa altura e atinge a velocidade terminal após determinado tempo. Qual é o módulo da força de resistência do ar depois que o objeto atinge a velocidade terminal? (g = 10 m/s²)",
         alternativas: ["0,20 N", "2,0 N", "200 N", "2000 N"],
         correta: 1,
       },
       {
         pergunta:
-          "(Unicamp 2024) João e Maria levaram uma sacola com 100 pedrinhas: 60 brancas e 40 pretas. Retiram aleatoriamente uma pedrinha por vez para marcar o caminho. Ao pararem para lanchar, já tinham sido jogadas 35 brancas e 25 pretas. Qual a probabilidade de as próximas duas pedrinhas jogadas serem brancas?",
+          "(Unicamp – 2024) João e Maria levaram uma sacola com 100 pedrinhas: 60 brancas e 40 pretas. Retiram aleatoriamente uma pedrinha por vez para marcar o caminho. Ao pararem para lanchar, já tinham sido jogadas 35 brancas e 25 pretas. Qual a probabilidade de as próximas duas pedrinhas jogadas serem brancas?",
         alternativas: ["7/13", "5/13", "11/52", "7/52"],
         correta: 1,
       },
