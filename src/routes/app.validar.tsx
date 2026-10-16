@@ -5,7 +5,7 @@ import { ShieldCheck, Check, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/app/validar")({
-  validateSearch: (s: Record<string, unknown>): { sessao?: string } => ({
+  validateSearch: (s: Record<string, unknown>): { sessao?: string | undefined } => ({
     sessao: typeof s["sessao"] === "string" ? (s["sessao"] as string) : undefined,
   }),
   head: () => ({
@@ -60,7 +60,7 @@ function Validar() {
       <div className="glass mx-auto max-w-lg p-8 text-center">
         <h1 className="text-2xl font-bold">Nenhuma monitoria para validar</h1>
         <p className="mt-2 text-sm text-muted-foreground">Comece uma monitoria e finalize a sessão para gerar o QR Code.</p>
-        <Link to="/app/ajuda" search={{ modo: undefined }} className="mt-6 inline-block rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background">
+        <Link to="/app/ajuda" className="mt-6 inline-block rounded-full bg-brand px-6 py-3 text-sm font-semibold text-background">
           Pedir ajuda
         </Link>
       </div>

@@ -9,7 +9,7 @@ import type { TipoConta } from "@/lib/xp-store";
 import { SERIES, TURMAS } from "@/lib/turmas";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({
+  validateSearch: (s: Record<string, unknown>): { redirect?: string | undefined } => ({
     redirect: typeof s["redirect"] === "string" && s["redirect"].startsWith("/") ? (s["redirect"] as string) : undefined,
   }),
   head: () => ({

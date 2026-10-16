@@ -115,7 +115,7 @@ function Professor() {
           <Marca to="/" usuario />
           <div className="flex items-center gap-3">
             <span className="hidden rounded-full border border-mint/40 px-3 py-1.5 text-xs font-semibold text-mint sm:inline">PROFESSOR</span>
-            <Link to="/login" search={{ redirect: undefined }} onClick={() => void sair()} className="text-sm text-muted-foreground hover:text-foreground">
+            <Link to="/login" onClick={() => void sair()} className="text-sm text-muted-foreground hover:text-foreground">
               Sair
             </Link>
           </div>
