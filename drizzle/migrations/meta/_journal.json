@@ -15,6 +15,13 @@
       "when": 1792116379443,
       "tag": "0001_escolas_atividades_interesses",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792121556872,
+      "tag": "0002_notificacoes_nomes",
+      "breakpoints": true
     }
   ]
 }
