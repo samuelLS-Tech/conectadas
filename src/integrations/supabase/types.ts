@@ -14,6 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
+      atividades: {
+        Row: {
+          acertos: number
+          atividade_ref: string
+          created_at: string
+          disciplina: string
+          estudante_id: string
+          id: string
+          status: string
+          titulo: string
+          total: number
+          validada_em: string | null
+          validada_por: string | null
+          xp: number
+        }
+        Insert: {
+          acertos: number
+          atividade_ref: string
+          created_at?: string
+          disciplina: string
+          estudante_id?: string
+          id?: string
+          status?: string
+          titulo: string
+          total: number
+          validada_em?: string | null
+          validada_por?: string | null
+          xp?: number
+        }
+        Update: {
+          acertos?: number
+          atividade_ref?: string
+          created_at?: string
+          disciplina?: string
+          estudante_id?: string
+          id?: string
+          status?: string
+          titulo?: string
+          total?: number
+          validada_em?: string | null
+          validada_por?: string | null
+          xp?: number
+        }
+        Relationships: []
+      }
+      empresa_interesses: {
+        Row: {
+          created_at: string
+          empresa_id: string
+          empresa_nome: string
+          estudante_id: string
+          id: string
+          oportunidade: string | null
+        }
+        Insert: {
+          created_at?: string
+          empresa_id?: string
+          empresa_nome: string
+          estudante_id: string
+          id?: string
+          oportunidade?: string | null
+        }
+        Update: {
+          created_at?: string
+          empresa_id?: string
+          empresa_nome?: string
+          estudante_id?: string
+          id?: string
+          oportunidade?: string | null
+        }
+        Relationships: []
+      }
+      monitoria_interesses: {
+        Row: {
+          created_at: string
+          id: string
+          interessada_id: string
+          interessada_nome: string
+          oferta_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          interessada_id?: string
+          interessada_nome: string
+          oferta_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interessada_id?: string
+          interessada_nome?: string
+          oferta_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitoria_interesses_oferta_id_fkey"
+            columns: ["oferta_id"]
+            isOneToOne: false
+            referencedRelation: "monitoria_ofertas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monitoria_ofertas: {
+        Row: {
+          assunto: string
+          autora_id: string
+          autora_nome: string
+          created_at: string
+          disciplina: string
+          id: string
+          tipo: string
+        }
+        Insert: {
+          assunto: string
+          autora_id?: string
+          autora_nome: string
+          created_at?: string
+          disciplina: string
+          id?: string
+          tipo: string
+        }
+        Update: {
+          assunto?: string
+          autora_id?: string
+          autora_nome?: string
+          created_at?: string
+          disciplina?: string
+          id?: string
+          tipo?: string
+        }
+        Relationships: []
+      }
       monitoria_sessoes: {
         Row: {
           created_at: string
@@ -47,10 +181,36 @@ export type Database = {
         }
         Relationships: []
       }
+      notificacoes: {
+        Row: {
+          created_at: string
+          id: string
+          lida: boolean
+          texto: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lida?: boolean
+          texto: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lida?: boolean
+          texto?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           atividades_concluidas: string[]
           created_at: string
+          disciplina: string | null
+          escola_id: string | null
           exercicios: number
           horas: number
           id: string
@@ -64,6 +224,8 @@ export type Database = {
         Insert: {
           atividades_concluidas?: string[]
           created_at?: string
+          disciplina?: string | null
+          escola_id?: string | null
           exercicios?: number
           horas?: number
           id: string
@@ -77,6 +239,8 @@ export type Database = {
         Update: {
           atividades_concluidas?: string[]
           created_at?: string
+          disciplina?: string | null
+          escola_id?: string | null
           exercicios?: number
           horas?: number
           id?: string
@@ -119,6 +283,23 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      listar_talentos: {
+        Args: never
+        Returns: {
+          escola_id: string
+          id: string
+          monitorias: number
+          nome: string
+          serie: string
+          turma: string
+          xp: number
+        }[]
+      }
+      minha_escola: { Args: never; Returns: string }
+      validar_atividade: {
+        Args: { _aprovar: boolean; _id: string }
+        Returns: string
       }
     }
     Enums: {
