@@ -1,101 +1,131 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Sessao = {
   monitora: string;
   materia: string;
 };
 
-type EstadoXP = {
+export type TipoConta = "estudante" | "empresa" | "professor";
+
+type Perfil = {
   xp: number;
   monitorias: number;
   exercicios: number;
   horas: number;
   lideranca: number;
   atividadesConcluidas: string[];
+  usuario: string;
+  serie: string | null;
+  turma: string | null;
+  tipo: TipoConta | null;
+  userId: string | null;
+  email: string | null;
+};
+
+const vazio: Perfil = {
+  xp: 0,
+  monitorias: 0,
+  exercicios: 0,
+  horas: 0,
+  lideranca: 0,
+  atividadesConcluidas: [],
+  usuario: "",
+  serie: null,
+  turma: null,
+  tipo: null,
+  userId: null,
+  email: null,
+};
+
+type Ctx = Perfil & {
+  carregando: boolean;
   medalhasExtras: string[];
   sessao: Sessao | null;
-  usuario: string;
-};
-
-const inicial: EstadoXP = {
-  xp: 2450,
-  monitorias: 37,
-  exercicios: 182,
-  horas: 96,
-  lideranca: 12,
-  atividadesConcluidas: [],
-  medalhasExtras: [],
-  sessao: null,
-  usuario: "",
-};
-
-const CHAVE = "conectadas-estado-v1";
-
-type Ctx = EstadoXP & {
   nivel: number;
   proximoNivel: number;
   iniciarSessao: (s: Sessao) => void;
-  validarMonitoria: () => void;
-  concluirAtividade: (id: string, xp: number) => void;
-  reiniciar: () => void;
-  entrar: (nome: string) => void;
-  sair: () => void;
+  concluirAtividade: (id: string, xp: number) => Promise<void>;
+  recarregar: () => Promise<void>;
+  sair: () => Promise<void>;
 };
 
 const XPContext = createContext<Ctx | null>(null);
 
-export function XPProvider({ children }: { children: ReactNode }) {
-  const [estado, setEstado] = useState<EstadoXP>(inicial);
+export const XP_POR_NIVEL = 600;
 
-  useEffect(() => {
-    try {
-      const salvo = localStorage.getItem(CHAVE);
-      if (salvo) setEstado({ ...inicial, ...JSON.parse(salvo) });
-    } catch {
-      /* demonstração: ignora falhas de leitura */
-    }
+async function carregarPerfil(userId: string, email: string | null): Promise<Perfil> {
+  const [{ data: p }, { data: roles }] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+    supabase.from("user_roles").select("role").eq("user_id", userId),
+  ]);
+  return {
+    xp: p?.xp ?? 0,
+    monitorias: p?.monitorias ?? 0,
+    exercicios: p?.exercicios ?? 0,
+    horas: p?.horas ?? 0,
+    lideranca: p?.lideranca ?? 0,
+    atividadesConcluidas: p?.atividades_concluidas ?? [],
+    usuario: p?.nome ?? "",
+    serie: p?.serie ?? null,
+    turma: p?.turma ?? null,
+    tipo: (roles?.[0]?.role as TipoConta | undefined) ?? null,
+    userId,
+    email,
+  };
+}
+
+export function XPProvider({ children }: { children: ReactNode }) {
+  const [perfil, setPerfil] = useState<Perfil>(vazio);
+  const [carregando, setCarregando] = useState(true);
+  const [sessao, setSessao] = useState<Sessao | null>(null);
+
+  const sincronizar = useCallback(async () => {
+    const { data } = await supabase.auth.getUser();
+    if (data.user) setPerfil(await carregarPerfil(data.user.id, data.user.email ?? null));
+    else setPerfil(vazio);
+    setCarregando(false);
   }, []);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(CHAVE, JSON.stringify(estado));
-    } catch {
-      /* demonstração */
-    }
-  }, [estado]);
+    void sincronizar();
+    const { data: sub } = supabase.auth.onAuthStateChange((evento) => {
+      if (evento === "SIGNED_IN" || evento === "SIGNED_OUT" || evento === "USER_UPDATED") {
+        // adia para fora do callback de auth
+        setTimeout(() => void sincronizar(), 0);
+      }
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [sincronizar]);
 
   const valor = useMemo<Ctx>(() => {
-    const nivel = Math.max(5, Math.floor(estado.xp / 600) + 1);
-    const proximoNivel = 3000 + (nivel - 5) * 600;
+    const nivel = Math.floor(perfil.xp / XP_POR_NIVEL) + 1;
+    const proximoNivel = nivel * XP_POR_NIVEL;
     return {
-      ...estado,
+      ...perfil,
+      carregando,
+      medalhasExtras: [],
+      sessao,
       nivel,
       proximoNivel,
-      iniciarSessao: (sessao) => setEstado((e) => ({ ...e, sessao })),
-      validarMonitoria: () =>
-        setEstado((e) => ({
-          ...e,
-          xp: e.xp + 50,
-          monitorias: e.monitorias + 1,
-          lideranca: e.lideranca + 1,
-          horas: e.horas + 1,
-        })),
-      concluirAtividade: (id, xp) =>
-        setEstado((e) =>
-          e.atividadesConcluidas.includes(id)
-            ? e
-            : {
-                ...e,
-                xp: e.xp + xp,
-                exercicios: e.exercicios + 10,
-                atividadesConcluidas: [...e.atividadesConcluidas, id],
-              },
-        ),
-      reiniciar: () => setEstado(inicial),
-      entrar: (nome) => setEstado((e) => ({ ...e, usuario: nome.trim() })),
-      sair: () => setEstado((e) => ({ ...e, usuario: "" })),
+      iniciarSessao: setSessao,
+      recarregar: sincronizar,
+      concluirAtividade: async (id, xp) => {
+        if (!perfil.userId || perfil.atividadesConcluidas.includes(id)) return;
+        const novo = {
+          xp: perfil.xp + xp,
+          exercicios: perfil.exercicios + 5,
+          atividades_concluidas: [...perfil.atividadesConcluidas, id],
+        };
+        setPerfil((p) => ({ ...p, xp: novo.xp, exercicios: novo.exercicios, atividadesConcluidas: novo.atividades_concluidas }));
+        await supabase.from("profiles").update(novo).eq("id", perfil.userId);
+      },
+      sair: async () => {
+        await supabase.auth.signOut();
+        setPerfil(vazio);
+      },
     };
-  }, [estado]);
+  }, [perfil, carregando, sessao, sincronizar]);
 
   return <XPContext.Provider value={valor}>{children}</XPContext.Provider>;
 }
