@@ -46,16 +46,24 @@ function variacao(chave: string, i: number) {
 type Aluna = { id: string; nome: string; serie: string; turma: string; xp: number; atividade: string; pendente: boolean; real?: boolean };
 
 function Professor() {
-  const { sair } = useXP();
+  const { sair, userId } = useXP();
   const [serie, setSerie] = useState<string>("Todas");
   const [turma, setTurma] = useState<string>("Todas");
+  const [disciplina, setDisciplina] = useState<string>("Todas");
   const [validadas, setValidadas] = useState<string[]>([]);
   const [reais, setReais] = useState<Aluna[]>([]);
+  const [minha, setMinha] = useState<{ escola_id: string | null; disciplina: string | null } | null>(null);
 
   useEffect(() => {
+    if (!userId) return;
+    void supabase.from("profiles").select("escola_id, disciplina").eq("id", userId).maybeSingle().then(({ data }) => {
+      setMinha(data);
+      if (data?.disciplina) setDisciplina(data.disciplina);
+    });
     void supabase
       .from("profiles")
       .select("id, nome, serie, turma, xp, monitorias")
+      .neq("id", userId)
       .order("xp", { ascending: false })
       .then(({ data }) =>
         setReais(
@@ -73,7 +81,8 @@ function Professor() {
             })),
         ),
       );
-  }, []);
+  }, [userId]);
+  const nomesReais = useMemo(() => new Map(reais.map((r) => [r.id, { nome: r.nome, serie: r.serie, turma: r.turma }])), [reais]);
 
   const todas: Aluna[] = useMemo(
     () => [...reais, ...estudantesEscola.map((e) => ({ ...e, id: e.nome }))],
