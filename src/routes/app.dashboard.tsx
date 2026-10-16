@@ -3,6 +3,7 @@ import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YA
 import { LifeBuoy, GraduationCap } from "lucide-react";
 import { useXP } from "@/lib/xp-store";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
+import { Notificacoes } from "@/components/conectadas/Notificacoes";
 import { evolucaoMensal, ranking, xpPorCategoria } from "@/lib/conectadas-data";
 
 export const Route = createFileRoute("/app/dashboard")({
@@ -34,6 +35,7 @@ function Dashboard() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
+      <Notificacoes />
       <header className="animate-rise glass p-7">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
           <div className="min-w-0">
