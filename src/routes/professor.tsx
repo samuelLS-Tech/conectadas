@@ -8,7 +8,8 @@ import { estudantesEscola } from "@/lib/conectadas-data";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
 import { supabase } from "@/integrations/supabase/client";
 import { useXP } from "@/lib/xp-store";
-import { SERIES, TURMAS } from "@/lib/turmas";
+import { DISCIPLINAS, SERIES, TURMAS, nomeEscola } from "@/lib/turmas";
+import { AtividadesProfessor } from "@/components/conectadas/AtividadesProfessor";
 
 export const Route = createFileRoute("/professor")({
   head: () => ({
@@ -137,9 +138,9 @@ function Professor() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="animate-rise text-3xl font-bold sm:text-4xl">🏫 Painel da Escola</h1>
-              <p className="mt-1 text-sm text-muted-foreground">{rotuloTurma}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{nomeEscola(minha?.escola_id)} · {rotuloTurma}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <select aria-label="Série" value={serie} onChange={(e) => setSerie(e.target.value)} className={seletor}>
                 <option value="Todas">Todas as séries</option>
                 {SERIES.map((s) => <option key={s}>{s}</option>)}
@@ -147,6 +148,10 @@ function Professor() {
               <select aria-label="Turma" value={turma} onChange={(e) => setTurma(e.target.value)} className={seletor}>
                 <option value="Todas">Todas as turmas</option>
                 {TURMAS.map((t) => <option key={t} value={t}>Turma {t}</option>)}
+              </select>
+              <select aria-label="Disciplina" value={disciplina} onChange={(e) => setDisciplina(e.target.value)} className={seletor}>
+                <option value="Todas">Todas as disciplinas</option>
+                {DISCIPLINAS.map((d) => <option key={d}>{d}</option>)}
               </select>
             </div>
           </div>
@@ -191,6 +196,8 @@ function Professor() {
               </div>
             ))}
           </div>
+
+          <AtividadesProfessor nomes={nomesReais} serie={serie} turma={turma} disciplina={disciplina} />
 
           <section className="glass p-5 sm:p-7">
             <h2 className="text-xl font-bold">👩‍🎓 Estudantes por série e turma</h2>
