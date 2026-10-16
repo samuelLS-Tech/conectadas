@@ -37,16 +37,11 @@ function Dashboard() {
     <div className="mx-auto max-w-6xl space-y-8">
       <Notificacoes />
       <header className="animate-rise glass p-7">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:justify-between">
-          <div className="min-w-0">
-            <h1 className="truncate text-2xl font-bold sm:text-3xl">Olá, {(usuario || "Ana").split(" ")[0]}! 👋</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Nível {nivel} · Pesquisadora Sênior
-            </p>
-          </div>
-          <span className="shrink-0 rounded-full border border-mint/40 bg-mint/10 px-4 py-2 text-xs font-semibold text-mint">
-            🔥 Sequência de 7 dias
-          </span>
+        <div className="min-w-0">
+          <h1 className="truncate text-2xl font-bold sm:text-3xl">Olá, {(usuario || "Ana").split(" ")[0]}! 👋</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Nível {nivel} · Pesquisadora Sênior
+          </p>
         </div>
         <div className="mt-6">
           <div className="mb-2 flex justify-between text-sm">

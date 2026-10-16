@@ -17,7 +17,7 @@ export const Route = createFileRoute("/login")({
       { title: "Entrar — CONECTADAS" },
       { name: "description", content: "Entre ou crie sua conta no CONECTADAS como estudante, empresa ou professor." },
       { property: "og:title", content: "Entrar na plataforma — CONECTADAS" },
-      { property: "og:description", content: "Bem-vinda ao CONECTADAS 💜" },
+      { property: "og:description", content: "Olá! Boas-vindas ao CONECTADAS 💜" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -89,7 +89,7 @@ function Login() {
           setModo("entrar");
           return;
         }
-        toast.success(`Bem-vinda, ${nome.trim().split(" ")[0]}!`);
+        toast.success(`Olá, ${nome.trim().split(" ")[0]}!`);
         await irParaDestino(data.user.id);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
@@ -117,7 +117,7 @@ function Login() {
         </div>
 
         <div className="glass animate-pop p-8">
-          <h1 className="text-center text-2xl font-bold">Bem-vinda ao CONECTADAS 💜</h1>
+          <h1 className="text-center text-2xl font-bold">Olá! Boas-vindas ao CONECTADAS 💜</h1>
 
           <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
             {(["entrar", "criar"] as const).map((m) => (
