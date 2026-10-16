@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Star, Trophy } from "lucide-react";
 import { materias, monitorasPorMateria } from "@/lib/conectadas-data";
 import { useXP } from "@/lib/xp-store";
+import { OfertasMonitoria } from "@/components/conectadas/OfertasMonitoria";
 
 type Busca = { modo?: "ensinar" | "aprender" };
 
@@ -111,6 +112,10 @@ function Ajuda() {
             ))}
           </div>
         </section>
+      )}
+
+      {materia && (
+        <OfertasMonitoria ensinar={ensinar} disciplina={materias.find((m) => m.id === materia)?.nome ?? materia} />
       )}
     </div>
   );

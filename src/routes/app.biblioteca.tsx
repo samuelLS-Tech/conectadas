@@ -56,7 +56,12 @@ function Biblioteca() {
       } else {
         const ganho = calcularXPAtividade(ativo.xp, ativo.questoes.length, novosAcertos);
         setXpGanho(ganho);
-        void concluirAtividade(ativo.id, ganho);
+        void concluirAtividade(ativo.id, ganho, {
+          titulo: ativo.titulo,
+          disciplina: ativo.categoria,
+          acertos: novosAcertos,
+          total: ativo.questoes.length,
+        });
         setFim(true);
       }
     }, 900);
