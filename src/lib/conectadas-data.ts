@@ -544,12 +544,12 @@ export const trajetoria = [
 ];
 
 export const estudantesEscola = [
-  { nome: "Ana Silva", turma: "3º Técnico", atividade: "Monitoria de Física — 45 min", xp: 2450, pendente: true },
-  { nome: "Júlia Moraes", turma: "3º Técnico", atividade: "Desafio Python — 10 exercícios", xp: 2120, pendente: true },
-  { nome: "Maria Duarte", turma: "2º Ano", atividade: "Projeto de automação", xp: 1980, pendente: true },
-  { nome: "Beatriz Nunes", turma: "2º Ano", atividade: "Monitoria de Matemática — 30 min", xp: 1580, pendente: false },
-  { nome: "Alice Rocha", turma: "1º Ano", atividade: "Relatório de laboratório", xp: 1440, pendente: true },
-  { nome: "Nina Prado", turma: "1º Ano", atividade: "Simulado de Vestibular", xp: 1650, pendente: false },
+  { nome: "Ana Silva", serie: "3º ano", turma: "A", atividade: "Monitoria de Física — 45 min", xp: 2450, pendente: true },
+  { nome: "Júlia Moraes", serie: "3º ano", turma: "A", atividade: "Desafio Python — 10 exercícios", xp: 2120, pendente: true },
+  { nome: "Maria Duarte", serie: "2º ano", turma: "B", atividade: "Projeto de automação", xp: 1980, pendente: true },
+  { nome: "Beatriz Nunes", serie: "2º ano", turma: "A", atividade: "Monitoria de Matemática — 30 min", xp: 1580, pendente: false },
+  { nome: "Alice Rocha", serie: "1º ano", turma: "A", atividade: "Relatório de laboratório", xp: 1440, pendente: true },
+  { nome: "Nina Prado", serie: "1º ano", turma: "C", atividade: "Simulado de Vestibular", xp: 1650, pendente: false },
 ];
 
 export const comoFunciona = [
