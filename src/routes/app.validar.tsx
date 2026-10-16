@@ -5,7 +5,7 @@ import { ShieldCheck, Check, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/app/validar")({
-  validateSearch: (s: Record<string, unknown>) => ({
+  validateSearch: (s: Record<string, unknown>): { sessao?: string } => ({
     sessao: typeof s["sessao"] === "string" ? (s["sessao"] as string) : undefined,
   }),
   head: () => ({
