@@ -6,7 +6,7 @@ import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { supabase } from "@/integrations/supabase/client";
 import type { TipoConta } from "@/lib/xp-store";
-import { SERIES, TURMAS } from "@/lib/turmas";
+import { DISCIPLINAS, ESCOLAS, SERIES, TURMAS } from "@/lib/turmas";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (s: Record<string, unknown>): { redirect?: string | undefined } => ({
@@ -51,6 +51,8 @@ function Login() {
   const [senha, setSenha] = useState("");
   const [serie, setSerie] = useState<string>(SERIES[0]);
   const [turma, setTurma] = useState<string>(TURMAS[0]);
+  const [escola, setEscola] = useState<string>(ESCOLAS[0].id);
+  const [disciplina, setDisciplina] = useState<string>(DISCIPLINAS[0]);
   const [enviando, setEnviando] = useState(false);
 
   async function irParaDestino(userId: string) {
@@ -76,6 +78,8 @@ function Login() {
               tipo,
               serie: tipo === "estudante" ? serie : "",
               turma: tipo === "estudante" ? turma : "",
+              escola_id: tipo !== "empresa" ? escola : "",
+              disciplina: tipo === "professor" ? disciplina : "",
             },
           },
         });
@@ -155,6 +159,22 @@ function Login() {
                   <label className={rotulo}>NOME</label>
                   <input required value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Seu nome" className={campo} />
                 </div>
+                {tipo !== "empresa" && (
+                  <div>
+                    <label className={rotulo}>ESCOLA</label>
+                    <select value={escola} onChange={(e) => setEscola(e.target.value)} className={campo}>
+                      {ESCOLAS.map((s) => <option key={s.id} value={s.id}>{s.nome}</option>)}
+                    </select>
+                  </div>
+                )}
+                {tipo === "professor" && (
+                  <div>
+                    <label className={rotulo}>DISCIPLINA</label>
+                    <select value={disciplina} onChange={(e) => setDisciplina(e.target.value)} className={campo}>
+                      {DISCIPLINAS.map((d) => <option key={d}>{d}</option>)}
+                    </select>
+                  </div>
+                )}
                 {tipo === "estudante" && (
                   <div className="grid grid-cols-2 gap-3">
                     <div>
