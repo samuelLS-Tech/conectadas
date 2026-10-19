@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { isAuthSessionMissingError, type User } from "@supabase/supabase-js";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Building2, Eye, EyeOff, GraduationCap, School } from "lucide-react";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { supabase } from "@/integrations/supabase/client";
+import { ehTipoConta, resolverFluxoLogin } from "@/lib/login-flow";
 import { useXP, type TipoConta } from "@/lib/xp-store";
 import { DISCIPLINAS, ESCOLAS, SERIES, TURMAS } from "@/lib/turmas";
 
@@ -40,6 +42,7 @@ export const destinoPorTipo: Record<TipoConta, string> = {
 const campo =
   "mt-1.5 w-full rounded-xl border border-input bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary";
 const rotulo = "text-xs font-semibold tracking-widest text-muted-foreground";
+const tipoGoogleKey = "conectadas-google-tipo";
 
 function Login() {
   const navigate = useNavigate();
@@ -59,36 +62,72 @@ function Login() {
   const [codigoProf, setCodigoProf] = useState("");
   const [oauthPendente, setOauthPendente] = useState(false);
 
-  const irParaDestino = useCallback(async (userId: string) => {
-    if (redirect) return navigate({ to: redirect });
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-    const t = (data?.[0]?.role as TipoConta | undefined) ?? "estudante";
-    navigate({ to: destinoPorTipo[t] });
-  }, [navigate, redirect]);
+  const abrirOnboarding = useCallback((user: User) => {
+    const tipoSalvo = sessionStorage.getItem(tipoGoogleKey);
+    if (ehTipoConta(tipoSalvo)) setTipo(tipoSalvo);
+    setNome(
+      String(
+        user.user_metadata?.["full_name"] ??
+          user.user_metadata?.["name"] ??
+          user.user_metadata?.["nome"] ??
+          "",
+      ),
+    );
+    setEmail(user.email ?? "");
+    setModo("criar");
+    setOauthPendente(true);
+  }, []);
+
+  const resolverSessao = useCallback(
+    async (user: User) => {
+      const { data: papeis, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      const fluxo = resolverFluxoLogin(papeis, error);
+      if (fluxo.estado === "onboarding") {
+        abrirOnboarding(user);
+        return;
+      }
+      if (fluxo.estado === "bloqueado") {
+        throw new Error(
+          fluxo.motivo === "consulta"
+            ? "Não foi possível verificar seu tipo de conta. Tente novamente."
+            : "Seu tipo de conta precisa ser corrigido. Fale com o suporte.",
+        );
+      }
+      sessionStorage.removeItem(tipoGoogleKey);
+      await navigate({ to: redirect ?? destinoPorTipo[fluxo.tipo] });
+    },
+    [abrirOnboarding, navigate, redirect],
+  );
 
   useEffect(() => {
-    void supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return;
-      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
-      if (roles?.length) return void irParaDestino(data.user.id);
-      const tipoSalvo = sessionStorage.getItem("conectadas-google-tipo") as TipoConta | null;
-      if (tipoSalvo && destinoPorTipo[tipoSalvo]) setTipo(tipoSalvo);
-      setNome(String(data.user.user_metadata?.["full_name"] ?? data.user.user_metadata?.["name"] ?? ""));
-      setEmail(data.user.email ?? "");
-      setModo("criar");
-      setOauthPendente(true);
-    });
-  }, [irParaDestino]);
+    void (async () => {
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (error && !isAuthSessionMissingError(error)) throw error;
+        if (data.user) await resolverSessao(data.user);
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Não foi possível verificar sua conta.");
+      }
+    })();
+  }, [resolverSessao]);
 
   async function entrarComGoogle() {
-    sessionStorage.setItem("conectadas-google-tipo", tipo);
+    sessionStorage.setItem(tipoGoogleKey, tipo);
     const retorno = new URL("/login", window.location.origin);
     if (redirect) retorno.searchParams.set("redirect", redirect);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: retorno.toString(), queryParams: { prompt: "select_account" } },
-    });
-    if (error) toast.error("Não foi possível iniciar o login com Google.");
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: retorno.toString(), queryParams: { prompt: "select_account" } },
+      });
+      if (error) throw error;
+    } catch {
+      sessionStorage.removeItem(tipoGoogleKey);
+      toast.error("Não foi possível iniciar o login com Google.");
+    }
   }
 
   async function enviar(e: React.FormEvent) {
@@ -107,11 +146,12 @@ function Login() {
           _codigo_professor: tipo === "professor" ? codigoProf.trim() : undefined,
         });
         if (error) throw error;
-        sessionStorage.removeItem("conectadas-google-tipo");
+        sessionStorage.removeItem(tipoGoogleKey);
         await recarregar();
+        const { data, error: userError } = await supabase.auth.getUser();
+        if (userError || !data.user) throw new Error("Não foi possível recuperar sua sessão.");
+        await resolverSessao(data.user);
         toast.success(`Olá, ${nome.trim().split(" ")[0]}!`);
-        const { data } = await supabase.auth.getUser();
-        if (data.user) await irParaDestino(data.user.id);
       } else if (modo === "criar") {
         if (!nome.trim()) throw new Error("Informe seu nome.");
         const { data, error } = await supabase.auth.signUp({
@@ -136,14 +176,14 @@ function Login() {
           setModo("entrar");
           return;
         }
+        await resolverSessao(data.user);
         toast.success(`Olá, ${nome.trim().split(" ")[0]}!`);
-        await irParaDestino(data.user.id);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
         if (error) throw error;
+        await resolverSessao(data.user);
         const n = String(data.user.user_metadata?.["nome"] ?? "").trim().split(" ")[0];
         toast.success(n ? `Olá, ${n}!` : "Olá!");
-        await irParaDestino(data.user.id);
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Algo deu errado.";
