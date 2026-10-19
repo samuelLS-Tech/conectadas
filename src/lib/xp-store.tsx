@@ -116,17 +116,15 @@ export function XPProvider({ children }: { children: ReactNode }) {
       recarregar: sincronizar,
       concluirAtividade: async (id, xp, envio) => {
         if (!perfil.userId || perfil.atividadesConcluidas.includes(id)) return;
-        const novo = {
-          xp: perfil.xp + xp,
-          exercicios: perfil.exercicios + 5,
-          atividades_concluidas: [...perfil.atividadesConcluidas, id],
-        };
-        setPerfil((p) => ({ ...p, xp: novo.xp, exercicios: novo.exercicios, atividadesConcluidas: novo.atividades_concluidas }));
-        await supabase.from("profiles").update(novo).eq("id", perfil.userId);
-        // envia a atividade para validação do professor (XP já foi contado acima; aprovar não soma de novo)
-        if (envio) {
-          await supabase.from("atividades").insert({ atividade_ref: id, xp, ...envio });
-        }
+        // XP é calculado e salvo no servidor (uma única vez por atividade); aprovar não soma de novo
+        setPerfil((p) => ({ ...p, xp: p.xp + xp, exercicios: p.exercicios + 5, atividadesConcluidas: [...p.atividadesConcluidas, id] }));
+        await supabase.rpc("concluir_atividade", {
+          _ref: id,
+          _titulo: envio?.titulo ?? "",
+          _disciplina: envio?.disciplina ?? "",
+          _acertos: envio?.acertos ?? 0,
+        });
+        void sincronizar();
       },
       sair: async () => {
         await supabase.auth.signOut();
