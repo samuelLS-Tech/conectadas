@@ -55,6 +55,7 @@ function Login() {
   const [disciplina, setDisciplina] = useState<string>(DISCIPLINAS[0]);
   const [enviando, setEnviando] = useState(false);
   const [verSenha, setVerSenha] = useState(false);
+  const [codigoProf, setCodigoProf] = useState("");
 
   async function irParaDestino(userId: string) {
     if (redirect) return navigate({ to: redirect });
@@ -81,6 +82,7 @@ function Login() {
               turma: tipo === "estudante" ? turma : "",
               escola_id: tipo !== "empresa" ? escola : "",
               disciplina: tipo === "professor" ? disciplina : "",
+              ...(tipo === "professor" ? { codigo_professor: codigoProf.trim() } : {}),
             },
           },
         });
@@ -102,6 +104,7 @@ function Login() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Algo deu errado.";
       toast.error(
+        tipo === "professor" && modo === "criar" && msg.toLowerCase().includes("database error") ? "Código de acesso de professor inválido." :
         msg.includes("Invalid login") ? "E-mail ou senha incorretos." :
         msg.includes("already registered") ? "Este e-mail já tem conta. Use Entrar." :
         msg.toLowerCase().includes("password") ? "A senha precisa ter pelo menos 6 caracteres e não pode ser muito comum." : msg,
@@ -176,6 +179,12 @@ function Login() {
                     <select value={disciplina} onChange={(e) => setDisciplina(e.target.value)} className={campo}>
                       {DISCIPLINAS.map((d) => <option key={d}>{d}</option>)}
                     </select>
+                  </div>
+                )}
+                {tipo === "professor" && (
+                  <div>
+                    <label className={rotulo}>CÓDIGO DE ACESSO DE PROFESSOR</label>
+                    <input required value={codigoProf} onChange={(e) => setCodigoProf(e.target.value)} placeholder="Fornecido pela escola" className={campo} />
                   </div>
                 )}
                 {tipo === "estudante" && (
