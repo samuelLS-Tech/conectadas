@@ -117,16 +117,16 @@ function Talento() {
         <section className="glass p-7">
           <h2 className="text-lg font-bold">Medalhas</h2>
           <div className="mt-4 flex flex-wrap gap-3">
-            {medalhas.map((m) => (
+            {TRILHAS.map((t) => (
               <span
-                key={m.id}
+                key={t.id}
                 className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm ${
-                  m.desbloqueada
+                  TRILHAS_CONCLUIDAS.has(t.id)
                     ? "border-mint/40 bg-mint/5"
                     : "border-border text-muted-foreground opacity-60"
                 }`}
               >
-                {m.emoji} {m.nome}
+                {t.medalha.emoji} {t.medalha.nome}
               </span>
             ))}
           </div>
