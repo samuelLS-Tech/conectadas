@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Marca } from "@/components/conectadas/Marca";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
-import { medalhas, trajetoria } from "@/lib/conectadas-data";
+import { trajetoria } from "@/lib/conectadas-data";
+import { TRILHAS } from "@/lib/conquistas";
+
+// Perfil de demonstração visto pela empresa: trilhas concluídas da estudante fictícia
+const TRILHAS_CONCLUIDAS = new Set(["tecnologia", "fisica"]);
 
 export const Route = createFileRoute("/empresa-talento")({
   head: () => ({
