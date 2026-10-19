@@ -276,6 +276,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      concluir_atividade: {
+        Args: {
+          _acertos: number
+          _disciplina: string
+          _ref: string
+          _titulo: string
+        }
+        Returns: number
+      }
       confirmar_monitoria: { Args: { _sessao: string }; Returns: string }
       has_role: {
         Args: {
