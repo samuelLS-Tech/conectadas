@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { trajetoria } from "@/lib/conectadas-data";
 import { TRILHAS, useConquistas } from "@/lib/conquistas";
 import { useXP } from "@/lib/xp-store";
 import { gerarCurriculoPDF } from "@/lib/curriculo-pdf";
@@ -22,15 +21,16 @@ export const Route = createFileRoute("/app/portfolio")({
 
 function Portfolio() {
   const { xp, monitorias, exercicios, horas, nivel, tituloNivel, lideranca, usuario, email, serie, turma } = useXP();
-  const { medalhas, completa } = useConquistas();
+  const { nos, desbloqueados, medalhas, completa } = useConquistas();
   const medalhasGanhas = TRILHAS.filter((t) => medalhas.has(t.id) || completa(t.id));
+  const habilidadesGanhas = nos.filter((no) => desbloqueados.has(no.id)).map((no) => no.nome);
 
   const stats = [
     { v: monitorias, l: "monitorias" },
     { v: exercicios, l: "exercícios" },
-    { v: 14, l: "projetos" },
     { v: `${horas}h`, l: "horas" },
-    { v: "4,9/5", l: "avaliação" },
+    { v: lideranca, l: "liderança" },
+    { v: xp.toLocaleString("pt-BR"), l: "XP" },
   ];
 
   return (
@@ -60,22 +60,6 @@ function Portfolio() {
       </header>
 
       <section className="glass p-8">
-        <h2 className="text-xl font-bold">Minha trajetória</h2>
-        <ol className="relative mt-6 space-y-6 border-l border-primary/40 pl-8">
-          {trajetoria.map((t, i) => (
-            <li key={t.titulo} className="animate-rise relative" style={{ animationDelay: `${i * 90}ms` }}>
-              <span className="absolute -left-[2.85rem] grid h-9 w-9 place-items-center rounded-full border border-primary/50 bg-background text-base shadow-[var(--shadow-neon)]">
-                {t.emoji}
-              </span>
-              <p className="text-xs font-semibold tracking-widest text-mint">{t.ano}</p>
-              <h3 className="text-base font-bold">{t.titulo}</h3>
-              <p className="text-sm text-muted-foreground">{t.descricao}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="glass p-8">
         <h2 className="text-xl font-bold">Medalhas conquistadas</h2>
         <div className="mt-5 flex flex-wrap gap-3">
           {medalhasGanhas.length === 0 && (
@@ -100,7 +84,7 @@ function Portfolio() {
 {
             gerarCurriculoPDF({
               nome: usuario, email, serie, turma, nivel, xp, monitorias, exercicios, horas, lideranca,
-              trajetoria,
+              habilidades: habilidadesGanhas,
               medalhas: medalhasGanhas.map((t) => t.medalha.nome),
             });
             toast.success("Currículo digital baixado!");

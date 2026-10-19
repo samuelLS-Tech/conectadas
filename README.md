@@ -1,5 +1,7 @@
 # Conectadas
 
+Configuração de Google OAuth, migration necessária e limitações conhecidas: [docs/configuracao-e-limitacoes.md](docs/configuracao-e-limitacoes.md).
+
 Crie um site/protótipo web moderno, tecnológico, responsivo e interativo chamado CONECTADAS, desenvolvido para apresentação em uma feira científica escolar chamada FECEG — Ciência Delas.
 
 O CONECTADAS é uma plataforma digital voltada para meninas estudantes do Ensino Médio e Técnico que desejam aprender, ensinar e desenvolver experiências nas áreas de STEM (Ciência, Tecnologia, Engenharia e Matemática).

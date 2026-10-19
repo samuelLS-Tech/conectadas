@@ -1,8 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useXP } from "@/lib/xp-store";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type Oferta = { id: string; autora_id: string; autora_nome: string; tipo: string; disciplina: string; assunto: string; created_at: string };
 
@@ -51,6 +63,18 @@ export function OfertasMonitoria({ ensinar, disciplina }: { ensinar: boolean; di
     if (error && !error.message.includes("duplicate")) return void toast.error("Não foi possível registrar.");
     toast.success(`${o.autora_nome} foi avisada do seu interesse.`);
     void carregar();
+  }
+
+  async function excluir(oferta: Oferta) {
+    setMinhas((atuais) => atuais.filter((item) => item.id !== oferta.id));
+    setInteresses((atuais) => atuais.filter((item) => item.oferta_id !== oferta.id));
+    const { error } = await supabase.from("monitoria_ofertas").delete().eq("id", oferta.id);
+    if (error) {
+      setMinhas((atuais) => [oferta, ...atuais]);
+      toast.error("Não foi possível excluir a publicação.");
+      return;
+    }
+    toast.success("Publicação excluída.");
   }
 
   const jaInteressei = (id: string) => interesses.some((i) => i.oferta_id === id && i.interessada_id === userId);
@@ -107,11 +131,34 @@ export function OfertasMonitoria({ ensinar, disciplina }: { ensinar: boolean; di
             {minhas.map((o) => {
               const nomes = interesses.filter((i) => i.oferta_id === o.id).map((i) => i.interessada_nome);
               return (
-                <div key={o.id} className="rounded-2xl border border-border/70 p-3 text-sm">
-                  <p className="font-semibold">{o.tipo === "oferta" ? "Ofereço" : "Preciso"}: {o.assunto}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {nomes.length ? `Interessadas: ${nomes.join(", ")}` : "Ainda sem interessadas"}
-                  </p>
+                <div key={o.id} className="flex items-start justify-between gap-3 rounded-2xl border border-border/70 p-3 text-sm">
+                  <div className="min-w-0">
+                    <p className="font-semibold">{o.tipo === "oferta" ? "Ofereço" : "Preciso"}: {o.assunto}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {nomes.length ? `Interessadas: ${nomes.join(", ")}` : "Ainda sem interessadas"}
+                    </p>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button type="button" aria-label={`Excluir publicação sobre ${o.assunto}`} className="shrink-0 rounded-full p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+                        <X size={16} />
+                      </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir esta publicação?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          A publicação e os interesses vinculados a ela serão removidos. Esta ação não pode ser desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => void excluir(o)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                          Excluir
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               );
             })}

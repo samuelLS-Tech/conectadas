@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { RequerConta } from "@/components/conectadas/RequerConta";
-import { estudantesEscola } from "@/lib/conectadas-data";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
 import { supabase } from "@/integrations/supabase/client";
 import { useXP } from "@/lib/xp-store";
 import { DISCIPLINAS, SERIES, TURMAS, nomeEscola } from "@/lib/turmas";
-import { AtividadesProfessor } from "@/components/conectadas/AtividadesProfessor";
+import { AtividadesProfessor, type AtividadeProfessorItem } from "@/components/conectadas/AtividadesProfessor";
+import { agregarDesempenho } from "@/lib/professor-dashboard";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/professor")({
   head: () => ({
@@ -29,31 +29,49 @@ export const Route = createFileRoute("/professor")({
   ),
 });
 
-const materiasBase = [
-  { materia: "Matemática", emoji: "🔢", base: 74, forte: "funções do 1º grau", fraco: "raízes e gráfico da função quadrática" },
-  { materia: "Física", emoji: "⚛️", base: 60, forte: "cinemática básica", fraco: "leis de Newton e força resultante" },
-  { materia: "Química", emoji: "🧪", base: 64, forte: "massa molar", fraco: "estequiometria e balanceamento" },
-  { materia: "Programação", emoji: "💻", base: 80, forte: "lógica e laços de repetição", fraco: "funções e listas em Python" },
-  { materia: "Vestibulares", emoji: "🎓", base: 62, forte: "interpretação de enunciados", fraco: "probabilidade e pH (FUVEST/Unicamp)" },
-];
+type Aluna = { id: string; nome: string; serie: string; turma: string; xp: number; monitorias: number };
 
-/** Variação fictícia e estável para cada turma. */
-function variacao(chave: string, i: number) {
-  let h = 0;
-  for (const c of chave + i) h = (h * 31 + c.charCodeAt(0)) % 997;
-  return (h % 25) - 12;
-}
-
-type Aluna = { id: string; nome: string; serie: string; turma: string; xp: number; atividade: string; pendente: boolean; real?: boolean };
+const emojiDisciplina: Record<string, string> = {
+  Matemática: "🔢",
+  Física: "⚛️",
+  Química: "🧪",
+  Biologia: "🧬",
+  Programação: "💻",
+  Engenharia: "📐",
+  Vestibulares: "🎓",
+};
 
 function Professor() {
   const { sair, userId } = useXP();
   const [serie, setSerie] = useState<string>("Todas");
   const [turma, setTurma] = useState<string>("Todas");
   const [disciplina, setDisciplina] = useState<string>("Todas");
-  const [validadas, setValidadas] = useState<string[]>([]);
   const [reais, setReais] = useState<Aluna[]>([]);
+  const [atividades, setAtividades] = useState<AtividadeProfessorItem[]>([]);
   const [minha, setMinha] = useState<{ escola_id: string | null; disciplina: string | null } | null>(null);
+
+  const carregarAtividades = useCallback(async () => {
+    const tamanhoPagina = 1000;
+    const todas: AtividadeProfessorItem[] = [];
+    let inicio = 0;
+
+    while (true) {
+      const { data, error } = await supabase
+        .from("atividades")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .range(inicio, inicio + tamanhoPagina - 1);
+      if (error) {
+        toast.error("Não foi possível carregar as atividades.");
+        return;
+      }
+      todas.push(...(data ?? []));
+      if (!data || data.length < tamanhoPagina) break;
+      inicio += tamanhoPagina;
+    }
+
+    setAtividades(todas);
+  }, []);
 
   useEffect(() => {
     if (!userId) return;
@@ -76,36 +94,28 @@ function Professor() {
               serie: p.serie!,
               turma: p.turma!,
               xp: p.xp,
-              atividade: `${p.monitorias} monitorias registradas`,
-              pendente: false,
-              real: true,
+              monitorias: p.monitorias,
             })),
         ),
       );
-  }, [userId]);
+    void carregarAtividades();
+  }, [carregarAtividades, userId]);
   const nomesReais = useMemo(() => new Map(reais.map((r) => [r.id, { nome: r.nome, serie: r.serie, turma: r.turma }])), [reais]);
-
-  const todas: Aluna[] = useMemo(
-    () => [...reais, ...estudantesEscola.map((e) => ({ ...e, id: e.nome }))],
-    [reais],
+  const estudantesAcademicos = useMemo(() => new Map(reais.map((r) => [r.id, { serie: r.serie, turma: r.turma }])), [reais]);
+  const resumo = useMemo(
+    () => agregarDesempenho(atividades, estudantesAcademicos, { serie, turma, disciplina }),
+    [atividades, disciplina, estudantesAcademicos, serie, turma],
   );
-  const filtradas = todas.filter(
+  const filtradas = reais.filter(
     (a) => (serie === "Todas" || a.serie === serie) && (turma === "Todas" || a.turma === turma),
   );
-  const chave = `${serie}-${turma}`;
-  const desempenho = materiasBase
-    .map((m, i) => ({ ...m, acerto: Math.min(95, Math.max(35, m.base + (chave === "Todas-Todas" ? 0 : variacao(chave, i)))) }))
-    .sort((a, b) => b.acerto - a.acerto);
-  const facilidades = desempenho.slice(0, 3).map((d) => `${d.materia}: ${d.forte}`);
-  const dificuldades = [...desempenho].reverse().slice(0, 3).map((d) => `${d.materia}: ${d.fraco}`);
-  const revisar = [...desempenho].reverse().slice(0, 2).map((d) => d.fraco).concat(desempenho[2] ? [desempenho[2].fraco] : []);
   const rotuloTurma = serie === "Todas" && turma === "Todas" ? "Toda a escola" : `${serie === "Todas" ? "Todas as séries" : serie} · ${turma === "Todas" ? "todas as turmas" : `Turma ${turma}`}`;
 
   const indicadores = [
     { emoji: "👩‍🎓", valor: filtradas.length, label: "estudantes" },
-    { emoji: "⭐", valor: filtradas.reduce((s, a) => s + a.xp, 0).toLocaleString("pt-BR"), label: "XP somado" },
-    { emoji: "⏳", valor: filtradas.filter((a) => a.pendente && !validadas.includes(a.id)).length, label: "atividades pendentes" },
-    { emoji: "📈", valor: `${Math.round(desempenho.reduce((s, d) => s + d.acerto, 0) / desempenho.length)}%`, label: "acerto médio" },
+    { emoji: "⭐", valor: resumo.atividades.reduce((s, a) => s + a.xp, 0).toLocaleString("pt-BR"), label: "XP nas atividades" },
+    { emoji: "⏳", valor: resumo.atividades.filter((a) => a.status === "pendente").length, label: "atividades pendentes" },
+    { emoji: "📈", valor: resumo.mediaGeral === null ? "—" : `${resumo.mediaGeral}%`, label: "acerto médio" },
   ];
 
   // agrupa por série e turma
@@ -168,36 +178,40 @@ function Professor() {
 
           <section className="glass p-7">
             <h2 className="text-xl font-bold">📊 Panorama — {rotuloTurma}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Taxa média de acertos por matéria na Biblioteca STEM e nas monitorias.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Taxa média de acertos nas atividades registradas da Biblioteca STEM.</p>
             <div className="mt-5 space-y-4">
-              {desempenho.map((d) => (
-                <div key={d.materia}>
+              {resumo.desempenho.map((d) => (
+                <div key={d.disciplina}>
                   <div className="mb-1.5 flex justify-between gap-3 text-sm">
-                    <span>{d.emoji} {d.materia}</span>
-                    <span className={d.acerto >= 75 ? "text-mint" : d.acerto < 60 ? "text-magenta" : "text-cyan"}>{d.acerto}% de acertos</span>
+                    <span>{emojiDisciplina[d.disciplina] ?? "📘"} {d.disciplina}</span>
+                    <span className={d.percentual >= 75 ? "text-mint" : d.percentual < 60 ? "text-magenta" : "text-cyan"}>{d.percentual}% de acertos · {d.atividades} atividade(s)</span>
                   </div>
-                  <ProgressoNeon valor={d.acerto} altura="h-2.5" />
+                  <ProgressoNeon valor={d.percentual} altura="h-2.5" />
                 </div>
               ))}
+              {resumo.desempenho.length === 0 && (
+                <p className="text-sm text-muted-foreground">Não há atividades com dados suficientes para os filtros selecionados.</p>
+              )}
             </div>
           </section>
 
           <div className="grid gap-4 md:grid-cols-3">
             {[
-              { t: "💪 Maiores facilidades", c: "text-mint", l: facilidades },
-              { t: "⚠️ Maiores dificuldades", c: "text-magenta", l: dificuldades },
-              { t: "🔁 Assuntos para revisar", c: "text-cyan", l: revisar },
+              { t: "💪 Maiores facilidades", c: "text-mint", l: resumo.facilidades },
+              { t: "⚠️ Maiores dificuldades", c: "text-magenta", l: resumo.dificuldades },
+              { t: "🔁 Assuntos para revisar", c: "text-cyan", l: resumo.dificuldades },
             ].map((b) => (
               <div key={b.t} className="glass p-6">
                 <h3 className={`font-bold ${b.c}`}>{b.t}</h3>
                 <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  {b.l.map((f) => <li key={f}>• {f}</li>)}
+                  {b.l.map((f) => <li key={f.rotulo}>• {f.rotulo} · {f.percentual}%</li>)}
+                  {b.l.length === 0 && <li>Sem dados para os filtros selecionados.</li>}
                 </ul>
               </div>
             ))}
           </div>
 
-          <AtividadesProfessor nomes={nomesReais} serie={serie} turma={turma} disciplina={disciplina} />
+          <AtividadesProfessor atividades={atividades} nomes={nomesReais} serie={serie} turma={turma} disciplina={disciplina} aoAtualizar={carregarAtividades} />
 
           <section className="glass p-5 sm:p-7">
             <h2 className="text-xl font-bold">👩‍🎓 Estudantes por série e turma</h2>
@@ -209,9 +223,7 @@ function Professor() {
                 <div key={grupo}>
                   <h3 className="text-xs font-semibold tracking-widest text-cyan">{grupo.toUpperCase()} · {alunas.length}</h3>
                   <div className="mt-3 space-y-3">
-                    {alunas.map((e) => {
-                      const ok = validadas.includes(e.id) || !e.pendente;
-                      return (
+                    {alunas.map((e) => (
                         <div key={e.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-2xl border border-border/70 p-4">
                           <div className="flex min-w-0 items-center gap-3">
                             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand font-bold text-background">
@@ -220,27 +232,13 @@ function Professor() {
                             <div className="min-w-0">
                               <p className="flex min-w-0 items-center gap-2 text-sm font-semibold">
                                 <span className="truncate">{e.nome}</span>
-                                {e.real && <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-mint/40 px-2 py-0.5 text-[10px] leading-none text-mint">conta real</span>}
+                                <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-mint/40 px-2 py-0.5 text-[10px] leading-none text-mint">conta real</span>
                               </p>
-                              <p className="truncate text-xs text-muted-foreground">{e.xp.toLocaleString("pt-BR")} XP · {e.atividade}</p>
+                              <p className="truncate text-xs text-muted-foreground">{e.xp.toLocaleString("pt-BR")} XP · {e.monitorias} monitorias registradas</p>
                             </div>
                           </div>
-                          {e.real ? null : ok ? (
-                            <span className="rounded-full border border-mint/50 px-3 py-2 text-xs font-semibold text-mint">✅ Validada</span>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                setValidadas((v) => [...v, e.id]);
-                                toast.success(`Atividade de ${e.nome} validada`);
-                              }}
-                              className="rounded-full bg-brand px-3 py-2 text-xs font-semibold text-background"
-                            >
-                              Validar
-                            </button>
-                          )}
                         </div>
-                      );
-                    })}
+                    ))}
                   </div>
                 </div>
               ))}

@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { RequerConta } from "@/components/conectadas/RequerConta";
 import { useXP } from "@/lib/xp-store";
 import { oportunidades, talentos } from "@/lib/conectadas-data";
 import { TalentosReais } from "@/components/conectadas/TalentosReais";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/empresa")({
   head: () => ({
@@ -39,11 +41,14 @@ function Empresa() {
 
 function EmpresaConteudo() {
   const navigate = useNavigate();
-  const { sair } = useXP();
+  const { sair, userId } = useXP();
   const [area, setArea] = useState("Todas");
   const [xpMin, setXpMin] = useState(500);
   const [vaga, setVaga] = useState<string | null>(null);
   const [analisando, setAnalisando] = useState(false);
+  const [contato, setContato] = useState("");
+  const [compartilharContato, setCompartilharContato] = useState(false);
+  const [salvandoContato, setSalvandoContato] = useState(false);
 
   useEffect(() => {
     if (!vaga) return;
@@ -51,6 +56,36 @@ function EmpresaConteudo() {
     const t = setTimeout(() => setAnalisando(false), 1600);
     return () => clearTimeout(t);
   }, [vaga]);
+
+  useEffect(() => {
+    if (!userId) return;
+    void supabase
+      .from("profiles")
+      .select("email_contato, compartilhar_email_contato")
+      .eq("id", userId)
+      .maybeSingle()
+      .then(({ data }) => {
+        setContato(data?.email_contato ?? "");
+        setCompartilharContato(data?.compartilhar_email_contato ?? false);
+      });
+  }, [userId]);
+
+  async function salvarContato(e: React.FormEvent) {
+    e.preventDefault();
+    if (!userId) return;
+    setSalvandoContato(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        email_contato: contato.trim() || null,
+        compartilhar_email_contato: compartilharContato && Boolean(contato.trim()),
+      })
+      .eq("id", userId);
+    setSalvandoContato(false);
+    if (error) return void toast.error("Não foi possível salvar o contato profissional.");
+    if (!contato.trim()) setCompartilharContato(false);
+    toast.success("Contato profissional atualizado.");
+  }
 
   const vagas = oportunidades.filter(
     (o) => (area === "Todas" || o.area === area) && o.xpMinimo >= xpMin,
@@ -131,6 +166,34 @@ function EmpresaConteudo() {
               </div>
             </div>
           </div>
+
+          <form onSubmit={salvarContato} className="glass grid gap-4 p-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+            <div>
+              <label htmlFor="contato-profissional" className="text-xs font-semibold tracking-widest text-muted-foreground">CONTATO PROFISSIONAL</label>
+              <input
+                id="contato-profissional"
+                type="email"
+                maxLength={254}
+                value={contato}
+                onChange={(e) => setContato(e.target.value)}
+                placeholder="contato@empresa.com.br"
+                className="mt-2 w-full rounded-xl border border-input bg-background/60 px-4 py-3 text-sm outline-none focus:border-primary"
+              />
+              <label className="mt-3 flex items-start gap-2 text-sm text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={compartilharContato}
+                  disabled={!contato.trim()}
+                  onChange={(e) => setCompartilharContato(e.target.checked)}
+                  className="mt-0.5 accent-[var(--cyan)]"
+                />
+                Autorizar o compartilhamento deste e-mail com estudantes quando a empresa manifestar interesse.
+              </label>
+            </div>
+            <button disabled={salvandoContato} className="rounded-full border border-cyan/60 px-5 py-2.5 text-sm font-semibold text-cyan disabled:opacity-60">
+              {salvandoContato ? "Salvando…" : "Salvar contato"}
+            </button>
+          </form>
 
           <section className="grid gap-4 md:grid-cols-3">
             {vagas.map((o, i) => (

@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { LifeBuoy, GraduationCap } from "lucide-react";
 import { useXP } from "@/lib/xp-store";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
 import { Notificacoes } from "@/components/conectadas/Notificacoes";
-import { evolucaoMensal, ranking, xpPorCategoria } from "@/lib/conectadas-data";
+import { evolucaoMensal, xpPorCategoria } from "@/lib/conectadas-data";
 import { NIVEL_MAXIMO, TITULOS_NIVEL, XP_POR_NIVEL } from "@/lib/niveis";
+import { supabase } from "@/integrations/supabase/client";
+
+type RankingItem = { posicao: number; id: string; nome: string; xp: number };
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
@@ -24,10 +27,40 @@ export const Route = createFileRoute("/app/dashboard")({
 });
 
 function Dashboard() {
-  const { xp, proximoNivel, monitorias, exercicios, horas, nivel, tituloNivel, usuario } = useXP();
+  const { xp, proximoNivel, monitorias, exercicios, horas, nivel, tituloNivel, usuario, userId } = useXP();
   const [trilhaAberta, setTrilhaAberta] = useState(false);
+  const [ranking, setRanking] = useState<RankingItem[]>([]);
+  const [rankingCarregando, setRankingCarregando] = useState(true);
   const maxCat = Math.max(...xpPorCategoria.map((c) => c.xp));
   const dados = [...evolucaoMensal.slice(0, -1), { mes: "Hoje", xp }];
+
+  useEffect(() => {
+    let ativo = true;
+    const carregarRanking = async () => {
+      const { data } = await supabase.rpc("ranking_minha_escola");
+      if (!ativo) return;
+      setRanking(data ?? []);
+      setRankingCarregando(false);
+    };
+    const aoFocar = () => void carregarRanking();
+    const aoMudarVisibilidade = () => {
+      if (document.visibilityState === "visible") void carregarRanking();
+    };
+
+    void carregarRanking();
+    const intervalo = window.setInterval(() => {
+      if (document.visibilityState === "visible") void carregarRanking();
+    }, 30_000);
+    window.addEventListener("focus", aoFocar);
+    document.addEventListener("visibilitychange", aoMudarVisibilidade);
+
+    return () => {
+      ativo = false;
+      window.clearInterval(intervalo);
+      window.removeEventListener("focus", aoFocar);
+      document.removeEventListener("visibilitychange", aoMudarVisibilidade);
+    };
+  }, [xp]);
 
   const cards = [
     { emoji: "⭐", valor: xp.toLocaleString("pt-BR"), label: "XP total" },
@@ -169,23 +202,25 @@ function Dashboard() {
         <div className="glass p-7">
           <h2 className="text-xl font-bold">Ranking da escola</h2>
           <ul className="mt-5 space-y-3">
-            {[{ pos: "🥇", nome: "Ana", xp }, ...ranking.slice(1)].map((r) => (
+            {ranking.map((r) => (
               <li
-                key={r.nome}
+                key={r.id}
                 className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition-colors ${
-                  r.nome === "Ana"
+                  r.id === userId
                     ? "border-primary/50 bg-soft"
                     : "border-border/60 hover:border-cyan/40"
                 }`}
               >
                 <span className="flex min-w-0 items-center gap-3">
-                  <span className="text-lg">{r.pos}</span>
+                  <span className="text-lg">{r.posicao === 1 ? "🥇" : r.posicao === 2 ? "🥈" : r.posicao === 3 ? "🥉" : `${r.posicao}º`}</span>
                   <span className="truncate text-sm font-semibold">{r.nome}</span>
                 </span>
                 <span className="shrink-0 text-sm text-mint">{r.xp.toLocaleString("pt-BR")} XP</span>
               </li>
             ))}
           </ul>
+          {rankingCarregando && <p className="mt-5 text-sm text-muted-foreground">Carregando classificação…</p>}
+          {!rankingCarregando && ranking.length === 0 && <p className="mt-5 text-sm text-muted-foreground">O ranking aparecerá quando sua escola tiver estudantes cadastradas.</p>}
           <Link
             to="/app/conquistas"
             className="mt-6 block rounded-full border border-border px-5 py-3 text-center text-sm font-semibold hover:border-cyan/60 hover:text-cyan"

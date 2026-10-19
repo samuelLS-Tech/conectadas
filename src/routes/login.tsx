@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Building2, Eye, EyeOff, GraduationCap, School } from "lucide-react";
 import { Marca } from "@/components/conectadas/Marca";
 import { NeuralBackground } from "@/components/conectadas/NeuralBackground";
 import { supabase } from "@/integrations/supabase/client";
-import type { TipoConta } from "@/lib/xp-store";
+import { useXP, type TipoConta } from "@/lib/xp-store";
 import { DISCIPLINAS, ESCOLAS, SERIES, TURMAS } from "@/lib/turmas";
 
 export const Route = createFileRoute("/login")({
@@ -43,6 +43,7 @@ const rotulo = "text-xs font-semibold tracking-widest text-muted-foreground";
 
 function Login() {
   const navigate = useNavigate();
+  const { recarregar } = useXP();
   const { redirect } = Route.useSearch();
   const [modo, setModo] = useState<"entrar" | "criar">("entrar");
   const [tipo, setTipo] = useState<TipoConta>("estudante");
@@ -56,19 +57,62 @@ function Login() {
   const [enviando, setEnviando] = useState(false);
   const [verSenha, setVerSenha] = useState(false);
   const [codigoProf, setCodigoProf] = useState("");
+  const [oauthPendente, setOauthPendente] = useState(false);
 
-  async function irParaDestino(userId: string) {
+  const irParaDestino = useCallback(async (userId: string) => {
     if (redirect) return navigate({ to: redirect });
     const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
     const t = (data?.[0]?.role as TipoConta | undefined) ?? "estudante";
     navigate({ to: destinoPorTipo[t] });
+  }, [navigate, redirect]);
+
+  useEffect(() => {
+    void supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return;
+      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
+      if (roles?.length) return void irParaDestino(data.user.id);
+      const tipoSalvo = sessionStorage.getItem("conectadas-google-tipo") as TipoConta | null;
+      if (tipoSalvo && destinoPorTipo[tipoSalvo]) setTipo(tipoSalvo);
+      setNome(String(data.user.user_metadata?.["full_name"] ?? data.user.user_metadata?.["name"] ?? ""));
+      setEmail(data.user.email ?? "");
+      setModo("criar");
+      setOauthPendente(true);
+    });
+  }, [irParaDestino]);
+
+  async function entrarComGoogle() {
+    sessionStorage.setItem("conectadas-google-tipo", tipo);
+    const retorno = new URL("/login", window.location.origin);
+    if (redirect) retorno.searchParams.set("redirect", redirect);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: retorno.toString(), queryParams: { prompt: "select_account" } },
+    });
+    if (error) toast.error("Não foi possível iniciar o login com Google.");
   }
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     setEnviando(true);
     try {
-      if (modo === "criar") {
+      if (oauthPendente) {
+        if (!nome.trim()) throw new Error("Informe seu nome.");
+        const { error } = await supabase.rpc("concluir_onboarding", {
+          _tipo: tipo,
+          _nome: nome.trim(),
+          _serie: tipo === "estudante" ? serie : undefined,
+          _turma: tipo === "estudante" ? turma : undefined,
+          _escola_id: tipo !== "empresa" ? escola : undefined,
+          _disciplina: tipo === "professor" ? disciplina : undefined,
+          _codigo_professor: tipo === "professor" ? codigoProf.trim() : undefined,
+        });
+        if (error) throw error;
+        sessionStorage.removeItem("conectadas-google-tipo");
+        await recarregar();
+        toast.success(`Olá, ${nome.trim().split(" ")[0]}!`);
+        const { data } = await supabase.auth.getUser();
+        if (data.user) await irParaDestino(data.user.id);
+      } else if (modo === "criar") {
         if (!nome.trim()) throw new Error("Informe seu nome.");
         const { data, error } = await supabase.auth.signUp({
           email,
@@ -123,9 +167,9 @@ function Login() {
         </div>
 
         <div className="glass animate-pop p-8">
-          <h1 className="text-center text-2xl font-bold">Olá! Boas-vindas ao CONECTADAS 💜</h1>
+          <h1 className="text-center text-2xl font-bold">{oauthPendente ? "Complete seu perfil" : "Olá! Boas-vindas ao CONECTADAS 💜"}</h1>
 
-          <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
+          {!oauthPendente && <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
             {(["entrar", "criar"] as const).map((m) => (
               <button
                 key={m}
@@ -138,7 +182,17 @@ function Login() {
                 {m === "entrar" ? "Entrar" : "Criar conta"}
               </button>
             ))}
-          </div>
+          </div>}
+
+          {!oauthPendente && (
+            <button
+              type="button"
+              onClick={() => void entrarComGoogle()}
+              className="mt-6 w-full rounded-full border border-border px-6 py-3 text-sm font-semibold transition-colors hover:border-cyan/60 hover:text-cyan"
+            >
+              Continuar com Google
+            </button>
+          )}
 
           <form className="mt-6 space-y-4" onSubmit={enviar}>
             {modo === "criar" && (
@@ -205,11 +259,11 @@ function Login() {
                 )}
               </>
             )}
-            <div>
+            {!oauthPendente && <div>
               <label className={rotulo}>E-MAIL</label>
               <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={campo} />
-            </div>
-            <div>
+            </div>}
+            {!oauthPendente && <div>
               <label className={rotulo}>SENHA</label>
               <div className="relative">
                 <input required minLength={6} type={verSenha ? "text" : "password"} value={senha} onChange={(e) => setSenha(e.target.value)} className={`${campo} pr-12`} />
@@ -222,13 +276,13 @@ function Login() {
                   {verSenha ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-            </div>
+            </div>}
             <button
               type="submit"
               disabled={enviando}
               className="w-full rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-background shadow-[var(--shadow-neon)] transition-transform hover:scale-[1.02] disabled:opacity-60"
             >
-              {enviando ? "Aguarde…" : modo === "entrar" ? "Entrar" : "Criar conta"}
+              {enviando ? "Aguarde…" : oauthPendente ? "Concluir cadastro" : modo === "entrar" ? "Entrar" : "Criar conta"}
             </button>
           </form>
         </div>

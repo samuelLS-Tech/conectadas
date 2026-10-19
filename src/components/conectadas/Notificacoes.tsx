@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-type N = { id: string; texto: string; lida: boolean; created_at: string };
+type N = { id: string; texto: string; contato_email: string | null; empresa_interesse_id: string | null; lida: boolean; created_at: string };
 
 /** Notificações internas (validação de atividades, interesse de empresas e monitorias). */
 export function Notificacoes() {
@@ -37,7 +37,16 @@ export function Notificacoes() {
       <ul className="mt-3 space-y-2 text-sm">
         {itens.map((n) => (
           <li key={n.id} className={n.lida ? "text-muted-foreground" : ""}>
-            • {n.texto} <span className="text-xs text-muted-foreground">({new Date(n.created_at).toLocaleDateString("pt-BR")})</span>
+            <span>• {n.texto} </span>
+            {n.contato_email && (
+              <a href={`mailto:${n.contato_email}`} className="font-semibold text-cyan underline-offset-2 hover:underline">
+                {n.contato_email}
+              </a>
+            )}{" "}
+            {n.empresa_interesse_id && !n.contato_email && (
+              <span className="text-muted-foreground">Contato profissional não disponibilizado. </span>
+            )}
+            <span className="text-xs text-muted-foreground">({new Date(n.created_at).toLocaleDateString("pt-BR")})</span>
           </li>
         ))}
       </ul>

@@ -8,7 +8,6 @@ type T = { id: string; nome: string; serie: string | null; turma: string | null;
 
 /** Estudantes com conta real (sem e-mail); a empresa pode manifestar interesse. */
 export function TalentosReais({ oportunidade }: { oportunidade?: string | undefined }) {
-  const { usuario } = useXP();
   const [lista, setLista] = useState<T[]>([]);
   const [enviados, setEnviados] = useState<string[]>([]);
 
@@ -19,7 +18,6 @@ export function TalentosReais({ oportunidade }: { oportunidade?: string | undefi
 
   async function interessar(t: T) {
     const { error } = await supabase.from("empresa_interesses").insert({
-      empresa_nome: usuario || "Empresa",
       estudante_id: t.id,
       oportunidade: oportunidade ?? null,
     });

@@ -1,32 +1,25 @@
-import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-type Atv = { id: string; estudante_id: string; titulo: string; disciplina: string; acertos: number; total: number; xp: number; status: string; created_at: string };
+export type AtividadeProfessorItem = { id: string; estudante_id: string; titulo: string; disciplina: string; acertos: number; total: number; xp: number; status: string; created_at: string };
 
 /** Atividades reais enviadas pelas estudantes da escola do professor, com aprovar/recusar. */
-export function AtividadesProfessor({ nomes, serie, turma, disciplina }: {
+export function AtividadesProfessor({ atividades, nomes, serie, turma, disciplina, aoAtualizar }: {
+  atividades: AtividadeProfessorItem[];
   nomes: Map<string, { nome: string; serie: string; turma: string }>;
   serie: string;
   turma: string;
   disciplina: string;
+  aoAtualizar: () => Promise<void>;
 }) {
-  const [lista, setLista] = useState<Atv[]>([]);
-
-  const carregar = useCallback(async () => {
-    const { data } = await supabase.from("atividades").select("*").order("created_at", { ascending: false }).limit(100);
-    setLista(data ?? []);
-  }, []);
-  useEffect(() => void carregar(), [carregar]);
-
-  async function decidir(a: Atv, aprovar: boolean) {
+  async function decidir(a: AtividadeProfessorItem, aprovar: boolean) {
     const { data, error } = await supabase.rpc("validar_atividade", { _id: a.id, _aprovar: aprovar });
     if (error) return void toast.error("Não foi possível registrar a decisão.");
     toast.success(data === "ja_validada" ? "Esta atividade já tinha sido validada." : aprovar ? "Atividade aprovada" : "Atividade recusada");
-    void carregar();
+    await aoAtualizar();
   }
 
-  const filtradas = lista.filter((a) => {
+  const filtradas = atividades.filter((a) => {
     const e = nomes.get(a.estudante_id);
     return (serie === "Todas" || e?.serie === serie) && (turma === "Todas" || e?.turma === turma) && (disciplina === "Todas" || a.disciplina === disciplina);
   });

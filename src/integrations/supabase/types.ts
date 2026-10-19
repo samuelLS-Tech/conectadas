@@ -77,6 +77,7 @@ export type Database = {
       empresa_interesses: {
         Row: {
           created_at: string
+          empresa_email: string | null
           empresa_id: string
           empresa_nome: string
           estudante_id: string
@@ -85,14 +86,16 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          empresa_email?: string | null
           empresa_id?: string
-          empresa_nome: string
+          empresa_nome?: string
           estudante_id: string
           id?: string
           oportunidade?: string | null
         }
         Update: {
           created_at?: string
+          empresa_email?: string | null
           empresa_id?: string
           empresa_nome?: string
           estudante_id?: string
@@ -284,31 +287,47 @@ export type Database = {
       }
       notificacoes: {
         Row: {
+          contato_email: string | null
           created_at: string
+          empresa_interesse_id: string | null
           id: string
           lida: boolean
           texto: string
           user_id: string
         }
         Insert: {
+          contato_email?: string | null
           created_at?: string
+          empresa_interesse_id?: string | null
           id?: string
           lida?: boolean
           texto: string
           user_id: string
         }
         Update: {
+          contato_email?: string | null
           created_at?: string
+          empresa_interesse_id?: string | null
           id?: string
           lida?: boolean
           texto?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "notificacoes_empresa_interesse_id_fkey"
+            columns: ["empresa_interesse_id"]
+            isOneToOne: false
+            referencedRelation: "empresa_interesses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           atividades_concluidas: string[]
+          compartilhar_email_contato: boolean
+          email_contato: string | null
           created_at: string
           disciplina: string | null
           escola_id: string | null
@@ -324,6 +343,8 @@ export type Database = {
         }
         Insert: {
           atividades_concluidas?: string[]
+          compartilhar_email_contato?: boolean
+          email_contato?: string | null
           created_at?: string
           disciplina?: string | null
           escola_id?: string | null
@@ -339,6 +360,8 @@ export type Database = {
         }
         Update: {
           atividades_concluidas?: string[]
+          compartilhar_email_contato?: boolean
+          email_contato?: string | null
           created_at?: string
           disciplina?: string | null
           escola_id?: string | null
@@ -388,6 +411,18 @@ export type Database = {
         Returns: number
       }
       confirmar_monitoria: { Args: { _sessao: string }; Returns: string }
+      concluir_onboarding: {
+        Args: {
+          _codigo_professor?: string
+          _disciplina?: string
+          _escola_id?: string
+          _nome: string
+          _serie?: string
+          _tipo: Database["public"]["Enums"]["app_role"]
+          _turma?: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -408,6 +443,15 @@ export type Database = {
         }[]
       }
       minha_escola: { Args: never; Returns: string }
+      ranking_minha_escola: {
+        Args: never
+        Returns: {
+          id: string
+          nome: string
+          posicao: number
+          xp: number
+        }[]
+      }
       validar_atividade: {
         Args: { _aprovar: boolean; _id: string }
         Returns: string
