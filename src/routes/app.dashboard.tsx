@@ -194,6 +194,58 @@ function Dashboard() {
           </Link>
         </div>
       </section>
+
+      {trilhaAberta && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-background/80 px-5 backdrop-blur-sm"
+          onClick={() => setTrilhaAberta(false)}
+        >
+          <div
+            className="glass animate-pop max-h-[85vh] w-full max-w-md overflow-y-auto p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold">Trilha de níveis</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Cada nível exige {XP_POR_NIVEL} XP a mais que o anterior.
+            </p>
+            <ol className="mt-5 space-y-2.5">
+              {Array.from({ length: NIVEL_MAXIMO }, (_, i) => i + 1).map((n) => {
+                const concluido = n < nivel;
+                const atual = n === nivel;
+                return (
+                  <li
+                    key={n}
+                    className={`flex items-center gap-3 rounded-2xl border px-4 py-3 ${
+                      atual
+                        ? "border-mint/70 bg-mint/10 shadow-[var(--shadow-cyan)]"
+                        : concluido
+                          ? "border-border/60 bg-secondary/40"
+                          : "border-border/40 opacity-55"
+                    }`}
+                  >
+                    <span className="text-lg">{concluido ? "✅" : atual ? "✨" : "🔒"}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-bold">
+                        Nível {n} — {TITULOS_NIVEL[n]}
+                      </span>
+                      <span className="block text-xs text-muted-foreground">
+                        {((n - 1) * XP_POR_NIVEL).toLocaleString("pt-BR")} XP
+                        {atual ? " · nível atual" : ""}
+                      </span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+            <button
+              onClick={() => setTrilhaAberta(false)}
+              className="mt-6 w-full rounded-full border border-border px-6 py-2.5 text-sm font-semibold hover:border-cyan/60 hover:text-cyan"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

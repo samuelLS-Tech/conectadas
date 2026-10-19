@@ -26,7 +26,7 @@ function AppLayout() {
 }
 
 function AppConteudo() {
-  const { xp, proximoNivel, nivel, sair } = useXP();
+  const { xp, proximoNivel, nivel, tituloNivel, sair } = useXP();
 
   return (
     <div className="min-h-screen lg:flex">
@@ -36,11 +36,13 @@ function AppConteudo() {
 
           <div className="glass hidden p-4 lg:block">
             <p className="text-xs tracking-widest text-muted-foreground">NÍVEL {nivel}</p>
-            <p className="font-display text-base font-bold text-foreground">Pesquisadora Sênior</p>
+            <p className="font-display text-base font-bold text-foreground">{tituloNivel}</p>
             <div className="mt-3">
-              <ProgressoNeon valor={(xp / proximoNivel) * 100} altura="h-2" />
+              <ProgressoNeon valor={proximoNivel === null ? 100 : (xp / proximoNivel) * 100} altura="h-2" />
               <p className="mt-2 text-xs text-muted-foreground">
-                {xp.toLocaleString("pt-BR")} / {proximoNivel.toLocaleString("pt-BR")} XP
+                {proximoNivel === null
+                  ? `${xp.toLocaleString("pt-BR")} XP · nível máximo`
+                  : `${xp.toLocaleString("pt-BR")} / ${proximoNivel.toLocaleString("pt-BR")} XP`}
               </p>
             </div>
           </div>
