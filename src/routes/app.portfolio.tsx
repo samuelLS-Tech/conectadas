@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { medalhas, trajetoria } from "@/lib/conectadas-data";
+import { trajetoria } from "@/lib/conectadas-data";
+import { TRILHAS, useConquistas } from "@/lib/conquistas";
 import { useXP } from "@/lib/xp-store";
 import { gerarCurriculoPDF } from "@/lib/curriculo-pdf";
 
@@ -20,7 +21,9 @@ export const Route = createFileRoute("/app/portfolio")({
 });
 
 function Portfolio() {
-  const { xp, monitorias, exercicios, horas, nivel, lideranca, usuario, email, serie, turma } = useXP();
+  const { xp, monitorias, exercicios, horas, nivel, tituloNivel, lideranca, usuario, email, serie, turma } = useXP();
+  const { medalhas, completa } = useConquistas();
+  const medalhasGanhas = TRILHAS.filter((t) => medalhas.has(t.id) || completa(t.id));
 
   const stats = [
     { v: monitorias, l: "monitorias" },
@@ -42,7 +45,7 @@ function Portfolio() {
             <h1 className="mt-1 text-3xl font-bold">{usuario || "Estudante"}</h1>
             {serie && turma && <p className="text-sm text-cyan">{serie} · Turma {turma}</p>}
             <p className="text-sm text-muted-foreground">
-              Pesquisadora Sênior — Nível {nivel} · {xp.toLocaleString("pt-BR")} XP
+              {tituloNivel} — Nível {nivel} · {xp.toLocaleString("pt-BR")} XP
             </p>
           </div>
         </div>
@@ -75,16 +78,19 @@ function Portfolio() {
       <section className="glass p-8">
         <h2 className="text-xl font-bold">Medalhas conquistadas</h2>
         <div className="mt-5 flex flex-wrap gap-3">
-          {medalhas
-            .filter((m) => m.desbloqueada)
-            .map((m) => (
-              <span
-                key={m.id}
-                className="inline-flex items-center gap-2 rounded-full border border-mint/40 bg-mint/5 px-4 py-2 text-sm"
-              >
-                {m.emoji} {m.nome}
-              </span>
-            ))}
+          {medalhasGanhas.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              Nenhuma medalha ainda — complete uma trilha na Central de Conquistas.
+            </p>
+          )}
+          {medalhasGanhas.map((t) => (
+            <span
+              key={t.id}
+              className="inline-flex items-center gap-2 rounded-full border border-mint/40 bg-mint/5 px-4 py-2 text-sm"
+            >
+              {t.medalha.emoji} {t.medalha.nome}
+            </span>
+          ))}
         </div>
       </section>
 
@@ -95,7 +101,7 @@ function Portfolio() {
             gerarCurriculoPDF({
               nome: usuario, email, serie, turma, nivel, xp, monitorias, exercicios, horas, lideranca,
               trajetoria,
-              medalhas: medalhas.filter((m) => m.desbloqueada).map((m) => m.nome),
+              medalhas: medalhasGanhas.map((t) => t.medalha.nome),
             });
             toast.success("Currículo digital baixado!");
           }

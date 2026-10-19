@@ -1,5 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { XP_POR_NIVEL, nivelPorXP, proximoNivelXP, tituloNivel } from "@/lib/niveis";
+
+export { XP_POR_NIVEL };
 
 export type Sessao = {
   monitora: string;
@@ -43,7 +46,8 @@ type Ctx = Perfil & {
   medalhasExtras: string[];
   sessao: Sessao | null;
   nivel: number;
-  proximoNivel: number;
+  tituloNivel: string;
+  proximoNivel: number | null;
   iniciarSessao: (s: Sessao) => void;
   concluirAtividade: (
     id: string,
@@ -55,8 +59,6 @@ type Ctx = Perfil & {
 };
 
 const XPContext = createContext<Ctx | null>(null);
-
-export const XP_POR_NIVEL = 600;
 
 async function carregarPerfil(userId: string, email: string | null): Promise<Perfil> {
   const [{ data: p }, { data: roles }] = await Promise.all([
@@ -103,14 +105,15 @@ export function XPProvider({ children }: { children: ReactNode }) {
   }, [sincronizar]);
 
   const valor = useMemo<Ctx>(() => {
-    const nivel = Math.floor(perfil.xp / XP_POR_NIVEL) + 1;
-    const proximoNivel = nivel * XP_POR_NIVEL;
+    const nivel = nivelPorXP(perfil.xp);
+    const proximoNivel = proximoNivelXP(nivel);
     return {
       ...perfil,
       carregando,
       medalhasExtras: [],
       sessao,
       nivel,
+      tituloNivel: tituloNivel(nivel),
       proximoNivel,
       iniciarSessao: setSessao,
       recarregar: sincronizar,
