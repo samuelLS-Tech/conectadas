@@ -59,6 +59,21 @@ export type Database = {
         }
         Relationships: []
       }
+      config_privada: {
+        Row: {
+          chave: string
+          valor: string
+        }
+        Insert: {
+          chave: string
+          valor: string
+        }
+        Update: {
+          chave?: string
+          valor?: string
+        }
+        Relationships: []
+      }
       empresa_interesses: {
         Row: {
           created_at: string
