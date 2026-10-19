@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { LifeBuoy, GraduationCap } from "lucide-react";
 import { useXP } from "@/lib/xp-store";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
 import { Notificacoes } from "@/components/conectadas/Notificacoes";
 import { evolucaoMensal, ranking, xpPorCategoria } from "@/lib/conectadas-data";
+import { NIVEL_MAXIMO, TITULOS_NIVEL, XP_POR_NIVEL } from "@/lib/niveis";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
@@ -22,7 +24,8 @@ export const Route = createFileRoute("/app/dashboard")({
 });
 
 function Dashboard() {
-  const { xp, proximoNivel, monitorias, exercicios, horas, nivel, usuario } = useXP();
+  const { xp, proximoNivel, monitorias, exercicios, horas, nivel, tituloNivel, usuario } = useXP();
+  const [trilhaAberta, setTrilhaAberta] = useState(false);
   const maxCat = Math.max(...xpPorCategoria.map((c) => c.xp));
   const dados = [...evolucaoMensal.slice(0, -1), { mes: "Hoje", xp }];
 
@@ -40,18 +43,28 @@ function Dashboard() {
         <div className="min-w-0">
           <h1 className="truncate text-2xl font-bold sm:text-3xl">Olá, {(usuario || "Ana").split(" ")[0]}! 👋</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Nível {nivel} · Pesquisadora Sênior
+            Nível {nivel} · {tituloNivel}
           </p>
         </div>
-        <div className="mt-6">
+        <button
+          type="button"
+          onClick={() => setTrilhaAberta(true)}
+          className="mt-6 block w-full text-left"
+          aria-label="Ver trilha de níveis"
+        >
           <div className="mb-2 flex justify-between text-sm">
-            <span className="text-muted-foreground">Progresso para o próximo nível</span>
+            <span className="text-muted-foreground">
+              {proximoNivel === null ? "Nível máximo alcançado" : "Progresso para o próximo nível"}
+            </span>
             <span className="font-semibold">
-              {xp.toLocaleString("pt-BR")} / {proximoNivel.toLocaleString("pt-BR")} XP
+              {proximoNivel === null
+                ? `${xp.toLocaleString("pt-BR")} XP`
+                : `${xp.toLocaleString("pt-BR")} / ${proximoNivel.toLocaleString("pt-BR")} XP`}
             </span>
           </div>
-          <ProgressoNeon valor={(xp / proximoNivel) * 100} altura="h-4" />
-        </div>
+          <ProgressoNeon valor={proximoNivel === null ? 100 : (xp / proximoNivel) * 100} altura="h-4" />
+          <span className="mt-2 block text-xs text-cyan">Ver trilha de níveis →</span>
+        </button>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
