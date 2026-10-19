@@ -43,6 +43,13 @@
       "when": 1792374932368,
       "tag": "0005_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792379400823,
+      "tag": "0006_gamificacao_trilhas_medalhas",
+      "breakpoints": true
     }
   ]
 }

@@ -101,6 +101,92 @@ export type Database = {
         }
         Relationships: []
       }
+      estudante_habilidades: {
+        Row: {
+          desbloqueada_em: string
+          estudante_id: string
+          habilidade_id: string
+        }
+        Insert: {
+          desbloqueada_em?: string
+          estudante_id: string
+          habilidade_id: string
+        }
+        Update: {
+          desbloqueada_em?: string
+          estudante_id?: string
+          habilidade_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estudante_habilidades_estudante_id_fkey"
+            columns: ["estudante_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estudante_habilidades_habilidade_id_fkey"
+            columns: ["habilidade_id"]
+            isOneToOne: false
+            referencedRelation: "habilidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estudante_medalhas: {
+        Row: {
+          conquistada_em: string
+          estudante_id: string
+          medalha_id: string
+        }
+        Insert: {
+          conquistada_em?: string
+          estudante_id: string
+          medalha_id: string
+        }
+        Update: {
+          conquistada_em?: string
+          estudante_id?: string
+          medalha_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estudante_medalhas_estudante_id_fkey"
+            columns: ["estudante_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      habilidades: {
+        Row: {
+          criterio_tipo: string
+          criterio_valor: string
+          id: string
+          nome: string
+          ordem: number
+          trilha: string
+        }
+        Insert: {
+          criterio_tipo: string
+          criterio_valor: string
+          id: string
+          nome: string
+          ordem?: number
+          trilha: string
+        }
+        Update: {
+          criterio_tipo?: string
+          criterio_valor?: string
+          id?: string
+          nome?: string
+          ordem?: number
+          trilha?: string
+        }
+        Relationships: []
+      }
       monitoria_interesses: {
         Row: {
           created_at: string
@@ -291,6 +377,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      conceder_medalhas: { Args: { _uid: string }; Returns: undefined }
       concluir_atividade: {
         Args: {
           _acertos: number
