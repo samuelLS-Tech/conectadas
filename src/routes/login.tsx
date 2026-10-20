@@ -107,27 +107,27 @@ function Login() {
       try {
         const { data, error } = await supabase.auth.getUser();
         if (error && !isAuthSessionMissingError(error)) throw error;
-        if (data.user) await resolverSessao(data.user);
+        if (data.user) setSessaoAtual(data.user);
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Não foi possível verificar sua conta.");
       }
     })();
-  }, [resolverSessao]);
+  }, []);
 
-  async function entrarComGoogle() {
-    sessionStorage.setItem(tipoGoogleKey, tipo);
-    const retorno = new URL("/login", window.location.origin);
-    if (redirect) retorno.searchParams.set("redirect", redirect);
+  async function continuarConectado() {
+    if (!sessaoAtual) return;
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: retorno.toString(), queryParams: { prompt: "select_account" } },
-      });
-      if (error) throw error;
-    } catch {
-      sessionStorage.removeItem(tipoGoogleKey);
-      toast.error("Não foi possível iniciar o login com Google.");
+      await resolverSessao(sessaoAtual);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível entrar.");
     }
+  }
+
+  async function trocarDeConta() {
+    await supabase.auth.signOut();
+    sessionStorage.removeItem(tipoGoogleKey);
+    setSessaoAtual(null);
+    setOauthPendente(false);
   }
 
   async function enviar(e: React.FormEvent) {
