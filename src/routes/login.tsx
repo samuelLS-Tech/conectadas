@@ -340,7 +340,7 @@ function Login() {
             >
               {enviando ? "Aguarde…" : oauthPendente ? "Concluir cadastro" : modo === "entrar" ? "Entrar" : "Criar conta"}
             </button>
-          </form>
+          </form>}
         </div>
 
         <Link to="/" className="mt-6 block text-center text-sm text-muted-foreground hover:text-cyan">
