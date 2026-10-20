@@ -20,7 +20,7 @@ export function nivelPorXP(xp: number): number {
 }
 
 export function tituloNivel(nivel: number): string {
-  return TITULOS_NIVEL[Math.min(NIVEL_MAXIMO, Math.max(1, nivel))];
+  return TITULOS_NIVEL[Math.min(NIVEL_MAXIMO, Math.max(1, nivel))] ?? TITULOS_NIVEL[1]!;
 }
 
 /** XP necessário para concluir o nível atual; null no nível máximo. */
