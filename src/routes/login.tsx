@@ -61,6 +61,7 @@ function Login() {
   const [verSenha, setVerSenha] = useState(false);
   const [codigoProf, setCodigoProf] = useState("");
   const [oauthPendente, setOauthPendente] = useState(false);
+  const [sessaoAtual, setSessaoAtual] = useState<User | null>(null);
 
   const abrirOnboarding = useCallback((user: User) => {
     const tipoSalvo = sessionStorage.getItem(tipoGoogleKey);
@@ -107,27 +108,27 @@ function Login() {
       try {
         const { data, error } = await supabase.auth.getUser();
         if (error && !isAuthSessionMissingError(error)) throw error;
-        if (data.user) await resolverSessao(data.user);
+        if (data.user) setSessaoAtual(data.user);
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Não foi possível verificar sua conta.");
       }
     })();
-  }, [resolverSessao]);
+  }, []);
 
-  async function entrarComGoogle() {
-    sessionStorage.setItem(tipoGoogleKey, tipo);
-    const retorno = new URL("/login", window.location.origin);
-    if (redirect) retorno.searchParams.set("redirect", redirect);
+  async function continuarConectado() {
+    if (!sessaoAtual) return;
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: retorno.toString(), queryParams: { prompt: "select_account" } },
-      });
-      if (error) throw error;
-    } catch {
-      sessionStorage.removeItem(tipoGoogleKey);
-      toast.error("Não foi possível iniciar o login com Google.");
+      await resolverSessao(sessaoAtual);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível entrar.");
     }
+  }
+
+  async function trocarDeConta() {
+    await supabase.auth.signOut();
+    sessionStorage.removeItem(tipoGoogleKey);
+    setSessaoAtual(null);
+    setOauthPendente(false);
   }
 
   async function enviar(e: React.FormEvent) {
@@ -209,7 +210,7 @@ function Login() {
         <div className="glass animate-pop p-8">
           <h1 className="text-center text-2xl font-bold">{oauthPendente ? "Complete seu perfil" : "Olá! Boas-vindas ao CONECTADAS 💜"}</h1>
 
-          {!oauthPendente && <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
+          {!oauthPendente && !sessaoAtual && <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
             {(["entrar", "criar"] as const).map((m) => (
               <button
                 key={m}
@@ -224,17 +225,32 @@ function Login() {
             ))}
           </div>}
 
-          {!oauthPendente && (
-            <button
-              type="button"
-              onClick={() => void entrarComGoogle()}
-              className="mt-6 w-full rounded-full border border-border px-6 py-3 text-sm font-semibold transition-colors hover:border-cyan/60 hover:text-cyan"
-            >
-              Continuar com Google
-            </button>
+          {!oauthPendente && sessaoAtual && (
+            <div className="mt-6 rounded-2xl border border-border bg-background/40 p-4 text-sm">
+              <p className="text-muted-foreground">
+                Você já está conectado(a) como{" "}
+                <span className="font-semibold text-foreground">{sessaoAtual.email}</span>.
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => void continuarConectado()}
+                  className="rounded-full bg-brand px-4 py-2.5 text-xs font-semibold text-background"
+                >
+                  Continuar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void trocarDeConta()}
+                  className="rounded-full border border-border px-4 py-2.5 text-xs font-semibold hover:border-cyan/60 hover:text-cyan"
+                >
+                  Trocar de conta
+                </button>
+              </div>
+            </div>
           )}
 
-          <form className="mt-6 space-y-4" onSubmit={enviar}>
+          {!sessaoAtual && <form className="mt-6 space-y-4" onSubmit={enviar}>
             {modo === "criar" && (
               <>
                 <div>
@@ -324,7 +340,7 @@ function Login() {
             >
               {enviando ? "Aguarde…" : oauthPendente ? "Concluir cadastro" : modo === "entrar" ? "Entrar" : "Criar conta"}
             </button>
-          </form>
+          </form>}
         </div>
 
         <Link to="/" className="mt-6 block text-center text-sm text-muted-foreground hover:text-cyan">
