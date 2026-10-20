@@ -61,6 +61,7 @@ function Login() {
   const [verSenha, setVerSenha] = useState(false);
   const [codigoProf, setCodigoProf] = useState("");
   const [oauthPendente, setOauthPendente] = useState(false);
+  const [sessaoAtual, setSessaoAtual] = useState<User | null>(null);
 
   const abrirOnboarding = useCallback((user: User) => {
     const tipoSalvo = sessionStorage.getItem(tipoGoogleKey);
