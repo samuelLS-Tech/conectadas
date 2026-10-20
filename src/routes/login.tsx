@@ -210,7 +210,7 @@ function Login() {
         <div className="glass animate-pop p-8">
           <h1 className="text-center text-2xl font-bold">{oauthPendente ? "Complete seu perfil" : "Olá! Boas-vindas ao CONECTADAS 💜"}</h1>
 
-          {!oauthPendente && <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
+          {!oauthPendente && !sessaoAtual && <div className="mt-6 grid grid-cols-2 gap-1 rounded-full border border-border p-1">
             {(["entrar", "criar"] as const).map((m) => (
               <button
                 key={m}
@@ -250,7 +250,7 @@ function Login() {
             </div>
           )}
 
-          <form className="mt-6 space-y-4" onSubmit={enviar}>
+          {!sessaoAtual && <form className="mt-6 space-y-4" onSubmit={enviar}>
             {modo === "criar" && (
               <>
                 <div>
