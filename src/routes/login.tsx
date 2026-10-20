@@ -225,14 +225,29 @@ function Login() {
             ))}
           </div>}
 
-          {!oauthPendente && (
-            <button
-              type="button"
-              onClick={() => void entrarComGoogle()}
-              className="mt-6 w-full rounded-full border border-border px-6 py-3 text-sm font-semibold transition-colors hover:border-cyan/60 hover:text-cyan"
-            >
-              Continuar com Google
-            </button>
+          {!oauthPendente && sessaoAtual && (
+            <div className="mt-6 rounded-2xl border border-border bg-background/40 p-4 text-sm">
+              <p className="text-muted-foreground">
+                Você já está conectado(a) como{" "}
+                <span className="font-semibold text-foreground">{sessaoAtual.email}</span>.
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => void continuarConectado()}
+                  className="rounded-full bg-brand px-4 py-2.5 text-xs font-semibold text-background"
+                >
+                  Continuar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void trocarDeConta()}
+                  className="rounded-full border border-border px-4 py-2.5 text-xs font-semibold hover:border-cyan/60 hover:text-cyan"
+                >
+                  Trocar de conta
+                </button>
+              </div>
+            </div>
           )}
 
           <form className="mt-6 space-y-4" onSubmit={enviar}>
