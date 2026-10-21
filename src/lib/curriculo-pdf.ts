@@ -5,6 +5,7 @@ type Dados = {
   email: string | null;
   serie: string | null;
   turma: string | null;
+  escola: string | null;
   nivel: number;
   xp: number;
   monitorias: number;
@@ -260,7 +261,11 @@ export function criarCurriculoPDF(d: Dados) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(...CINZA);
-    doc.text(limitarTexto(doc, [d.serie, d.turma ? `Turma ${d.turma}` : null].filter(Boolean).join(" - "), 82), 18, esquerdaY + 6);
+    if (d.escola) {
+      doc.text(limitarTexto(doc, d.escola, 82), 18, esquerdaY + 6);
+      esquerdaY += 6;
+    }
+    doc.text(limitarTexto(doc, [d.serie, d.turma ? `Turma ${d.turma}` : null].filter(Boolean).join(" | "), 82), 18, esquerdaY + 6);
     esquerdaY += 6;
   }
 
