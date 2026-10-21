@@ -140,11 +140,9 @@ function Login() {
         const { error } = await supabase.rpc("concluir_onboarding", {
           _tipo: tipo,
           _nome: nome.trim(),
-          _serie: tipo === "estudante" ? serie : undefined,
-          _turma: tipo === "estudante" ? turma : undefined,
-          _escola_id: tipo !== "empresa" ? escola : undefined,
-          _disciplina: tipo === "professor" ? disciplina : undefined,
-          _codigo_professor: tipo === "professor" ? codigoProf.trim() : undefined,
+          ...(tipo === "estudante" ? { _serie: serie, _turma: turma } : {}),
+          ...(tipo !== "empresa" ? { _escola_id: escola } : {}),
+          ...(tipo === "professor" ? { _disciplina: disciplina, _codigo_professor: codigoProf.trim() } : {}),
         });
         if (error) throw error;
         sessionStorage.removeItem(tipoGoogleKey);
