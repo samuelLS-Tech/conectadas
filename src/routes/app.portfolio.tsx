@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { TRILHAS, useConquistas } from "@/lib/conquistas";
 import { useXP } from "@/lib/xp-store";
 import { gerarCurriculoPDF } from "@/lib/curriculo-pdf";
+import { nomeEscola } from "@/lib/turmas";
 
 export const Route = createFileRoute("/app/portfolio")({
   head: () => ({
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/app/portfolio")({
 });
 
 function Portfolio() {
-  const { xp, monitorias, exercicios, horas, nivel, tituloNivel, lideranca, usuario, email, serie, turma } = useXP();
+  const { xp, monitorias, exercicios, horas, nivel, tituloNivel, lideranca, usuario, email, serie, turma, escolaId } = useXP();
   const { nos, desbloqueados, medalhas, completa } = useConquistas();
   const medalhasGanhas = TRILHAS.filter((t) => medalhas.has(t.id) || completa(t.id));
   const habilidadesGanhas = nos.filter((no) => desbloqueados.has(no.id)).map((no) => no.nome);
@@ -83,7 +84,7 @@ function Portfolio() {
           onClick={() =>
 {
             gerarCurriculoPDF({
-              nome: usuario, email, serie, turma, nivel, xp, monitorias, exercicios, horas, lideranca,
+              nome: usuario, email, serie, turma, escola: escolaId ? nomeEscola(escolaId) : null, nivel, xp, monitorias, exercicios, horas, lideranca,
               habilidades: habilidadesGanhas,
               medalhas: medalhasGanhas.map((t) => t.medalha.nome),
             });
