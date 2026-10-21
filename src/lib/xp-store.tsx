@@ -21,6 +21,7 @@ type Perfil = {
   usuario: string;
   serie: string | null;
   turma: string | null;
+  escolaId: string | null;
   tipo: TipoConta | null;
   userId: string | null;
   email: string | null;
@@ -36,6 +37,7 @@ const vazio: Perfil = {
   usuario: "",
   serie: null,
   turma: null,
+  escolaId: null,
   tipo: null,
   userId: null,
   email: null,
@@ -75,6 +77,7 @@ async function carregarPerfil(userId: string, email: string | null): Promise<Per
     usuario: p?.nome ?? "",
     serie: p?.serie ?? null,
     turma: p?.turma ?? null,
+    escolaId: p?.escola_id ?? null,
     tipo: (roles?.[0]?.role as TipoConta | undefined) ?? null,
     userId,
     email,
