@@ -5,7 +5,7 @@ type Dados = {
   email: string | null;
   serie: string | null;
   turma: string | null;
-  escola: string | null;
+  escola?: string | null;
   nivel: number;
   xp: number;
   monitorias: number;
