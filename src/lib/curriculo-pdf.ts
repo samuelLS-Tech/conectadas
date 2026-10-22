@@ -176,10 +176,10 @@ function desenharHabilidades(doc: jsPDF, itens: string[], x: number, y: number, 
   let px = x;
   let py = y;
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(8.5);
+  doc.setFontSize(9);
   for (const item of itens) {
-    const rotulo = limitarTexto(doc, item, largura - 10);
-    const w = Math.min(largura, doc.getTextWidth(rotulo) + 10);
+    const rotulo = limitarTexto(doc, item, largura - 8);
+    const w = Math.min(largura, doc.getTextWidth(rotulo) + 8);
     if (px + w > x + largura) {
       px = x;
       py += 11.5;
@@ -193,8 +193,8 @@ function desenharHabilidades(doc: jsPDF, itens: string[], x: number, y: number, 
     doc.setFillColor(243, 241, 255);
     doc.roundedRect(px, py - 6, w, 9.5, 4, 4, "F");
     doc.setTextColor(...CINZA);
-    doc.text(rotulo, px + 5, py - 1);
-    px += w + 3;
+    doc.text(rotulo, px + 4, py - 1);
+    px += w + 2;
   }
   return itens.length ? py + 8 : y;
 }
@@ -243,7 +243,7 @@ export function criarCurriculoPDF(d: Dados, imagens?: ImagensCurriculo) {
   doc.setFontSize(23);
   doc.text(limitarTexto(doc, d.nome || "Estudante", 145), 51.5, 51);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
+  doc.setFontSize(11);
   doc.setTextColor(230, 232, 244);
   let detalheY = 59;
   if (d.email) {
@@ -281,7 +281,7 @@ export function criarCurriculoPDF(d: Dados, imagens?: ImagensCurriculo) {
     d.horas > 0 ? `${d.horas}h de estudo registradas` : null,
   ].filter((item): item is string => Boolean(item));
   if (experiencias.length) {
-    esquerdaY += 24;
+    esquerdaY += 21;
     secao(doc, "Projetos e experiências", 11, esquerdaY, 90);
     esquerdaY += 10;
     doc.setFont("helvetica", "normal");
