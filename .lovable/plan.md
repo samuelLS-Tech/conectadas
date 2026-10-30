@@ -1,4 +1,4 @@
-# CONECTADAS — conteúdos completos e monitoria real
+# CONECTADAS — conteúdos completos, avaliações e feedbacks
 
 ## Diagnóstico confirmado
 
@@ -35,30 +35,46 @@ Manter a aparência e a resolução atuais, com cinco disciplinas, dez assuntos 
 - Cada ciclo apresenta quatro rodadas de cinco questões, sem repetição. Salvar seleção e andamento por estudante no Lovable Cloud para resistir a recarregamento e troca de aparelho.
 - Após vinte questões, oferecer novo ciclo com nova ordem. Registrar o desempenho das novas tentativas sem conceder XP novamente pelas mesmas questões/conjuntos já recompensados, preservando a regra atual contra recompensas duplicadas.
 
-## 3. Sala: comparar antes de contratar
+## 3. Sistema de Avaliações e Feedbacks
 
-Você pediu outra avaliação antes de autorizar Daily. Nenhum serviço será contratado ou conectado nesta etapa sem sua decisão.
+Substituir a proposta de comunicação em tempo real por avaliações persistidas. Não integrar câmera, microfone, compartilhamento de tela ou chat real, nem contratar serviço de mídia. Preservar funcionalidades existentes; a sala demonstrativa não será usada como prova de interação real.
 
-| Solução | Custos publicados consultados | Configuração e limitações |
-|---|---|---|
-| Cloudflare Realtime SFU + TURN | Franquia de 1.000 GB compartilhada; acima dela, US$ 0,05/GB de saída | Conta Cloudflare e credenciais privadas. Não entrega uma sala pronta: exige integrar chamada, sinalização, reconexão, áudio, vídeo e tela. Mais trabalho de desenvolvimento; custo depende de tráfego, não apenas duração. |
-| LiveKit Cloud | Build: US$ 0/mês; Ship: a partir de US$ 50/mês; Scale: a partir de US$ 500/mês | Conta, endereço do projeto e credenciais privadas. SDK de salas e participantes; é necessário confirmar franquias, tarifa de mídia e limites do plano antes de estimar uso. |
-| Daily | 10.000 minutos por participante/mês grátis; depois, vídeo/tela a US$ 0,004 por minuto/participante | Conta e conexão segura. Menor esforço para integrar; permanece uma alternativa, não a escolha aprovada. |
-| Hospedagem própria | Sem tarifa universal; servidor e tráfego cobrados separadamente | Maior responsabilidade de operação, segurança e disponibilidade. O site atual não hospeda diretamente um servidor de mídia. |
+### A. Avaliações de monitorias
 
-Fontes oficiais: [Cloudflare Realtime](https://developers.cloudflare.com/realtime/sfu/pricing/), [LiveKit](https://livekit.io/pricing/) e [Daily](https://www.daily.co/pricing/video-sdk/). Valores em dólares, sujeitos a alteração; impostos, câmbio e uso do Lovable Cloud são separados. Não presumir que a franquia garante custo zero.
+- Integrar ao fluxo atual de ofertas, interesses, sessões e confirmação por QR, com participantes vinculados antes da conclusão. Adicionar estados de realização, conclusão e cancelamento, assunto e datas; preservar sessões e recompensas anteriores.
+- Exibir avaliação opcional somente quando ambas as participantes distintas tiverem confirmado a realização de uma sessão registrada. Não criar avaliações retroativas para sessões sem participantes ou confirmação suficientes.
+- A confirmação bilateral registra uma declaração das participantes, não prova técnica de presença. Sem mídia ou verificação externa, não prometer impedir toda combinação fraudulenta.
+- Cada participante avalia exclusivamente a outra, uma única vez por sessão; uma avaliação não depende da avaliação recíproca. Canceladas, incompletas e autoavaliações são bloqueadas no banco.
+- Ao avaliar a monitora: clareza das explicações, domínio do conteúdo, paciência e colaboração. Ao avaliar quem recebeu ajuda: participação e interesse, colaboração e comprometimento. Notas de critérios de 1 a 5, avaliação geral de 1 a 5 estrelas e comentário opcional; formulário sem obrigar envio.
+- Mostrar a opção após a conclusão e também nas monitorias elegíveis do portfólio. Sem prazo de expiração inicial, pois não foi exigido prazo específico.
+- A média e a quantidade consideram apenas avaliações de monitoria válidas e ativas recebidas, nunca feedback acadêmico ou recomendação profissional; separar o contexto de monitora e de quem recebeu ajuda nos comentários.
 
-**Proposta para avaliar:** LiveKit Cloud, por oferecer salas e controles de mídia sem operar servidor próprio. Confirmar primeiro limites e cobrança de WebRTC do plano escolhido; apresentar a conexão segura somente depois da autorização. Cloudflare é a alternativa para reduzir custo de tráfego aceitando maior esforço de integração.
+### B. Feedbacks acadêmicos
 
-### Funcionamento da sala após escolher o serviço
+- O cadastro atual associa professor e estudante à escola, mas não comprova que aquele professor leciona para aquela estudante. Não usar apenas a lista escolar como autorização de feedback.
+- Criar vínculo acadêmico explícito com escola, série, turma e disciplina, proposto pelo professor e reconhecido pela estudante. Verificar escola coincidente e disciplina cadastrada do professor no banco; vínculo inativo não autoriza novos registros.
+- No painel do professor, selecionar estudante com vínculo ativo e registrar data, disciplina, critérios relevantes e comentário. Não exigir todos os critérios; exigir algum conteúdo significativo.
+- Critérios opcionais: comprometimento, participação, evolução, colaboração, iniciativa e autonomia. Sem estrelas, nota geral ou efeito no XP.
+- A estudante vê autor, disciplina, data, critérios e comentário em seu portfólio. Reconhecimento bilateral documenta o vínculo no MVP; não equivale à comprovação institucional de matrícula/docência.
 
-- Abrir a partir de uma oferta e interesse reais, com aceite e identificação das duas contas. Retirar monitoras e respostas simuladas desse caminho.
-- Criar sessão privada antes da entrada; autorizar apenas participantes vinculados e emitir credenciais temporárias para aquela sala.
-- Implementar entrada, saída, áudio, vídeo, câmera/microfone, tela e chat reais. Não mostrar um controle ativo se o recurso não estiver disponível.
-- Tratar permissão negada, dispositivo ausente, perda de conexão, outra participante ausente e sessão encerrada.
-- Sem gravação por padrão. Documentar tratamento de mídia pelo provedor, consentimento e cuidados com menores.
-- Compartilhamento de tela depende do navegador; pode não estar disponível em celulares. Mostrar a limitação, sem simular compartilhamento.
-- QR identifica a sessão; não comprova sozinho presença. Manter confirmação individual e recompensa única apenas após ambas confirmarem, restringindo novas sessões às contas previamente vinculadas.
+### C. Recomendações profissionais
+
+- Criar registro de experiência profissional com empresa, estudante, tipo, descrição e período: estágio, trabalho, projeto ou outra atividade realizada.
+- Permitir proposta e reconhecimento da experiência pelas partes; exigir confirmação bilateral de realização antes de recomendar. Interesse ou visualização do currículo não cria nem aprova experiência.
+- Empresa só recomenda a participante da experiência reconhecida; autor, data e origem são derivados do usuário autenticado. Uma recomendação por empresa e experiência, com edição do próprio conteúdo em vez de duplicatas.
+- Critérios opcionais: responsabilidade, comprometimento, trabalho em equipe, comunicação, proatividade e organização; comentário sem nota numérica geral.
+- Exibir experiência e suas confirmações sem alegar verificação documental externa. Permitir contestação pela estudante.
+
+### Privacidade, auditoria e denúncias
+
+- Integrar três categorias independentes na seção “Avaliações e Feedbacks” do Meu Portfólio, com contagens, comentários e estados vazios; não criar avaliações de demonstração.
+- Leitura inicial restrita à destinatária e ao autor; nenhuma publicação automática para outras empresas, estudantes ou visitantes, e nenhuma inclusão automática no PDF.
+- Autores podem editar ou remover seus próprios comentários e feedbacks; remoção lógica preserva auditoria e não libera novo envio para a mesma monitoria. Notas de monitoria ficam imutáveis após envio, permitindo editar somente o comentário.
+- Guardar versão anterior, autor da alteração e data em histórico protegido. Não expor versões removidas a leitores comuns; auditoria não pode ser alterada pelo navegador.
+- Destinatária pode denunciar, contestar ou solicitar revisão com motivo. Registrar protocolo e status pendente; não prometer atendimento ou prazo sem responsável definido.
+- **Moderação será definida depois**, conforme sua escolha. Não criar acesso automático para professor/empresa nem painel que pareça ter análise humana ativa. Preparar registros privados para futura atribuição restrita.
+- Sinalizar para futura análise quando o mesmo par acumular pelo menos três sessões avaliadas reciprocamente em trinta dias. Esse é um indicador inicial, não evidência de fraude: não excluir nem reduzir notas automaticamente.
+- Validar tamanho de comentários, motivos, critérios e notas; renderizar texto sem HTML e orientar a não incluir dados pessoais/sensíveis. Validações não garantem detecção de todo conteúdo abusivo.
 
 ## 4. Exclusão segura e validação dos recursos existentes
 
@@ -75,8 +91,10 @@ Fontes oficiais: [Cloudflare Realtime](https://developers.cloudflare.com/realtim
 - Calcular correção e XP no servidor a partir das respostas e da tentativa autorizada. Bloquear referências desconhecidas, respostas fora da seleção e duplicação concorrente.
 - Substituir o aumento otimista de XP por confirmação da gravação; mostrar falha e permitir tentativa novamente sem duplicar pontos.
 - Preservar históricos e critérios de medalhas existentes; incluir novos critérios de Engenharia de modo compatível, sem remoções destrutivas.
-- Integrações privadas usam funções autenticadas; credenciais de mídia nunca vão para código público. Tokens de entrada ficam limitados à sala e à identidade validada.
-- Acrescentar testes de contagens exatas, ciclos de vinte, respostas inválidas, XP, repetição, autorização e exclusão/anonimização.
+- Criar registros separados para avaliações de monitoria, feedbacks acadêmicos e recomendações profissionais; vínculos acadêmicos, experiências profissionais, denúncias e histórico protegido reutilizam profiles/user_roles e sessões existentes.
+- Escritas passam por validação no banco e funções autenticadas; RLS restringe leituras e impede edição de terceiros. Não confiar em autor, destinatário ou elegibilidade enviados pelo navegador.
+- Unicidade, bloqueio concorrente e auditoria transacional impedem duplicatas e alterações indevidas; excluir dados pessoais deve considerar também os novos registros e vínculos.
+- Acrescentar testes de contagens exatas, ciclos de vinte, respostas inválidas, XP, repetição, autorização e exclusão/anonimização, além de todos os critérios de avaliações.
 
 ## Critérios de entrega
 
@@ -84,11 +102,13 @@ Fontes oficiais: [Cloudflare Realtime](https://developers.cloudflare.com/realtim
 2. Sete bancos de vestibulares com vinte questões cada, rodadas de cinco e persistência do ciclo.
 3. Nenhuma mudança de XP não confirmada pelo servidor; histórico anterior preservado.
 4. Exclusão da própria conta testada em conta descartável autorizada, preservando histórico anonimizado da outra participante.
-5. Comunicação verificada entre duas contas distintas com mídia, tela e chat — não apenas com botões ou dispositivos simulados. Testes automatizados de mídia sintética serão identificados como tais; redes/aparelhos reais precisam de verificação própria.
-6. Relatório final distingue implementado, testado, não verificado e dependente de configuração externa.
+5. Avaliações opcionais verificadas nas duas direções de uma monitoria concluída; bloqueios de terceiros, autoavaliação, duplicação e sessão cancelada testados também por requisições diretas.
+6. Feedback acadêmico autorizado apenas por vínculo ativo; recomendação profissional apenas por experiência realizada e reconhecida pelas partes; média exclusiva das monitorias, edição própria, auditoria, denúncia e persistência após novo acesso testadas.
+7. Relatório final distingue implementado, testado, não verificado e dependente de configuração externa.
 
 ## Dependências ainda abertas
 
-- Escolha e autorização do serviço de mídia, credenciais e limites de cobrança. A implementação de áudio/vídeo/tela aguarda isso; a aprovação deste plano não contrata um provedor.
-- Contas de teste de estudante, professor e empresa autorizadas, incluindo duas participantes distintas para validar a sala e uma conta descartável para exclusão.
+- Nenhuma integração externa de mídia é necessária para avaliações. Custos usuais de armazenamento e acesso ao Lovable Cloud continuam sujeitos ao plano e uso.
+- Responsável pela moderação ainda não definido: denúncias e sinais ficam pendentes, sem análise ativa prometida.
+- Contas de teste de estudante, professor e empresa autorizadas, incluindo duas participantes distintas para validar avaliações e uma conta descartável para exclusão.
 - Revisão pedagógica humana antes de uso avaliativo formal e autorização de reprodução de questões oficiais quando necessária.
