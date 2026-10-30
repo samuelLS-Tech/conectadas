@@ -64,6 +64,13 @@
       "when": 1792543705283,
       "tag": "0008_alinhamento_ranking_contato_notificacoes",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793382346754,
+      "tag": "0009_avaliacoes_feedbacks",
+      "breakpoints": true
     }
   ]
 }

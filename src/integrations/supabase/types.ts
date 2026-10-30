@@ -59,6 +59,68 @@ export type Database = {
         }
         Relationships: []
       }
+      avaliacoes_monitoria: {
+        Row: {
+          autora_id: string
+          autora_nome: string
+          avaliada_id: string
+          comentario: string | null
+          comentario_removido: boolean
+          created_at: string
+          criterio_1: number
+          criterio_2: number
+          criterio_3: number
+          estrelas: number
+          id: string
+          materia: string
+          papel_avaliada: string
+          sessao_id: string
+          updated_at: string
+        }
+        Insert: {
+          autora_id: string
+          autora_nome?: string
+          avaliada_id: string
+          comentario?: string | null
+          comentario_removido?: boolean
+          created_at?: string
+          criterio_1: number
+          criterio_2: number
+          criterio_3: number
+          estrelas: number
+          id?: string
+          materia?: string
+          papel_avaliada: string
+          sessao_id: string
+          updated_at?: string
+        }
+        Update: {
+          autora_id?: string
+          autora_nome?: string
+          avaliada_id?: string
+          comentario?: string | null
+          comentario_removido?: boolean
+          created_at?: string
+          criterio_1?: number
+          criterio_2?: number
+          criterio_3?: number
+          estrelas?: number
+          id?: string
+          materia?: string
+          papel_avaliada?: string
+          sessao_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avaliacoes_monitoria_sessao_id_fkey"
+            columns: ["sessao_id"]
+            isOneToOne: false
+            referencedRelation: "monitoria_sessoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       config_privada: {
         Row: {
           chave: string
@@ -71,6 +133,39 @@ export type Database = {
         Update: {
           chave?: string
           valor?: string
+        }
+        Relationships: []
+      }
+      denuncias_avaliacoes: {
+        Row: {
+          categoria: string
+          created_at: string
+          id: string
+          motivo: string
+          registro_id: string
+          solicitante_id: string
+          status: string
+          tipo: string
+        }
+        Insert: {
+          categoria: string
+          created_at?: string
+          id?: string
+          motivo: string
+          registro_id: string
+          solicitante_id: string
+          status?: string
+          tipo: string
+        }
+        Update: {
+          categoria?: string
+          created_at?: string
+          id?: string
+          motivo?: string
+          registro_id?: string
+          solicitante_id?: string
+          status?: string
+          tipo?: string
         }
         Relationships: []
       }
@@ -163,6 +258,101 @@ export type Database = {
           },
         ]
       }
+      experiencias_profissionais: {
+        Row: {
+          created_at: string
+          descricao: string
+          empresa_id: string
+          empresa_nome: string
+          estudante_id: string
+          estudante_nome: string
+          fim: string | null
+          id: string
+          inicio: string
+          respondida_em: string | null
+          status: string
+          tipo: string
+        }
+        Insert: {
+          created_at?: string
+          descricao: string
+          empresa_id: string
+          empresa_nome?: string
+          estudante_id: string
+          estudante_nome?: string
+          fim?: string | null
+          id?: string
+          inicio: string
+          respondida_em?: string | null
+          status?: string
+          tipo: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string
+          empresa_id?: string
+          empresa_nome?: string
+          estudante_id?: string
+          estudante_nome?: string
+          fim?: string | null
+          id?: string
+          inicio?: string
+          respondida_em?: string | null
+          status?: string
+          tipo?: string
+        }
+        Relationships: []
+      }
+      feedbacks_academicos: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          criterios: string[]
+          disciplina: string
+          estudante_id: string
+          id: string
+          professor_id: string
+          professor_nome: string
+          removido: boolean
+          updated_at: string
+          vinculo_id: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          criterios?: string[]
+          disciplina: string
+          estudante_id: string
+          id?: string
+          professor_id: string
+          professor_nome?: string
+          removido?: boolean
+          updated_at?: string
+          vinculo_id: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          criterios?: string[]
+          disciplina?: string
+          estudante_id?: string
+          id?: string
+          professor_id?: string
+          professor_nome?: string
+          removido?: boolean
+          updated_at?: string
+          vinculo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedbacks_academicos_vinculo_id_fkey"
+            columns: ["vinculo_id"]
+            isOneToOne: false
+            referencedRelation: "vinculos_academicos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       habilidades: {
         Row: {
           criterio_tipo: string
@@ -187,6 +377,36 @@ export type Database = {
           nome?: string
           ordem?: number
           trilha?: string
+        }
+        Relationships: []
+      }
+      historico_avaliacoes: {
+        Row: {
+          acao: string
+          autor_id: string
+          categoria: string
+          conteudo_anterior: Json | null
+          created_at: string
+          id: string
+          registro_id: string
+        }
+        Insert: {
+          acao: string
+          autor_id: string
+          categoria: string
+          conteudo_anterior?: Json | null
+          created_at?: string
+          id?: string
+          registro_id: string
+        }
+        Update: {
+          acao?: string
+          autor_id?: string
+          categoria?: string
+          conteudo_anterior?: Json | null
+          created_at?: string
+          id?: string
+          registro_id?: string
         }
         Relationships: []
       }
@@ -254,6 +474,7 @@ export type Database = {
       }
       monitoria_sessoes: {
         Row: {
+          concluida_em: string | null
           created_at: string
           criadora_confirmou: boolean
           criadora_id: string
@@ -262,8 +483,10 @@ export type Database = {
           monitora_confirmou: boolean
           monitora_id: string | null
           monitora_nome: string
+          status: string
         }
         Insert: {
+          concluida_em?: string | null
           created_at?: string
           criadora_confirmou?: boolean
           criadora_id?: string
@@ -272,8 +495,10 @@ export type Database = {
           monitora_confirmou?: boolean
           monitora_id?: string | null
           monitora_nome: string
+          status?: string
         }
         Update: {
+          concluida_em?: string | null
           created_at?: string
           criadora_confirmou?: boolean
           criadora_id?: string
@@ -282,6 +507,7 @@ export type Database = {
           monitora_confirmou?: boolean
           monitora_id?: string | null
           monitora_nome?: string
+          status?: string
         }
         Relationships: []
       }
@@ -377,6 +603,80 @@ export type Database = {
         }
         Relationships: []
       }
+      recomendacoes_profissionais: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          criterios: string[]
+          empresa_id: string
+          empresa_nome: string
+          estudante_id: string
+          experiencia_id: string
+          id: string
+          removida: boolean
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          criterios?: string[]
+          empresa_id: string
+          empresa_nome?: string
+          estudante_id: string
+          experiencia_id: string
+          id?: string
+          removida?: boolean
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          criterios?: string[]
+          empresa_id?: string
+          empresa_nome?: string
+          estudante_id?: string
+          experiencia_id?: string
+          id?: string
+          removida?: boolean
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recomendacoes_profissionais_experiencia_id_fkey"
+            columns: ["experiencia_id"]
+            isOneToOne: true
+            referencedRelation: "experiencias_profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sinalizacoes_reciprocidade: {
+        Row: {
+          atualizado_em: string
+          estudante_a: string
+          estudante_b: string
+          sessoes_reciprocas: number
+          status: string
+        }
+        Insert: {
+          atualizado_em?: string
+          estudante_a: string
+          estudante_b: string
+          sessoes_reciprocas: number
+          status?: string
+        }
+        Update: {
+          atualizado_em?: string
+          estudante_a?: string
+          estudante_b?: string
+          sessoes_reciprocas?: number
+          status?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -395,11 +695,68 @@ export type Database = {
         }
         Relationships: []
       }
+      vinculos_academicos: {
+        Row: {
+          created_at: string
+          disciplina: string
+          escola_id: string
+          estudante_id: string
+          estudante_nome: string
+          id: string
+          professor_id: string
+          professor_nome: string
+          respondido_em: string | null
+          serie: string | null
+          status: string
+          turma: string | null
+        }
+        Insert: {
+          created_at?: string
+          disciplina: string
+          escola_id: string
+          estudante_id: string
+          estudante_nome?: string
+          id?: string
+          professor_id: string
+          professor_nome?: string
+          respondido_em?: string | null
+          serie?: string | null
+          status?: string
+          turma?: string | null
+        }
+        Update: {
+          created_at?: string
+          disciplina?: string
+          escola_id?: string
+          estudante_id?: string
+          estudante_nome?: string
+          id?: string
+          professor_id?: string
+          professor_nome?: string
+          respondido_em?: string | null
+          serie?: string | null
+          status?: string
+          turma?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      avaliar_monitoria: {
+        Args: {
+          _c1: number
+          _c2: number
+          _c3: number
+          _comentario: string
+          _estrelas: number
+          _sessao: string
+        }
+        Returns: string
+      }
+      cancelar_monitoria: { Args: { _sessao: string }; Returns: string }
       conceder_medalhas: { Args: { _uid: string }; Returns: undefined }
       concluir_atividade: {
         Args: {
@@ -423,6 +780,10 @@ export type Database = {
         Returns: undefined
       }
       confirmar_monitoria: { Args: { _sessao: string }; Returns: string }
+      editar_comentario_monitoria: {
+        Args: { _comentario: string; _id: string; _remover: boolean }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -443,6 +804,20 @@ export type Database = {
         }[]
       }
       minha_escola: { Args: never; Returns: string }
+      propor_experiencia: {
+        Args: {
+          _descricao: string
+          _estudante: string
+          _fim: string
+          _inicio: string
+          _tipo: string
+        }
+        Returns: string
+      }
+      propor_vinculo_academico: {
+        Args: { _estudante: string }
+        Returns: string
+      }
       ranking_minha_escola: {
         Args: never
         Returns: {
@@ -452,6 +827,43 @@ export type Database = {
           xp: number
         }[]
       }
+      remover_feedback_academico: { Args: { _id: string }; Returns: undefined }
+      remover_recomendacao: { Args: { _id: string }; Returns: undefined }
+      responder_experiencia: {
+        Args: { _confirmar: boolean; _id: string }
+        Returns: string
+      }
+      responder_vinculo_academico: {
+        Args: { _aceitar: boolean; _id: string }
+        Returns: string
+      }
+      salvar_feedback_academico: {
+        Args: {
+          _comentario: string
+          _criterios: string[]
+          _feedback: string
+          _vinculo: string
+        }
+        Returns: string
+      }
+      salvar_recomendacao: {
+        Args: {
+          _comentario: string
+          _criterios: string[]
+          _experiencia: string
+        }
+        Returns: string
+      }
+      solicitar_revisao_avaliacao: {
+        Args: {
+          _categoria: string
+          _motivo: string
+          _registro: string
+          _tipo: string
+        }
+        Returns: string
+      }
+      texto_limpo: { Args: { _max: number; _t: string }; Returns: string }
       validar_atividade: {
         Args: { _aprovar: boolean; _id: string }
         Returns: string
