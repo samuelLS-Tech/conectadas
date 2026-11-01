@@ -10,6 +10,7 @@ import { DISCIPLINAS, SERIES, TURMAS, nomeEscola } from "@/lib/turmas";
 import { AtividadesProfessor, type AtividadeProfessorItem } from "@/components/conectadas/AtividadesProfessor";
 import { agregarDesempenho } from "@/lib/professor-dashboard";
 import { toast } from "sonner";
+import { FeedbacksAutor } from '@/components/conectadas/FeedbacksAutor';
 
 export const Route = createFileRoute("/professor")({
   head: () => ({
@@ -212,6 +213,7 @@ function Professor() {
           </div>
 
           <AtividadesProfessor atividades={atividades} nomes={nomesReais} serie={serie} turma={turma} disciplina={disciplina} aoAtualizar={carregarAtividades} />
+          <FeedbacksAutor tipo="professor" estudantes={filtradas} />
 
           <section className="glass p-5 sm:p-7">
             <h2 className="text-xl font-bold">👩‍🎓 Estudantes por série e turma</h2>

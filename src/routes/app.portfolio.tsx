@@ -7,6 +7,7 @@ import { nomeEscola } from "@/lib/turmas";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, LoaderCircle } from "lucide-react";
+import { AvaliacoesFeedbacks } from '@/components/conectadas/AvaliacoesFeedbacks';
 
 export const Route = createFileRoute("/app/portfolio")({
   head: () => ({
@@ -85,6 +86,7 @@ function Portfolio() {
         </div>
       </section>
 
+      <AvaliacoesFeedbacks />
       <div className="flex flex-wrap items-center gap-4">
         <Button
           disabled={gerando || carregando || carregandoConquistas || !userId}

@@ -110,6 +110,7 @@ function Validar() {
         <Link to="/app/dashboard" className="mt-6 inline-block rounded-full border border-border px-6 py-3 text-sm font-semibold hover:border-cyan/60 hover:text-cyan">
           Voltar ao painel
         </Link>
+        {ambas && <Link to="/app/portfolio" className="mt-4 block text-sm text-cyan">Avaliar a monitoria (opcional)</Link>}
       </div>
     </div>
   );

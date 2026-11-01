@@ -8,6 +8,7 @@ import { useXP } from "@/lib/xp-store";
 import { oportunidades, talentos } from "@/lib/conectadas-data";
 import { TalentosReais } from "@/components/conectadas/TalentosReais";
 import { supabase } from "@/integrations/supabase/client";
+import { FeedbacksAutor } from '@/components/conectadas/FeedbacksAutor';
 
 export const Route = createFileRoute("/empresa")({
   head: () => ({
@@ -23,6 +24,8 @@ export const Route = createFileRoute("/empresa")({
         property: "og:description",
         content: "Descubra estudantes pelo potencial e pelas experiências construídas.",
       },
+      { property: 'og:type', content: 'website' },
+      { name: 'twitter:card', content: 'summary' },
     ],
   }),
   component: Empresa,
@@ -49,6 +52,8 @@ function EmpresaConteudo() {
   const [contato, setContato] = useState("");
   const [compartilharContato, setCompartilharContato] = useState(false);
   const [salvandoContato, setSalvandoContato] = useState(false);
+  const [estudantesReais, setEstudantesReais] = useState<{id:string;nome:string}[]>([]);
+  useEffect(() => { void supabase.rpc('listar_talentos').then(({data,error}) => { if(error) toast.error('Não foi possível carregar estudantes para experiências.'); else setEstudantesReais(data ?? []); }); }, []);
 
   useEffect(() => {
     if (!vaga) return;
@@ -228,6 +233,7 @@ function EmpresaConteudo() {
           </section>
 
           <TalentosReais oportunidade={selecionada?.titulo} />
+          <FeedbacksAutor tipo="empresa" estudantes={estudantesReais} />
 
           {selecionada && (
             <section className="glass animate-rise min-w-0 p-5 sm:p-7">

@@ -84,6 +84,8 @@ function Confirmar() {
           <p className="text-sm text-muted-foreground">Esta monitoria já foi confirmada pelas duas participantes.</p>
         )}
         {resultado === "erro" && <p className="text-sm text-destructive">Este QR Code não é válido.</p>}
+        {resultado === 'cancelada' && <p className="text-sm text-muted-foreground">Esta monitoria foi cancelada.</p>}
+        {resultado && resultado !== 'erro' && resultado !== 'cancelada' && <Link to="/app/portfolio" className="mt-4 block text-sm text-cyan">Avaliações e Feedbacks (opcional)</Link>}
         {resultado && (
           <Link to="/" className="mt-6 inline-block text-sm text-muted-foreground hover:text-cyan">
             Ir para o início
