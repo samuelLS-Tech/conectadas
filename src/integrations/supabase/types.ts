@@ -808,7 +808,7 @@ export type Database = {
         Args: {
           _descricao: string
           _estudante: string
-          _fim: string
+          _fim?: string
           _inicio: string
           _tipo: string
         }
@@ -839,9 +839,9 @@ export type Database = {
       }
       salvar_feedback_academico: {
         Args: {
-          _comentario: string
-          _criterios: string[]
-          _feedback: string
+          _comentario?: string
+          _criterios?: string[]
+          _feedback?: string
           _vinculo: string
         }
         Returns: string
