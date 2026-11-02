@@ -71,6 +71,13 @@
       "when": 1793382346754,
       "tag": "0009_avaliacoes_feedbacks",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793583253695,
+      "tag": "0010_feedback_parametros_opcionais",
+      "breakpoints": true
     }
   ]
 }

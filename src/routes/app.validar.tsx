@@ -21,7 +21,7 @@ export const Route = createFileRoute("/app/validar")({
   component: Validar,
 });
 
-type Status = { materia: string; monitora_nome: string; criadora_confirmou: boolean; monitora_confirmou: boolean };
+type Status = { status: string; materia: string; monitora_nome: string; criadora_confirmou: boolean; monitora_confirmou: boolean };
 
 function Validar() {
   const { sessao } = Route.useSearch();
@@ -38,14 +38,14 @@ function Validar() {
     const ler = async () => {
       const { data } = await supabase
         .from("monitoria_sessoes")
-        .select("materia, monitora_nome, criadora_confirmou, monitora_confirmou")
+        .select("status, materia, monitora_nome, criadora_confirmou, monitora_confirmou")
         .eq("id", sessao)
         .maybeSingle();
       if (data) setStatus(data);
     };
     void ler();
     const canal = supabase
-      .channel(`sessao-${sessao}`)
+      .channel(`sessao-${sessao}-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "monitoria_sessoes", filter: `id=eq.${sessao}` }, () => void ler())
       .subscribe();
     const t = setInterval(() => void ler(), 5000);
@@ -67,14 +67,14 @@ function Validar() {
     );
   }
 
-  const ambas = status?.criadora_confirmou && status?.monitora_confirmou;
+  const ambas = status?.status === 'concluida' && status.criadora_confirmou && status.monitora_confirmou;
 
   return (
     <div className="mx-auto max-w-3xl">
       <div className="glass animate-pop p-6 text-center sm:p-8">
         <h1 className="text-2xl font-bold sm:text-3xl">{ambas ? "🎉 Monitoria validada!" : "✅ Monitoria concluída!"}</h1>
         <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-          As duas estudantes precisam escanear este QR Code com o celular e confirmar. Quem não confirmar não recebe a sua parte do XP.
+          As duas estudantes precisam escanear este QR Code com o celular e confirmar. O XP só é concedido após ambas confirmarem.
         </p>
         {status && (
           <p className="mt-2 text-xs text-muted-foreground">{status.materia} · com {status.monitora_nome}</p>
@@ -104,7 +104,7 @@ function Validar() {
 
         <p className="mx-auto mt-7 flex max-w-lg items-start gap-3 rounded-2xl border border-cyan/30 bg-cyan/5 p-4 text-left text-xs text-muted-foreground">
           <ShieldCheck size={18} className="shrink-0 text-cyan" />
-          <span>Cada confirmação é feita na conta de cada estudante, no próprio celular. Assim fica comprovado que a monitoria aconteceu.</span>
+          <span>Cada confirmação é feita na conta de cada estudante, no próprio celular. A confirmação registra a declaração das participantes; o QR Code não comprova presença.</span>
         </p>
 
         <Link to="/app/dashboard" className="mt-6 inline-block rounded-full border border-border px-6 py-3 text-sm font-semibold hover:border-cyan/60 hover:text-cyan">
