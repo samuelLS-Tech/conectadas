@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { biblioteca, type Material } from "@/lib/conectadas-data";
+import { biblioteca as base, type Material } from "@/lib/conectadas-data";
+import { assuntosNovos } from "@/lib/biblioteca-conteudo";
+
+const biblioteca = [...base, ...assuntosNovos];
 import { useXP } from "@/lib/xp-store";
 import { calcularXPAtividade, DESCONTO_POR_ERRO } from "@/lib/xp-regras";
 import { ProgressoNeon } from "@/components/conectadas/ProgressoNeon";
@@ -21,7 +24,7 @@ export const Route = createFileRoute("/app/biblioteca")({
   component: Biblioteca,
 });
 
-const categorias = ["Todas", "Matemática", "Física", "Química", "Programação", "Vestibulares"];
+const categorias = ["Todas", "Matemática", "Física", "Química", "Programação", "Engenharia", "Vestibulares"];
 
 function Biblioteca() {
   const { concluirAtividade, atividadesConcluidas } = useXP();
