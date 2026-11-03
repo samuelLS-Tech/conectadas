@@ -4,7 +4,7 @@
 - [ ] Validar vínculos de participantes, professores e experiências profissionais reconhecidas pelas partes.
 - [ ] Validar denúncias, contestação, auditoria e sinalização de reciprocidade; responsável pela análise ainda não definido.
 - [ ] Integrar formulários e histórico ao portfólio e aos perfis existentes; testar permissões e persistência.
-- [ ] Ampliar cinco disciplinas para dez assuntos de cinco questões cada.
+- [x] Ampliar cinco disciplinas para dez assuntos de cinco questões cada (inclui Engenharia).
 - [ ] Integrar Engenharia e preservar XP, habilidades e progresso anterior.
 - [ ] Organizar vestibulares em bancos de vinte questões e ciclos de quatro rodadas sem repetição.
 - [ ] Validar filtros escolares, ranking, notificações e exclusão de publicações com dados reais.
